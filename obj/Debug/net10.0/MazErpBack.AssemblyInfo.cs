@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MazErpBack")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c9757015316af3b018ff126a708e7e972f1f4878")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9701ad49af5de8962fb5810d819a95f77dfae571")]
 [assembly: System.Reflection.AssemblyProductAttribute("MazErpBack")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MazErpBack")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
