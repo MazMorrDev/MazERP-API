@@ -34,7 +34,7 @@ public class Client
     [Column("license_start_date")]
     public DateTime LicenseStartDate { get; set; } = DateTime.UtcNow;
 
-    // Lógica para saber si el cliente aún tiene la licensia activa
+    // Lógica para saber si el cliente aún tiene la licencia activa
     // public bool IsLicenseActive => DateTime.UtcNow <= LicenseEndDate;
 
     [Column("license_end_date")]

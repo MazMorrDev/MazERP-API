@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MazErpBack;
 
-[Table("workflow")]
+[Table("Workflow")]
 public class Workflow
 {
     [Key]
