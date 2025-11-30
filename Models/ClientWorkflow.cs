@@ -14,8 +14,7 @@ public class ClientWorkflow
     [Column("workflow_id")]
     public int WorkflowId { get; set; }
 
-    [MaxLength(500)]
-    [Column("notes")]
+    [Column("role")]
     public ClientWorkflowRole Role { get; set; }
 
     [Column("assigned_at")]

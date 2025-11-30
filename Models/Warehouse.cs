@@ -14,7 +14,7 @@ public class Warehouse
     // Foreign Key para Workflow
     [Required]
     [Column("workflow_id")]
-    public int? WorkflowId { get; set; }
+    public int WorkflowId { get; set; }
 
     [Required]
     [MaxLength(30)]
@@ -27,5 +27,5 @@ public class Warehouse
 
     // Navigation property
     [ForeignKey("WorkflowId")]
-    public virtual Workflow? Workflow { get; set; }
+    public virtual Workflow Workflow { get; set; } = null!;
 }
