@@ -12,6 +12,7 @@ public class Warehouse
     public int Id { get; set; }
 
     // Foreign Key para Workflow
+    [Required]
     [Column("workflow_id")]
     public int? WorkflowId { get; set; }
 
