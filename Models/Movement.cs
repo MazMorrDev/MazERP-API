@@ -28,11 +28,11 @@ public class Movement
     [Required, Column("quantity")]
     public int Quantity { get; set; }
 
-    [Required, Column("unitary_cost")]
+    [Column("unitary_cost")]
     public decimal? UnitaryCost { get; set; }
 
     [Required, Column("movement_date")]
-    public DateTime MovementDate { get; set; }
+    public DateTimeOffset MovementDate { get; set; }
 
     // Navigation Properties
     [ForeignKey("ClientId")]

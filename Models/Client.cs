@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MazErpBack;
 
-[Table("Clients")]
+[Table("Client")]
 public class Client
 {
     [Key, Column("id")]
@@ -24,13 +24,13 @@ public class Client
 
     // Lógica de licencia
     [Column("license_start_date")]
-    public DateTime LicenseStartDate { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset LicenseStartDate { get; set; } = DateTime.UtcNow;
 
     // Lógica para saber si el cliente aún tiene la licencia activa
     // public bool IsLicenseActive => DateTime.UtcNow <= LicenseEndDate;
 
     [Column("license_end_date")]
-    public DateTime LicenseEndDate { get; set; } = DateTime.UtcNow.AddMonths(1);
+    public DateTimeOffset LicenseEndDate { get; set; } = DateTime.UtcNow.AddMonths(1);
 
     [Column("profile_photo_url"), MaxLength(500)]
     public string? ProfilePhotoUrl { get; set; }
@@ -40,4 +40,9 @@ public class Client
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     [Column("updated_at")]
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    // Navigation Properties
+    public virtual ICollection<ClientWorkflow> ClientWorkflows { get; set; } = new HashSet<ClientWorkflow>();
+
+    public virtual ICollection<Movement> Movements { get; set; } = new HashSet<Movement>();
 }

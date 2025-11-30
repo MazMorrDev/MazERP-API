@@ -21,4 +21,8 @@ public class Workflow
 
     [Column("created_at")]
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    // Navigation Properties
+    public virtual ICollection<Warehouse> Warehouses { get; set; } = new HashSet<Warehouse>();
+    public virtual ICollection<ClientWorkflow> ClientWorkflows { get; set; } = new HashSet<ClientWorkflow>(); 
 }

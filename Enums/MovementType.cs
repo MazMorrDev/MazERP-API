@@ -2,5 +2,10 @@
 
 public enum MovementType
 {
-    Buy, Sell, Devolution, 
+    Buy,
+    Sell,
+    Devolution,
+    Entry,
+    Exit,
+    Transfer
 }
