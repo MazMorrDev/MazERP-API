@@ -6,21 +6,17 @@ namespace MazErpBack;
 [Table("Inventory")]
 public class Inventory
 {
-    [Key]
+    [Key, Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
     public int Id { get; set; }
 
-    [Required]
-    [Column("warehouse_id")]
+    [Required, Column("warehouse_id")]
     public int WarehouseId { get; set; }
 
-    [Required]
-    [Column("product_id")]
+    [Required, Column("product_id")]
     public int ProductId { get; set; }
 
-    [Required]
-    [Column("stock")]
+    [Required, Column("stock")]
     public int Stock { get; set; }
 
     // // Lógica para alertas

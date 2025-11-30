@@ -6,41 +6,32 @@ namespace MazErpBack;
 [Table("Movement")]
 public class Movement
 {
-    [Key]
+    [Key, Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
     public int Id { get; set; }
 
-    [Required]
-    [Column("client_id")]
+    [Required, Column("client_id")]
     public int ClientId { get; set; }
 
-    [Required]
-    [Column("warehouse_id")]
+    [Required, Column("warehouse_id")]
     public int WarehouseId { get; set; }
 
-    [Required]
-    [Column("product_id")]
+    [Required, Column("product_id")]
     public int ProductId { get; set; }
 
-    [MaxLength(225)]
-    [Column("description")]
+    [Column("description"), MaxLength(225)]
     public string? Description { get; set; }
 
-    [Required]
-    [Column("movement_type")]
+    [Required, Column("movement_type")]
     public MovementType MovementType { get; set; }
 
-    [Required]
-    [Column("quantity")]
+    [Required, Column("quantity")]
     public int Quantity { get; set; }
 
-    [Required]
-    [Column("unitary_cost")]
-    public double UnitaryCost { get; set; }
+    [Required, Column("unitary_cost")]
+    public decimal? UnitaryCost { get; set; }
 
-    [Required]
-    [Column("movement_date")]
+    [Required, Column("movement_date")]
     public DateTime MovementDate { get; set; }
 
     // Navigation Properties

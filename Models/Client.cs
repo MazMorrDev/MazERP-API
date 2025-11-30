@@ -6,28 +6,20 @@ namespace MazErpBack;
 [Table("Clients")]
 public class Client
 {
-    [Key]
+    [Key, Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
     public int Id { get; set; }
 
     // Decidí hacer que el email no fuese un PK porq una persona puede perder su email
     // habría que hacer un sistema para cambiar su email
     // TODO: al email hay que hacerle un índice único en la configuración del context para evitar duplicados
-    [Required]
-    [EmailAddress]
-    [MaxLength(255)]
-    [Column("email")]
+    [Required, EmailAddress, MaxLength(255), Column("email")]
     public string Email { get; set; } = string.Empty;
 
-    [Required]
-    [MaxLength(100)]
-    [Column("name")]
+    [Required, Column("name"), MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
-    [MaxLength(255)]
-    [Column("password_hash")]
+    [Required, Column("password_hash"), MaxLength(255)]
     public string PasswordHash { get; set; } = string.Empty;
 
     // Lógica de licencia
@@ -40,8 +32,7 @@ public class Client
     [Column("license_end_date")]
     public DateTime LicenseEndDate { get; set; } = DateTime.UtcNow.AddMonths(1);
 
-    [MaxLength(500)]
-    [Column("profile_photo_url")]
+    [Column("profile_photo_url"), MaxLength(500)]
     public string? ProfilePhotoUrl { get; set; }
 
     // Auditoría

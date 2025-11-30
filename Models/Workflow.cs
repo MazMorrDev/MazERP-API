@@ -6,22 +6,17 @@ namespace MazErpBack;
 [Table("Workflow")]
 public class Workflow
 {
-    [Key]
+    [Key, Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
     public int Id { get; set; }
 
-    [Required]
-    [MaxLength(30)]
-    [Column("name")]
+    [Required, Column("name"), MaxLength(30)]
     public string Name { get; set; } = string.Empty;
 
-    [MaxLength(255)]
-    [Column("description")]
+    [Column("description"), MaxLength(255)]
     public string? Description { get; set; }
 
-    [MaxLength(500)]
-    [Column("workflow_photo_url")]
+    [Column("workflow_photo_url"), MaxLength(500)]
     public string? WorkflowPhotoUrl { get; set; }
 
     [Column("created_at")]

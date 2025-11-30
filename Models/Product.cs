@@ -6,19 +6,16 @@ namespace MazErpBack;
 [Table("Product")]
 public class Product
 {
-    [Key]
+    [Key, Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
     public int Id { get; set; }
 
-    [Required]
-    [MaxLength(40)]
-    [Column("name")]
+    [Required, Column("name"), MaxLength(40)]
     public string Name { get; set; } = string.Empty;
 
 
     // Hay q decidir en moneda gestionamos los price dentro de la base de datos
     [Column("sell_price")]
-    public double? SellPrice { get; set; }
+    public decimal? SellPrice { get; set; }
 
 }

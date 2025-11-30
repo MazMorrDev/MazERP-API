@@ -6,12 +6,11 @@ namespace MazErpBack;
 [Table("ClientWorkflows")]
 public class ClientWorkflow
 {
-    // Clave primaria compuesta - Parte 1
-    [Column("client_id")]
+    [Key, Column("client_id", Order = 0)]
     public int ClientId { get; set; }
 
-    // Clave primaria compuesta - Parte 2
-    [Column("workflow_id")]
+
+    [Key, Column("workflow_id", Order = 1)]
     public int WorkflowId { get; set; }
 
     [Column("role")]

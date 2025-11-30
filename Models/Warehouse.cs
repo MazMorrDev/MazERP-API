@@ -6,23 +6,18 @@ namespace MazErpBack;
 [Table("Warehouse")]
 public class Warehouse
 {
-    [Key]
+    [Key, Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
     public int Id { get; set; }
 
     // Foreign Key para Workflow
-    [Required]
-    [Column("workflow_id")]
+    [Required, Column("workflow_id")]
     public int WorkflowId { get; set; }
 
-    [Required]
-    [MaxLength(30)]
-    [Column("name")]
+    [Required, Column("name"), MaxLength(30)]
     public string Name { get; set; } = string.Empty;
 
-    [MaxLength(255)]
-    [Column("description")]
+    [Column("description"), MaxLength(255)]
     public string? Description { get; set; }
 
     // Navigation property
