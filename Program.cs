@@ -1,5 +1,6 @@
 using DotNetEnv;
 using MazErpBack;
+using MazErpBack.Services.User;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -12,6 +13,9 @@ builder.Services.AddOpenApi("v1"); // Customize the document name
 Env.Load();
 var connectionString = Env.GetString("POSTGRES_CONNECTION_STRING");
 builder.Services.AddDbContext<AppDbContext>(optionsAction: options => options.UseNpgsql(connectionString));
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<TokenService>();
+// todo: map and register Mapster DI
 builder.Services.AddControllers();
 
 var app = builder.Build();
