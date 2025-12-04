@@ -9,14 +9,14 @@ namespace MazErpBack.Controllers;
 [Route("api/[controller]")]
 public class UserController(UserService userService) : ControllerBase
 {
-    private readonly UserService userService = userService;
+    private readonly UserService _userService = userService;
 
     [HttpPost("register")]
     public async Task<IActionResult> RegisterUser([FromBody] CreateUserDto createUserDto)
     {
         try
         {
-            var createUser = await userService.RegisterUserAsync(createUserDto);
+            var createUser = await _userService.RegisterUserAsync(createUserDto);
             return Ok(new { data = createUser } );
         }
         catch (Exception)
@@ -30,7 +30,7 @@ public class UserController(UserService userService) : ControllerBase
     {
         try
         {
-            var token = await userService.LoginUserAsync(loginDto);
+            var token = await _userService.LoginUserAsync(loginDto);
             if (token == null)
             {
                 return Unauthorized(new { error = "Invalid email or password." });
