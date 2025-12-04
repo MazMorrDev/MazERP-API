@@ -1,22 +1,14 @@
 using DotNetEnv;
 using MazErpBack;
-using MazErpBack.Services.User;
-using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi("v1"); // Customize the document name
 Env.Load();
 var connectionString = Env.GetString("POSTGRES_CONNECTION_STRING");
-builder.Services.AddDbContext<AppDbContext>(optionsAction: options => options.UseNpgsql(connectionString));
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<TokenService>();
-// TODO: map and register Mapster DI
-builder.Services.AddControllers();
+
+// Builder logic moved to dedicated class
+WebAppBuilderConfig.ConfigureBuilder(builder, connectionString);
+WebAppBuilderConfig.ConfigureCorsPolicy(builder);
 
 var app = builder.Build();
 
@@ -27,6 +19,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseCors();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
