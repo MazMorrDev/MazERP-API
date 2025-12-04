@@ -1,11 +1,12 @@
 # Debug folders
-bin/
+bin/*
 obj/*
 
 # Personal Configuration Folders
 *.user
 *.suo
 .vs/
+Migrations/*
 
 # Environment file
 .env
