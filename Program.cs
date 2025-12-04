@@ -15,7 +15,7 @@ var connectionString = Env.GetString("POSTGRES_CONNECTION_STRING");
 builder.Services.AddDbContext<AppDbContext>(optionsAction: options => options.UseNpgsql(connectionString));
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
-// todo: map and register Mapster DI
+// TODO: map and register Mapster DI
 builder.Services.AddControllers();
 
 var app = builder.Build();

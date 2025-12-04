@@ -44,8 +44,7 @@ public class UserService(AppDbContext context, TokenService tokenService) : IUse
             {
                 Email = userDto.Email,
                 Name = userDto.Name,
-                ProfilePhotoUrl = userDto.ProfilePhotoUrl,
-                CreatedAt = DateTimeOffset.UtcNow
+                ProfilePhotoUrl = userDto.ProfilePhotoUrl
             };
             var hasher = new PasswordHasher<Client>();
             client.PasswordHash = hasher.HashPassword(client, userDto.Password);

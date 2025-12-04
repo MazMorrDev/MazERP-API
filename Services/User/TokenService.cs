@@ -39,7 +39,7 @@ public class TokenService(IConfiguration config) : ITokenService
         }
         catch (Exception)
         {
-            // Esto se deja vacío?
+            // TODO
             throw;
         }
     }
