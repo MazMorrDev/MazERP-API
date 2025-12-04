@@ -26,7 +26,7 @@ public class WebAppBuilderConfig
         {
             options.AddPolicy("AllowSpecificOrigin", policy =>
             {
-                policy.WithOrigins("http://localhost:5148", "http://localhost:7162")
+                policy.WithOrigins("http://localhost:4200")
                       .AllowAnyMethod()
                       .AllowAnyHeader();
             });
