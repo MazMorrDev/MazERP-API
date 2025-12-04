@@ -6,16 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.User;
 
-public class UserService : IUserService
+public class UserService(AppDbContext context, TokenService tokenService) : IUserService
 {
-    private readonly AppDbContext _context;
-    private readonly TokenService _tokenService;
-
-    public UserService(AppDbContext context, TokenService tokenService)
-    {
-        _context = context;
-        _tokenService = tokenService;
-    }
+    private readonly AppDbContext _context = context;
+    private readonly TokenService _tokenService = tokenService;
 
     public async Task<TokenDto?> LoginUserAsync(LoginDto loginDto)
     {
@@ -35,9 +29,9 @@ public class UserService : IUserService
             var token = _tokenService.CreateTokenAsync(user);
             return token;
         }
-        catch (System.Exception)
+        catch (Exception)
         {
-            
+            // TODO
             throw;
         }
     }
@@ -67,7 +61,7 @@ public class UserService : IUserService
             };
             return response;
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             // todo: implement logging
             throw;
