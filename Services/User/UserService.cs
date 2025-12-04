@@ -62,7 +62,7 @@ public class UserService(AppDbContext context, TokenService tokenService) : IUse
         }
         catch (Exception)
         {
-            // todo: implement logging
+            // TODO: implement logging
             throw;
         }
     }

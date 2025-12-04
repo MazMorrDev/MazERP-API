@@ -29,7 +29,7 @@ public class Client
     // public bool IsLicenseActive => DateTime.UtcNow <= LicenseEndDate;
 
     [Column("license_end_date")]
-    public DateTimeOffset LicenseEndDate { get; set; } = DateTime.UtcNow.AddMonths(1);
+    public DateTimeOffset LicenseEndDate { get; set; } = DateTimeOffset.UtcNow.AddMonths(1);
 
     [Column("profile_photo_url"), MaxLength(500)]
     public string? ProfilePhotoUrl { get; set; }
