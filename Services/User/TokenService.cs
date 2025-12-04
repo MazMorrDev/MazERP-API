@@ -6,14 +6,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace MazErpBack.Services.User;
 
-public class TokenService : ITokenService
+public class TokenService(IConfiguration config) : ITokenService
 {
-    private readonly string _jwtSecret;
+    private readonly string _jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? config["JWT_SECRET"] ??
+    throw new ArgumentNullException("JWT_SECRET not found in environment variables or configuration.");
 
-    public TokenService(IConfiguration config)
-    {
-        _jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? config["JWT_SECRET"] ?? throw new ArgumentNullException("JWT_SECRET not found in environment variables or configuration.");
-    }
     public TokenDto CreateTokenAsync(Client client)
     {
         try
@@ -33,15 +30,16 @@ public class TokenService : ITokenService
             claims,
             expires: DateTime.Now.AddMinutes(35),
             signingCredentials: credentials);
-            var tokenResponse = new TokenDto{
+            var tokenResponse = new TokenDto
+            {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = token.ValidTo
             };
             return tokenResponse;
         }
-        catch (System.Exception)
+        catch (Exception)
         {
-            
+            // Esto se deja vacío?
             throw;
         }
     }
