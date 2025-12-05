@@ -11,8 +11,7 @@ public class Client
     public int Id { get; set; }
 
     // Decidí hacer que el email no fuese un PK porq una persona puede perder su email
-    // habría que hacer un sistema para cambiar su email
-    // TODO: al email hay que hacerle un índice único en la configuración del context para evitar duplicados
+    // TODO: habría que hacer un sistema para cambiar el email de su cuenta
     [Required, EmailAddress, MaxLength(255), Column("email")]
     public string Email { get; set; } = string.Empty;
 
@@ -24,13 +23,13 @@ public class Client
 
     // Lógica de licencia
     [Column("license_start_date")]
-    public DateTimeOffset LicenseStartDate { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset LicenseStartDate { get; set; } = DateTimeOffset.UtcNow;
 
     // Lógica para saber si el cliente aún tiene la licencia activa
     // public bool IsLicenseActive => DateTime.UtcNow <= LicenseEndDate;
 
     [Column("license_end_date")]
-    public DateTimeOffset LicenseEndDate { get; set; } = DateTime.UtcNow.AddMonths(1);
+    public DateTimeOffset LicenseEndDate { get; set; } = DateTimeOffset.UtcNow.AddMonths(1);
 
     [Column("profile_photo_url"), MaxLength(500)]
     public string? ProfilePhotoUrl { get; set; }

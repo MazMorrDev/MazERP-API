@@ -1,9 +1,17 @@
-bin/
+# Debug folders
+bin/*
 obj/*
+
+# Personal Configuration Folders
 *.user
 *.suo
 .vs/
+Migrations/*
+
+# Environment file
 .env
+
+# Private Documentation
 Documentación Workflow.md
 
 # Common node modules locations
