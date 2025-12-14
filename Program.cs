@@ -5,10 +5,12 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 Env.Load();
 var connectionString = Env.GetString("POSTGRES_CONNECTION_STRING");
+var jwtSecret = Env.GetString("JWT_SECRET");
 
 // Builder logic moved to dedicated class
 WebAppBuilderConfig.ConfigureBuilder(builder, connectionString);
 WebAppBuilderConfig.ConfigureCorsPolicy(builder);
+WebAppBuilderConfig.ConfigureAuthentication(builder, jwtSecret);
 
 var app = builder.Build();
 

@@ -1,6 +1,32 @@
-@MazErpBack_HostAddress = http://localhost:5148
+@host = http://localhost:5148
+@json = application/json
 
-GET {{MazErpBack_HostAddress}}/weatherforecast/
-Accept: application/json
+### User Register
+POST {{host}}/api/User/register
+Content-Type: {{json}}
+
+{
+	"email": "john.doe@example.com",
+	"name": "John Doe",
+	"password": "P@ssw0rd!",
+	"profilePhotoUrl": "https://example.com/avatar.jpg"
+}
+
+### User Login
+POST {{host}}/api/User/login
+Content-Type: {{json}}
+
+{
+	"email": "john.doe@example.com",
+	"password": "P@ssw0rd!"
+}
+
+### Set token returned from login response
+@token = {{token}}
+
+### Example authorized request (replace endpoint if needed)
+GET {{host}}/api/User/me
+Accept: {{json}}
+Authorization: Bearer {{token}}
 
 ###
