@@ -107,12 +107,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.HasOne(i => i.Warehouse)
                 .WithMany()
                 .HasForeignKey(i => i.WarehouseId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(i => i.Product)
                 .WithMany(p => p.Inventories)
                 .HasForeignKey(i => i.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasIndex(e => new { e.WarehouseId, e.ProductId }).IsUnique();
 
@@ -132,17 +132,17 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.HasOne(m => m.Client)
                 .WithMany(c => c.Movements)
                 .HasForeignKey(m => m.ClientId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(m => m.Warehouse)
                 .WithMany()
                 .HasForeignKey(m => m.WarehouseId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(m => m.Product)
                 .WithMany(p => p.Movements)
                 .HasForeignKey(m => m.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.Property(e => e.UnitaryCost).HasPrecision(18, 2);
             entity.Property(e => e.MovementDate).HasDefaultValueSql("GETUTCDATE()");
