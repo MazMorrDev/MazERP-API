@@ -1,4 +1,5 @@
-﻿using MazErpBack.Services.User;
+﻿using System.Security.Claims;
+using MazErpBack.Services.User;
 using MazErpBack.Services.WorkflowService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,13 @@ public class WebAppBuilderConfig
         // TODO: map and register Mapster DI
         builder.Services.AddControllers();
 
+        builder.Services.AddAuthorization( options => {
+            options.AddPolicy("Client", policy => policy.RequireClaim(ClaimTypes.Role, "Client"));
+            options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+            options.AddPolicy("Inventory", policy => policy.RequireClaim(ClaimTypes.Role, "Inventory"));
+            options.AddPolicy("Sales", policy => policy.RequireClaim(ClaimTypes.Role, "Sales"));
+            options.AddPolicy("Finance", policy => policy.RequireClaim(ClaimTypes.Role, "Finance"));
+        } );
     }
 
     public static void ConfigureCorsPolicy(WebApplicationBuilder builder)
@@ -32,8 +40,8 @@ public class WebAppBuilderConfig
             options.AddPolicy("AllowSpecificOrigin", policy =>
             {
                 policy.WithOrigins("http://localhost:4200")
-                      .AllowAnyMethod()
-                      .AllowAnyHeader();
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
             });
         });
     }
