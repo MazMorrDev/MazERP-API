@@ -1,4 +1,5 @@
 ﻿using MazErpBack.Services.User;
+using MazErpBack.Services.WorkflowService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,14 +9,16 @@ namespace MazErpBack;
 public class WebAppBuilderConfig
 {
 
-    public static void ConfigureBuilder(WebApplicationBuilder builder, string connectionString)
+    public static void ConfigureBuilder(WebApplicationBuilder builder, string connectionString, int port)
     {
+        builder.WebHost.UseUrls($"http://localhost:{port}");
         // Add services to the container.
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddOpenApi("v1"); // Customize the document name
         builder.Services.AddDbContext<AppDbContext>(optionsAction: options => options.UseNpgsql(connectionString));
         builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<TokenService>();
+        builder.Services.AddScoped<WfService>();
         // TODO: map and register Mapster DI
         builder.Services.AddControllers();
 
