@@ -24,6 +24,13 @@ public class TokenService(IConfiguration config) : ITokenService
                 new Claim("userId", client.Id.ToString()),
                 new Claim(ClaimTypes.Role, "Client")
             };
+            if (client.ClientWorkflows != null)
+            {
+                foreach (var cw in client.ClientWorkflows)
+                {
+                    claims = claims.Append(new Claim(ClaimTypes.Role, cw.Role.ToString())).ToArray();
+                }
+            }
             var token = new JwtSecurityToken(
             "http://localhost",
             "*",
