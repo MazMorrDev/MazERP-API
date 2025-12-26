@@ -1,6 +1,7 @@
 using MazErpBack.Dtos;
 using MazErpBack.Dtos.Login;
 using MazErpBack.Services.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MazErpBack.Controllers;
@@ -12,6 +13,7 @@ public class UserController(UserService userService) : ControllerBase
     private readonly UserService _userService = userService;
 
     [HttpPost("register")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RegisterUser([FromBody] CreateUserDto createUserDto)
     {
         try

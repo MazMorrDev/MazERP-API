@@ -15,7 +15,9 @@ public class UserService(AppDbContext context, TokenService tokenService) : IUse
     {
         try
         {
-            var user = await _context.Clients.FirstOrDefaultAsync(c => c.Email == loginDto.Email);
+            var user = await _context.Clients
+                .Include(c => c.ClientWorkflows)
+                .FirstOrDefaultAsync(c => c.Email == loginDto.Email);
             if (user == null)
             {
                 return null;
@@ -50,6 +52,7 @@ public class UserService(AppDbContext context, TokenService tokenService) : IUse
             client.PasswordHash = hasher.HashPassword(client, userDto.Password);
             _context.Clients.Add(client);
             await _context.SaveChangesAsync();
+            // register wf a client - modificar service para hacerlo en un solo paso
             var response = new ClientDto(){
                 Id = client.Id,
                 Email = client.Email,
