@@ -23,13 +23,12 @@ public class WebAppBuilderConfig
         // TODO: map and register Mapster DI
         builder.Services.AddControllers();
 
-        builder.Services.AddAuthorization( options => {
-            options.AddPolicy("Client", policy => policy.RequireClaim(ClaimTypes.Role, "Client"));
-            options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
-            options.AddPolicy("Inventory", policy => policy.RequireClaim(ClaimTypes.Role, "Inventory"));
-            options.AddPolicy("Sales", policy => policy.RequireClaim(ClaimTypes.Role, "Sales"));
-            options.AddPolicy("Finance", policy => policy.RequireClaim(ClaimTypes.Role, "Finance"));
-        } );
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("Client", policy => policy.RequireClaim(ClaimTypes.Role, "Client"))
+            .AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"))
+            .AddPolicy("Inventory", policy => policy.RequireClaim(ClaimTypes.Role, "Inventory"))
+            .AddPolicy("Sales", policy => policy.RequireClaim(ClaimTypes.Role, "Sales"))
+            .AddPolicy("Finance", policy => policy.RequireClaim(ClaimTypes.Role, "Finance"));
     }
 
     public static void ConfigureCorsPolicy(WebApplicationBuilder builder)
