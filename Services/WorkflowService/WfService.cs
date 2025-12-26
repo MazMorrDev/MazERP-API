@@ -49,21 +49,19 @@ public class WfService(AppDbContext context, ILogger<WfService> logger) : IWf
     {
         try
         {
-            _context.Workflows.Add(new Workflow
-            {
-                Name = workflowDto.Name,
-                Description = workflowDto.Description,
-                WorkflowPhotoUrl = workflowDto.WorkflowPhotoUrl,
-                CreatedAt = workflowDto.CreatedAt
-            });
-            await _context.SaveChangesAsync();
-            return new Workflow
+            var workflow = new Workflow()
             {
                 Name = workflowDto.Name,
                 Description = workflowDto.Description,
                 WorkflowPhotoUrl = workflowDto.WorkflowPhotoUrl,
                 CreatedAt = workflowDto.CreatedAt
             };
+
+            _context.Workflows.Add(workflow);
+
+            await _context.SaveChangesAsync();
+
+            return workflow;
         }
         catch (Exception)
         {
