@@ -32,7 +32,10 @@ public class WfService(AppDbContext context, ILogger<WfService> logger) : IWf
             await _context.SaveChangesAsync();
             return new WorkflowClientDto
             {
-                
+                ClientId = clientWfAdd.ClientId,
+                WorkflowId = clientWfAdd.WorkflowId,
+                Role = clientWfAdd.Role,
+                AssignedAt = clientWfAdd.AssignedAt
             };
         }
         catch (Exception ex)
