@@ -25,22 +25,17 @@ public class ProductsService(AppDbContext context) : IProductsService
             throw;
         }
     }
-    public async Task<bool> DeleteProductAsync(DeleteProductDto productDto)
+
+    public async Task<Product> DeleteProductAsync(DeleteProductDto productDto)
     {
         try
         {
             var product = _context.Products.Find(productDto.Id);
-            if (product != null)
-            {
-                product.IsActive = false;
-                _context.Products.Update(product);
-                return true;
-            }
-
-            return false;
-
+            product.IsActive = false;
+            await _context.SaveChangesAsync();
+            return product;
         }
-        catch (Exception)
+        catch (NullReferenceException)
         {
             throw;
         }

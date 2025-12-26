@@ -20,6 +20,8 @@ public class Product
     [Column("is_deleted")]
     public bool IsActive { get; set; } = true;
 
+    public DateTimeOffset UpdatedAt {get; set;} = DateTimeOffset.Now; 
+
     // Navigation Properties
     public virtual ICollection<Movement> Movements { get; set; } = new HashSet<Movement>();
     public virtual ICollection<Inventory> Inventories { get; set; } = new HashSet<Inventory>();
