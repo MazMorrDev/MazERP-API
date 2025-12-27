@@ -21,6 +21,8 @@ public class Warehouse
     [Column("description"), MaxLength(255)]
     public string? Description { get; set; }
 
+    public bool IsActive {get; set;}
+
     // Navigation property
     [ForeignKey("WorkflowId")]
     public virtual Workflow Workflow { get; set; } = null!;
