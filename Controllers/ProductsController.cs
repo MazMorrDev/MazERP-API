@@ -10,7 +10,7 @@ public class ProductsController(ProductsService productsService) : ControllerBas
     private readonly ProductsService _productService = productsService;
 
 
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
     {
         try
@@ -23,12 +23,12 @@ public class ProductsController(ProductsService productsService) : ControllerBas
         }
     }
 
-    [HttpDelete("delete")]
-    public async Task<IActionResult> DeleteProduct ([FromBody] DeleteProductDto productDto)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteProduct(int id)
     {
         try
         {
-            return Ok(await _productService.DeleteProductAsync(productDto));
+            return Ok(await _productService.DeleteProductAsync(id));
         }
         catch (Exception)
         {

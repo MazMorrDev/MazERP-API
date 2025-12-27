@@ -26,18 +26,16 @@ public class ProductsService(AppDbContext context) : IProductsService
         }
     }
 
-    public async Task<Product> DeleteProductAsync(DeleteProductDto productDto)
+    public async Task<Product> DeleteProductAsync(int id)
     {
         try
         {
-            ArgumentNullException.ThrowIfNull(productDto);
-
-            var product = await _context.Products.FindAsync(productDto.Id);
+            var product = await _context.Products.FindAsync(id);
             ArgumentNullException.ThrowIfNull(product);
 
             product.IsActive = false;
             await _context.SaveChangesAsync();
-            
+
             return product;
         }
         catch (NullReferenceException)
