@@ -8,7 +8,7 @@ public class WarehouseController(WarehouseService warehouseService) : Controller
 {
     private readonly WarehouseService _warehouseService = warehouseService;
 
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<IActionResult> CreateWarehouse([FromBody] CreateWarehouseDto warehouseDto)
     {
         try
@@ -21,17 +21,29 @@ public class WarehouseController(WarehouseService warehouseService) : Controller
         }
     }
 
-    [HttpDelete("delete")]
-    public async Task<IActionResult> DeleteWarehouse(DeleteWarehouseDto warehouseDto)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteWarehouse(int id)
     {
         try
         {
-            return Ok(await _warehouseService.DeleteWarehouse(warehouseDto));
+            return Ok(await _warehouseService.DeleteWarehouse(id));
         }
-        catch(Exception)
+        catch (Exception)
         {
             throw;
         }
-        
+    }
+
+    [HttpGet("by-workflow/{workflowId:int}")]
+    public async Task<IActionResult> GetWarehousesByWorkflow(int workflowId)
+    {
+        try
+        {
+            return Ok(await _warehouseService.GetWarehousesByWorkflowAsync(workflowId));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }
