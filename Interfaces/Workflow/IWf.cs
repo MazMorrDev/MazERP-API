@@ -9,5 +9,5 @@ public interface IWf
 
     public Task<Workflow> CreateWorkflow(CreateWorkflowDto workflowDto);
 
-    public Task<WorkflowClientDto> AssingnWorkflowToClient(int clientId, int workflowId, ClientWorkflowRole role = ClientWorkflowRole.Admin);
+    public Task<WorkflowClientDto> AssignWorkflowToClient(int clientId, int workflowId, ClientWorkflowRole role = ClientWorkflowRole.Admin);
 }

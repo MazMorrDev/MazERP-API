@@ -10,7 +10,7 @@ public class WfService(AppDbContext context, ILogger<WfService> logger) : IWf
     private readonly AppDbContext _context = context;
     private readonly ILogger<WfService> _logger = logger;
 
-    public async Task<WorkflowClientDto> AssingnWorkflowToClient(int clientId, int workflowId, ClientWorkflowRole role = ClientWorkflowRole.Admin)
+    public async Task<WorkflowClientDto> AssignWorkflowToClient(int clientId, int workflowId, ClientWorkflowRole role = ClientWorkflowRole.Admin)
     {
         try
         {
