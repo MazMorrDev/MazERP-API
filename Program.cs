@@ -1,6 +1,5 @@
 using DotNetEnv;
 using MazErpBack;
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 Env.Load();
@@ -15,19 +14,5 @@ WebAppBuilderConfig.ConfigureAuthentication(builder, jwtSecret);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi("/openapi/v1.json");
-    app.MapScalarApiReference( options =>
-    {
-        options.WithOpenApiRoutePattern("/openapi/v1.json");
-    });
-}
-
-app.UseCors("AllowSpecificOrigin");
-app.UseHttpsRedirection();
-app.MapControllers();
-app.UseAuthentication();
-app.UseAuthorization();
-app.Run();
+WebAppConfig.UseDevApiConfigs(app);
+WebAppConfig.UseGeneralApiConfigs(app);
