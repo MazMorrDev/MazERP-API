@@ -74,6 +74,7 @@ public class WfService(AppDbContext context, ILogger<WfService> logger) : IWf
     {
         try
         {
+            // FIX: cualquier cliente no debería tener acceso a todos los workflows
             var result = await _context.Workflows.ToListAsync();
             return result;
         }
