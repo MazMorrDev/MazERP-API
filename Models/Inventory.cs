@@ -30,6 +30,9 @@ public class Inventory
     [Column("warning_stock")]
     public int? WarningStock { get; set; }
 
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
+
     // Navigation Properties
     [ForeignKey("WarehouseId")]
     public virtual Warehouse Warehouse { get; set; } = null!;

@@ -1,4 +1,6 @@
-﻿namespace MazErpBack;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace MazErpBack;
 
 public class WarehouseService(AppDbContext context) : IWarehouseService
 {
@@ -41,6 +43,22 @@ public class WarehouseService(AppDbContext context) : IWarehouseService
             await _context.SaveChangesAsync();
 
             return warehouse;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<List<Warehouse>> GetWarehousesByWorkflowAsync(GetWarehousesByWfDto getWarehousesByWfDto)
+    {
+        try
+        {
+            // Validación básica del DTO
+            ArgumentNullException.ThrowIfNull(getWarehousesByWfDto);
+
+            var warehouses = await _context.Warehouses.Where(w => w.WorkflowId.Equals(getWarehousesByWfDto.WorkflowId)).ToListAsync();
+            return warehouses;
         }
         catch (Exception)
         {
