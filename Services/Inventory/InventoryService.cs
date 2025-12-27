@@ -6,7 +6,7 @@ public class InventoryService(AppDbContext context) : IInventoryService
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<Inventory> CreateInventory(CreateInventoryDto inventoryDto)
+    public async Task<Inventory> CreateInventoryAsync(CreateInventoryDto inventoryDto)
     {
         try
         {
@@ -30,7 +30,7 @@ public class InventoryService(AppDbContext context) : IInventoryService
         }
     }
 
-    public async Task<Inventory> DeleteInventory(int id)
+    public async Task<Inventory> DeleteInventoryAsync(int id)
     {
         try
         {
