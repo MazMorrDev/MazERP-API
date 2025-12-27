@@ -1,15 +1,25 @@
 ﻿namespace MazErpBack;
 
-public class WarehouseService : IWarehouseService
+public class WarehouseService(AppDbContext context) : IWarehouseService
 {
-    public Task<Warehouse> CreateWarehouse(CreateWarehouseDto warehouseDto)
+    private readonly AppDbContext _context = context;
+    public async Task<Warehouse> CreateWarehouse(CreateWarehouseDto warehouseDto)
     {
         try
         {
+            // Validation
+            ArgumentNullException.ThrowIfNull(warehouseDto);
 
+            var warehouse = new Warehouse()
+            {
+                WorkflowId = warehouseDto.WorkflowId,
+                Name = warehouseDto.Name,
+                Description = warehouseDto.Description
+            };
 
-
-            return ;
+            _context.Warehouses.Add(warehouse);
+            await _context.SaveChangesAsync();
+            return warehouse;
         }
         catch (Exception)
         {
@@ -17,11 +27,20 @@ public class WarehouseService : IWarehouseService
         }
     }
 
-    public Task<Warehouse> DeleteWarehouse(DeleteWarehouseDto warehouseDto)
+    public async Task<Warehouse> DeleteWarehouse(DeleteWarehouseDto warehouseDto)
     {
         try
         {
-            return;
+            // Validación básica del DTO
+            ArgumentNullException.ThrowIfNull(warehouseDto);
+
+            var warehouse = await _context.Warehouses.FindAsync(warehouseDto.Id);
+            ArgumentNullException.ThrowIfNull(warehouse);
+
+            warehouse.IsActive = false;
+            await _context.SaveChangesAsync();
+
+            return warehouse;
         }
         catch (Exception)
         {

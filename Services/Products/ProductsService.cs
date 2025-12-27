@@ -30,9 +30,14 @@ public class ProductsService(AppDbContext context) : IProductsService
     {
         try
         {
-            var product = _context.Products.Find(productDto.Id);
+            ArgumentNullException.ThrowIfNull(productDto);
+
+            var product = await _context.Products.FindAsync(productDto.Id);
+            ArgumentNullException.ThrowIfNull(product);
+
             product.IsActive = false;
             await _context.SaveChangesAsync();
+            
             return product;
         }
         catch (NullReferenceException)
