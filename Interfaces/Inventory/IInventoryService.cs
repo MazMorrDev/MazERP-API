@@ -2,7 +2,7 @@
 
 public interface IInventoryService
 {
-    public Task<List<Inventory>> GetInventoriesByWarehouseAsync();
-    public Task<Inventory> CreateInventory();
-    public Task<Inventory> DeleteInventory();
+    public Task<List<Inventory>> GetInventoriesByWarehouseAsync(int id);
+    public Task<Inventory> CreateInventory(CreateInventoryDto inventoryDto);
+    public Task<Inventory> DeleteInventory(int id);
 }

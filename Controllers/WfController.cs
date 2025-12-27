@@ -27,7 +27,7 @@ public class WfController(WfService wfService) : ControllerBase
     {
         try
         {
-            return Ok(await _wfService.AssingnWorkflowToClient(clientId, workflowId, role));
+            return Ok(await _wfService.AssignWorkflowToClient(clientId, workflowId, role));
         }
         catch (Exception ex)
         {
