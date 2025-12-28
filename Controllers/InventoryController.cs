@@ -3,6 +3,7 @@
 namespace MazErpBack;
 
 [ApiController]
+[Route("api/[controller]")]
 public class InventoryController(InventoryService inventoryService) : ControllerBase
 {
     private readonly InventoryService _inventoryService = inventoryService;
