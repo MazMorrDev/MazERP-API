@@ -26,8 +26,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<Client>(entity =>
         {
             entity.HasIndex(e => e.Email).IsUnique();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
-            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("NOW()");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("NOW()");
         });
 
         /*
@@ -52,7 +52,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasForeignKey(cw => cw.WorkflowId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.Property(e => e.AssignedAt).HasDefaultValueSql("GETUTCDATE()");
+            entity.Property(e => e.AssignedAt).HasDefaultValueSql("NOW()");
         });
 
         /*
@@ -63,7 +63,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         */
         modelBuilder.Entity<Workflow>(entity =>
         {
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("NOW()");
 
             entity.HasMany(w => w.Warehouses)
                 .WithOne(wh => wh.Workflow)
@@ -117,7 +117,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             entity.HasIndex(e => new { e.WarehouseId, e.ProductId }).IsUnique();
 
-            entity.ToTable(t => t.HasCheckConstraint("CK_Inventory_Stock", "[Stock] >= 0"));
+            entity.ToTable(t => t.HasCheckConstraint("CK_Inventory_Stock", "Stock >= 0"));
         });
 
         /*
@@ -146,9 +146,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.Property(e => e.UnitaryCost).HasPrecision(18, 2);
-            entity.Property(e => e.MovementDate).HasDefaultValueSql("GETUTCDATE()");
+            entity.Property(e => e.MovementDate).HasDefaultValueSql("NOW()");
 
-            entity.ToTable(t => t.HasCheckConstraint("CK_Movement_Quantity", "[Quantity] > 0"));
+            entity.ToTable(t => t.HasCheckConstraint("CK_Movement_Quantity", "Quantity > 0"));
         });
 
         /*
