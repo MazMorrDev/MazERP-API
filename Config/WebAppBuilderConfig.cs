@@ -20,6 +20,9 @@ public class WebAppBuilderConfig
         builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<TokenService>();
         builder.Services.AddScoped<WfService>();
+        builder.Services.AddScoped<WarehouseService>();
+        builder.Services.AddScoped<ProductsService>();
+        builder.Services.AddScoped<InventoryService>();
         // TODO: map and register Mapster DI
         builder.Services.AddControllers();
 
