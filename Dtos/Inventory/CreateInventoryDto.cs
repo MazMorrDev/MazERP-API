@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MazErpBack;
+namespace MazErpBack.Dtos.Inventory;
 
 public record class CreateInventoryDto
 {

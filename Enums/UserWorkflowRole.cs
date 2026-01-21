@@ -1,6 +1,6 @@
-﻿namespace MazErpBack;
+﻿namespace MazErpBack.Enums;
 
-public enum ClientWorkflowRole
+public enum UserWorkflowRole
 {
     Admin,          // Acceso total
     Member,         // Usuario básico

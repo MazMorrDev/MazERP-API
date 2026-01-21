@@ -1,6 +1,5 @@
-using MazErpBack.Dtos;
-using MazErpBack.Dtos.Login;
-using MazErpBack.Services.User;
+using MazErpBack.Dtos.Users;
+using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +7,9 @@ namespace MazErpBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController(UserService userService) : ControllerBase
+public class UserController(IUserService userService) : ControllerBase
 {
-    private readonly UserService _userService = userService;
+    private readonly IUserService _userService = userService;
 
     [HttpPost("register")]
     [Authorize(Roles = "Admin")]

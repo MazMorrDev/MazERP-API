@@ -10,8 +10,8 @@ public class Movement
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required, Column("client_id")]
-    public int ClientId { get; set; }
+    [Required, Column("user_id")]
+    public int UserId { get; set; }
 
     [Required, Column("warehouse_id")]
     public int WarehouseId { get; set; }
@@ -35,8 +35,8 @@ public class Movement
     public DateTimeOffset MovementDate { get; set; }
 
     // Navigation Properties
-    [ForeignKey("ClientId")]
-    public virtual Client Client { get; set; } = null!;
+    [ForeignKey("UserId")]
+    public virtual User User { get; set; } = null!;
 
     [ForeignKey("WarehouseId")]
     public virtual Warehouse Warehouse { get; set; } = null!;

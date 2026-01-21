@@ -1,17 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using MazErpBack.Dtos.Login;
-using MazErpBack.Interfaces;
+using MazErpBack.Dtos.Users;
+using MazErpBack.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
-namespace MazErpBack.Services.User;
+namespace MazErpBack.Services;
 
 public class TokenService(IConfiguration config) : ITokenService
 {
     private readonly string _jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? config["JWT_SECRET"] ??
     throw new ArgumentNullException("JWT_SECRET not found in environment variables or configuration.");
 
-    public TokenDto CreateTokenAsync(Client client)
+    public TokenDto CreateTokenAsync(User user)
     {
         try
         {
@@ -19,14 +19,14 @@ public class TokenService(IConfiguration config) : ITokenService
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, client.Name),
-                new Claim(ClaimTypes.Email, client.Email),
-                new Claim("userId", client.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Name),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("userId", user.Id.ToString()),
                 new Claim(ClaimTypes.Role, "Client")
             };
-            if (client.ClientWorkflows != null)
+            if (user.UserWorkflows != null)
             {
-                foreach (var cw in client.ClientWorkflows)
+                foreach (var cw in user.UserWorkflows)
                 {
                     claims = claims.Append(new Claim(ClaimTypes.Role, cw.Role.ToString())).ToArray();
                 }

@@ -1,10 +1,10 @@
-using MazErpBack.Dtos;
-using MazErpBack.Dtos.Login;
-using MazErpBack.Interfaces;
+using MazErpBack.Context;
+using MazErpBack.Dtos.Users;
+using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services.User;
+namespace MazErpBack.Services;
 
 public class UserService(AppDbContext context, TokenService tokenService) : IUserService
 {
@@ -15,14 +15,14 @@ public class UserService(AppDbContext context, TokenService tokenService) : IUse
     {
         try
         {
-            var user = await _context.Clients
-                .Include(c => c.ClientWorkflows)
+            var user = await _context.Users
+                .Include(c => c.UserWorkflows)
                 .FirstOrDefaultAsync(c => c.Email == loginDto.Email);
             if (user == null)
             {
                 return null;
             }
-            var hasher = new PasswordHasher<Client>();
+            var hasher = new PasswordHasher<User>();
             var result = hasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
@@ -38,28 +38,28 @@ public class UserService(AppDbContext context, TokenService tokenService) : IUse
         }
     }
 
-    public async Task<ClientDto> RegisterUserAsync(CreateUserDto userDto)
+    public async Task<UserDto> RegisterUserAsync(CreateUserDto userDto)
     {
         try
         {
-            var client = new Client
+            var user = new User
             {
                 Email = userDto.Email,
                 Name = userDto.Name,
                 ProfilePhotoUrl = userDto.ProfilePhotoUrl
             };
-            var hasher = new PasswordHasher<Client>();
-            client.PasswordHash = hasher.HashPassword(client, userDto.Password);
-            _context.Clients.Add(client);
+            var hasher = new PasswordHasher<User>();
+            user.PasswordHash = hasher.HashPassword(user, userDto.Password);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            // register wf a client - modificar service para hacerlo en un solo paso
-            var response = new ClientDto(){
-                Id = client.Id,
-                Email = client.Email,
-                Name = client.Name,
-                ProfilePhotoUrl = client.ProfilePhotoUrl,
-                CreatedAt = client.CreatedAt,
-                UpdatedAt = client.UpdatedAt
+            // register wf a user - modificar service para hacerlo en un solo paso
+            var response = new UserDto(){
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                ProfilePhotoUrl = user.ProfilePhotoUrl,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt = user.UpdatedAt
             };
             return response;
         }

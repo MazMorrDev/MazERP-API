@@ -1,13 +1,14 @@
-﻿
+﻿using MazErpBack.Dtos.Products;
+using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MazErpBack;
+namespace MazErpBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(ProductsService productsService) : ControllerBase
+public class ProductsController(IProductService productsService) : ControllerBase
 {
-    private readonly ProductsService _productService = productsService;
+    private readonly IProductService _productService = productsService;
 
 
     [HttpPost]

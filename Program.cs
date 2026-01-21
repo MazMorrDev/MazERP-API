@@ -1,5 +1,5 @@
 using DotNetEnv;
-using MazErpBack;
+using MazErpBack.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 Env.Load();

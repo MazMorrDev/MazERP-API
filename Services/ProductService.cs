@@ -1,6 +1,10 @@
-﻿namespace MazErpBack;
+﻿using MazErpBack.Context;
+using MazErpBack.Dtos.Products;
+using MazErpBack.Services.Interfaces;
 
-public class ProductsService(AppDbContext context) : IProductsService
+namespace MazErpBack.Services;
+
+public class ProductService(AppDbContext context) : IProductService
 {
     private readonly AppDbContext _context = context;
 

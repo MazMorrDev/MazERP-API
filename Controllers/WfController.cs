@@ -1,5 +1,6 @@
 ﻿using MazErpBack.Dtos.Workflow;
-using MazErpBack.Services.WorkflowService;
+using MazErpBack.Enums;
+using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,9 @@ namespace MazErpBack.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class WfController(WfService wfService) : ControllerBase
+public class WfController(IWorkflowService wfService) : ControllerBase
 {
-    private readonly WfService _wfService = wfService;
+    private readonly IWorkflowService _wfService = wfService;
 
     [HttpGet("workflows")]
     [Authorize(Roles = "Client")]
@@ -21,18 +22,18 @@ public class WfController(WfService wfService) : ControllerBase
         return Ok(new { data = workflows });
     }
 
-    [HttpPut("assign/{clientId}/{workflowId}")]
+    [HttpPut("assign/{userId}/{workflowId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> AssignWorkflowToClient(int clientId, int workflowId, [FromQuery] ClientWorkflowRole role = ClientWorkflowRole.Admin)
+    public async Task<IActionResult> AssignWorkflowToUser(int userId, int workflowId, [FromQuery] UserWorkflowRole role = UserWorkflowRole.Admin)
     {
         try
         {
-            return Ok(await _wfService.AssignWorkflowToClient(clientId, workflowId, role));
+            return Ok(await _wfService.AssignWorkflowToUser(userId, workflowId, role));
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
-            return StatusCode(500, "An error occurred while assigning the workflow to the client. Check logs for details or try again later.");
+            return StatusCode(500, "An error occurred while assigning the workflow to the user. Check logs for details or try again later.");
         }
     }
 

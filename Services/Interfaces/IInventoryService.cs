@@ -1,4 +1,6 @@
-﻿namespace MazErpBack;
+﻿using MazErpBack.Dtos.Inventory;
+
+namespace MazErpBack.Services.Interfaces;
 
 public interface IInventoryService
 {

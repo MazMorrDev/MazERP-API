@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MazErpBack.Dtos.Inventory;
+using MazErpBack.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
-namespace MazErpBack;
+namespace MazErpBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class InventoryController(InventoryService inventoryService) : ControllerBase
+public class InventoryController(IInventoryService inventoryService) : ControllerBase
 {
-    private readonly InventoryService _inventoryService = inventoryService;
+    private readonly IInventoryService _inventoryService = inventoryService;
 
     [HttpGet("by-warehouse{warehouseId:int}")]
     public async Task<IActionResult> GetInventoriesByWarehouse(int warehouseId)

@@ -1,6 +1,6 @@
-namespace MazErpBack.Dtos;
+namespace MazErpBack.Dtos.Users;
 
-public class ClientDto
+public class UserDto
 {
     public int Id { get; set; }
     public required string Email { get; set; }
@@ -9,5 +9,5 @@ public class ClientDto
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
-    //todo: agregar propiedades de la relacion con Workflow y Movement
+    //TODO: agregar propiedades de la relacion con Workflow y Movement
 }

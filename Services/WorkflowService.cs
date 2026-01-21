@@ -1,46 +1,47 @@
-﻿using MazErpBack.Dtos.Workflow;
-using MazErpBack.Interfaces;
+﻿using MazErpBack.Context;
+using MazErpBack.Dtos.Workflow;
+using MazErpBack.Enums;
 using MazErpBack.Models;
+using MazErpBack.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services.WorkflowService;
+namespace MazErpBack.Services;
 
-public class WfService(AppDbContext context, ILogger<WfService> logger) : IWf
+public class WfService(AppDbContext context, ILogger<WfService> logger) : IWorkflowService
 {
     private readonly AppDbContext _context = context;
     private readonly ILogger<WfService> _logger = logger;
 
-    public async Task<WorkflowClientDto> AssignWorkflowToClient(int clientId, int workflowId, ClientWorkflowRole role = ClientWorkflowRole.Admin)
+    public async Task<WorkflowUserDto> AssignWorkflowToUser(int userId, int workflowId, UserWorkflowRole role = UserWorkflowRole.Admin)
     {
         try
         {
-            var existingClientWf = await _context.ClientWorkflows
-                .FirstOrDefaultAsync(cw => cw.ClientId == clientId && cw.WorkflowId == workflowId);
-            if (existingClientWf != null)
+            var existingUserWf = await _context.UserWorkflows.FirstOrDefaultAsync(cw => cw.UserId == userId && cw.WorkflowId == workflowId);
+            if (existingUserWf != null)
             {
-                throw new BadHttpRequestException($"Workflow {workflowId} is already assigned to client {clientId}.");
+                throw new BadHttpRequestException($"Workflow {workflowId} is already assigned to user {userId}.");
             }
-            var clientWfAdd = new ClientWorkflow
+            var userWfAdd = new UserWorkflow
             {
-                ClientId = clientId,
+                UserId = userId,
                 WorkflowId = workflowId,
                 Role = role,
                 AssignedAt = DateTimeOffset.UtcNow
             };
-            // check if workflow is already associated to client
-            _context.ClientWorkflows.Add(clientWfAdd);
+            // check if workflow is already associated to user
+            _context.UserWorkflows.Add(userWfAdd);
             await _context.SaveChangesAsync();
-            return new WorkflowClientDto
+            return new WorkflowUserDto
             {
-                ClientId = clientWfAdd.ClientId,
-                WorkflowId = clientWfAdd.WorkflowId,
-                Role = clientWfAdd.Role,
-                AssignedAt = clientWfAdd.AssignedAt
+                UserId = userWfAdd.UserId,
+                WorkflowId = userWfAdd.WorkflowId,
+                Role = userWfAdd.Role,
+                AssignedAt = userWfAdd.AssignedAt
             };
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error assigning workflow with id:{workflowId} to client with id:{clientId}");
+            _logger.LogError(ex, $"Error assigning workflow with id:{workflowId} to client with id:{userId}");
             throw;
         }
     }

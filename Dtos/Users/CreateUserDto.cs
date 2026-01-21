@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MazErpBack.Dtos;
+namespace MazErpBack.Dtos.Users;
 
 public class CreateUserDto
 {

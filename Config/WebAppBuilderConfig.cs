@@ -1,11 +1,12 @@
 ﻿using System.Security.Claims;
-using MazErpBack.Services.User;
-using MazErpBack.Services.WorkflowService;
+using MazErpBack.Context;
+using MazErpBack.Services;
+using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace MazErpBack;
+namespace MazErpBack.Config;
 
 public class WebAppBuilderConfig
 {
@@ -17,12 +18,12 @@ public class WebAppBuilderConfig
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddOpenApi("v1"); // Customize the document name
         builder.Services.AddDbContext<AppDbContext>(optionsAction: options => options.UseNpgsql(connectionString));
-        builder.Services.AddScoped<UserService>();
-        builder.Services.AddScoped<TokenService>();
-        builder.Services.AddScoped<WfService>();
-        builder.Services.AddScoped<WarehouseService>();
-        builder.Services.AddScoped<ProductsService>();
-        builder.Services.AddScoped<InventoryService>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IWorkflowService, WfService>();
+        builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IInventoryService, InventoryService>();
         // TODO: map and register Mapster DI
         builder.Services.AddControllers();
 

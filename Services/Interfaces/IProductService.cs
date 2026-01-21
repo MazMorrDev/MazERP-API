@@ -1,6 +1,8 @@
-﻿namespace MazErpBack;
+﻿using MazErpBack.Dtos.Products;
 
-public interface IProductsService
+namespace MazErpBack.Services.Interfaces;
+
+public interface IProductService
 {
     public Task<Product> CreateProductAsync(CreateProductDto productDto);
 

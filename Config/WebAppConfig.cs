@@ -1,6 +1,6 @@
 ﻿using Scalar.AspNetCore;
 
-namespace MazErpBack;
+namespace MazErpBack.Config;
 
 public class WebAppConfig
 {

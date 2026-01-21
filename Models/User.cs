@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MazErpBack;
 
-[Table("Client")]
-public class Client
+[Table("User")]
+public class User
 {
     [Key, Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -26,7 +26,7 @@ public class Client
     [Column("license_start_date")]
     public DateTimeOffset LicenseStartDate { get; set; } = DateTimeOffset.UtcNow;
 
-    // Lógica para saber si el cliente aún tiene la licencia activa
+    // Lógica para saber si el usuario aún tiene la licencia activa
     // public bool IsLicenseActive => DateTime.UtcNow <= LicenseEndDate;
 
     [Column("license_end_date")]
@@ -42,7 +42,7 @@ public class Client
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     // Navigation Properties
-    public virtual ICollection<ClientWorkflow> ClientWorkflows { get; set; } = new HashSet<ClientWorkflow>();
+    public virtual ICollection<UserWorkflow> UserWorkflows { get; set; } = new HashSet<UserWorkflow>();
 
     public virtual ICollection<Movement> Movements { get; set; } = new HashSet<Movement>();
 }

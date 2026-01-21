@@ -24,5 +24,5 @@ public class Workflow
 
     // Navigation Properties
     public virtual ICollection<Warehouse> Warehouses { get; set; } = new HashSet<Warehouse>();
-    public virtual ICollection<ClientWorkflow> ClientWorkflows { get; set; } = new HashSet<ClientWorkflow>(); 
+    public virtual ICollection<UserWorkflow> UserWorkflows { get; set; } = new HashSet<UserWorkflow>(); 
 }

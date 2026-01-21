@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MazErpBack.Dtos.Warehouse;
+using MazErpBack.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
-namespace MazErpBack;
+namespace MazErpBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class WarehouseController(WarehouseService warehouseService) : ControllerBase
+public class WarehouseController(IWarehouseService warehouseService) : ControllerBase
 {
-    private readonly WarehouseService _warehouseService = warehouseService;
+    private readonly IWarehouseService _warehouseService = warehouseService;
 
     [HttpPost]
     public async Task<IActionResult> CreateWarehouse([FromBody] CreateWarehouseDto warehouseDto)

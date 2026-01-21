@@ -1,4 +1,6 @@
-﻿namespace MazErpBack;
+﻿using MazErpBack.Dtos.Warehouse;
+
+namespace MazErpBack.Services.Interfaces;
 
 public interface IWarehouseService
 {

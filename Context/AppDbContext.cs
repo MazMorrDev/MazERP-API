@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MazErpBack.Models;
+﻿using MazErpBack.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack;
+namespace MazErpBack.Context;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<Client> Clients { get; set; }
-    public DbSet<ClientWorkflow> ClientWorkflows { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<UserWorkflow> UserWorkflows { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<Movement> Movements { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -18,12 +18,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         base.OnModelCreating(modelBuilder);
 
         /*
-        CONFIGURACIÓN PARA CLIENT:
-        - Índice único en Email: Garantiza que no existan clientes con el mismo email
+        CONFIGURACIÓN PARA USER:
+        - Índice único en Email: Garantiza que no existan usuarios con el mismo email
         - Valores por defecto en CreatedAt y UpdatedAt: Establece automáticamente la fecha UTC actual
           al crear o actualizar un registro
         */
-        modelBuilder.Entity<Client>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("NOW()");
@@ -31,24 +31,24 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         });
 
         /*
-        CONFIGURACIÓN PARA CLIENTWORKFLOW (TABLA DE UNIÓN):
-        - Clave primaria compuesta: Combina ClientId y WorkflowId como clave única
-        - Relación muchos a muchos entre Client y Workflow
-        - Eliminación en cascada: Si se elimina un Client o Workflow, se eliminan automáticamente
+        CONFIGURACIÓN PARA USERWORKFLOW (TABLA DE UNIÓN):
+        - Clave primaria compuesta: Combina UserId y WorkflowId como clave única
+        - Relación muchos a muchos entre User y Workflow
+        - Eliminación en cascada: Si se elimina un User o Workflow, se eliminan automáticamente
           sus relaciones en esta tabla
-        - Valor por defecto en AssignedAt: Fecha UTC actual al asignar un workflow a un cliente
+        - Valor por defecto en AssignedAt: Fecha UTC actual al asignar un workflow a un user
         */
-        modelBuilder.Entity<ClientWorkflow>(entity =>
+        modelBuilder.Entity<UserWorkflow>(entity =>
         {
-            entity.HasKey(e => new { e.ClientId, e.WorkflowId });
+            entity.HasKey(e => new { e.UserId, e.WorkflowId });
 
-            entity.HasOne(cw => cw.Client)
-                .WithMany(c => c.ClientWorkflows)
-                .HasForeignKey(cw => cw.ClientId)
+            entity.HasOne(cw => cw.User)
+                .WithMany(c => c.UserWorkflows)
+                .HasForeignKey(cw => cw.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(cw => cw.Workflow)
-                .WithMany(w => w.ClientWorkflows)
+                .WithMany(w => w.UserWorkflows)
                 .HasForeignKey(cw => cw.WorkflowId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -122,7 +122,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         /*
         CONFIGURACIÓN PARA MOVEMENT:
-        - Relaciones con Client, Warehouse y Product: Registra movimientos vinculados a estas entidades
+        - Relaciones con User, Warehouse y Product: Registra movimientos vinculados a estas entidades
         - Precisión decimal para UnitaryCost: Formato consistente para costos unitarios
         - Valor por defecto en MovementDate: Fecha UTC actual al crear un movimiento
         - Check constraint: Asegura que la cantidad de movimiento sea siempre positiva
@@ -130,9 +130,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         */
         modelBuilder.Entity<Movement>(entity =>
         {
-            entity.HasOne(m => m.Client)
+            entity.HasOne(m => m.User)
                 .WithMany(c => c.Movements)
-                .HasForeignKey(m => m.ClientId)
+                .HasForeignKey(m => m.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(m => m.Warehouse)
@@ -157,7 +157,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         - Longitud máxima: Limita el tamaño de almacenamiento para los campos de enum
         - Esto mejora la legibilidad de la base de datos y facilita consultas directas
         */
-        modelBuilder.Entity<ClientWorkflow>()
+        modelBuilder.Entity<UserWorkflow>()
             .Property(e => e.Role)
             .HasConversion<string>()
             .HasMaxLength(20);
