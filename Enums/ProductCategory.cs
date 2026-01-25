@@ -1,6 +1,6 @@
 ﻿namespace MazErpBack.Enums;
 
-public enum Currency
+public enum ProductCategory
 {
 
 }
