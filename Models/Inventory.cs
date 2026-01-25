@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MazErpBack;
+namespace MazErpBack.Models;
 
 [Table("Inventory")]
 public class Inventory

@@ -1,8 +1,7 @@
-﻿using MazErpBack.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MazErpBack;
+namespace MazErpBack.Models;
 
 [Table("User")]
 public class User

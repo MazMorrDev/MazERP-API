@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MazErpBack.Models;
 
-namespace MazErpBack;
+namespace MazErpBack.Models;
 
 [Table("Warehouse")]
 public class Warehouse
