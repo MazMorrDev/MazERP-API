@@ -19,7 +19,8 @@ public class Workflow
     [Column("workflow_photo_url"), MaxLength(500)]
     public string? WorkflowPhotoUrl { get; set; }
 
-    public Currency currency { get; set; }
+    [Column("currency")]
+    public Currency Currency { get; set; }
 
     // Auditoría
     [Column("created_at")]
