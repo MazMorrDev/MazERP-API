@@ -4,7 +4,6 @@ using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace MazErpBack.Controllers;
 
 [Route("api/[controller]")]
