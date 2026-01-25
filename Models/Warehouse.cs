@@ -21,7 +21,11 @@ public class Warehouse
     [Column("description"), MaxLength(255)]
     public string? Description { get; set; }
 
-    public bool IsActive {get; set;} = true;
+    [Column("updated_at")]
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
 
     // Navigation property
     [ForeignKey("WorkflowId")]
