@@ -19,8 +19,16 @@ public class Workflow
     [Column("workflow_photo_url"), MaxLength(500)]
     public string? WorkflowPhotoUrl { get; set; }
 
+    public Currency currency {get; set;}
+
+    // Auditoría
     [Column("created_at")]
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    [Column("updated_at")]
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
 
     // Navigation Properties
     public virtual ICollection<Warehouse> Warehouses { get; set; } = new HashSet<Warehouse>();
