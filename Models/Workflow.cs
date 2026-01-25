@@ -19,7 +19,7 @@ public class Workflow
     [Column("workflow_photo_url"), MaxLength(500)]
     public string? WorkflowPhotoUrl { get; set; }
 
-    public Currency currency {get; set;}
+    public Currency currency { get; set; }
 
     // Auditoría
     [Column("created_at")]
@@ -32,5 +32,5 @@ public class Workflow
 
     // Navigation Properties
     public virtual ICollection<Warehouse> Warehouses { get; set; } = new HashSet<Warehouse>();
-    public virtual ICollection<UserWorkflow> UserWorkflows { get; set; } = new HashSet<UserWorkflow>(); 
+    public virtual ICollection<UserWorkflow> UserWorkflows { get; set; } = new HashSet<UserWorkflow>();
 }
