@@ -41,6 +41,9 @@ public class User
     [Column("updated_at")]
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
+
     // Navigation Properties
     public virtual ICollection<UserWorkflow> UserWorkflows { get; set; } = new HashSet<UserWorkflow>();
 
