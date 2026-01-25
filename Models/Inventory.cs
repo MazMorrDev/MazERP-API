@@ -30,6 +30,12 @@ public class Inventory
     [Column("warning_stock")]
     public int? WarningStock { get; set; }
 
+    // Auditoría
+    [Column("created_at")]
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    [Column("updated_at")]
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
     [Column("is_active")]
     public bool IsActive { get; set; } = true;
 
