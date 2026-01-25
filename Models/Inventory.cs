@@ -19,6 +19,13 @@ public class Inventory
     [Required, Column("stock")]
     public int Stock { get; set; }
 
+    [Column("actual_discount", TypeName = "decimal(5,2)")]
+    [Range(0, 100, ErrorMessage = "El descuento debe estar entre 0 y 100%")]
+    public decimal? ActualDiscount { get; set; }
+
+    [Column("average_cost")]
+    public decimal AverageCost { get; set; }
+
     // // Lógica para alertas
     // public bool IsBelowAlertStock => AlertStock.HasValue && Stock < AlertStock.Value;
 
@@ -31,8 +38,9 @@ public class Inventory
     public int? WarningStock { get; set; }
 
     // Auditoría
-    [Column("created_at")]
-    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    [Column("last_sale_date")]
+    public DateTimeOffset LastSaleDate { get; set; }
+
     [Column("updated_at")]
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
