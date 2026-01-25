@@ -14,11 +14,8 @@ public class Movement
     [Required, Column("user_id")]
     public int UserId { get; set; }
 
-    [Required, Column("warehouse_id")]
-    public int WarehouseId { get; set; }
-
-    [Required, Column("product_id")]
-    public int ProductId { get; set; }
+    [Required, Column("inventory_id")]
+    public int InventoryId { get; set; }
 
     [Column("description"), MaxLength(225)]
     public string? Description { get; set; }
@@ -29,20 +26,26 @@ public class Movement
     [Required, Column("quantity")]
     public int Quantity { get; set; }
 
-    [Column("unitary_cost")]
-    public decimal? UnitaryCost { get; set; }
+    [Column("currency")]
+    public Currency Currency { get; set; }
 
     [Required, Column("movement_date")]
     public DateTimeOffset MovementDate { get; set; }
+
+    // Auditoría
+    [Column("created_at")]
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    [Column("updated_at")]
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
 
     // Navigation Properties
     [ForeignKey("UserId")]
     public virtual User User { get; set; } = null!;
 
-    [ForeignKey("WarehouseId")]
-    public virtual Warehouse Warehouse { get; set; } = null!;
-
-    [ForeignKey("ProductId")]
-    public virtual Product Product { get; set; } = null!;
-
+    [ForeignKey("InventoryId")]
+    public virtual Inventory Inventory { get; set; } = null!;
 }
