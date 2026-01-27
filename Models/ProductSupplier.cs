@@ -1,6 +1,6 @@
 ﻿namespace MazErpBack.Models;
 
-public class Devolution
+public class ProductSupplier
 {
 
 }
