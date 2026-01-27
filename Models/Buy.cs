@@ -12,6 +12,9 @@ public class Buy
     [Column("unitary_cost")]
     public decimal UnitaryCost { get; set; }
 
+    [Column("received_quantity")]
+    public int ReceivedQuantity { get; set; }
+
     // Navigation Property
     [ForeignKey("MovementId")]
     public required virtual Movement Movement { get; set; }
