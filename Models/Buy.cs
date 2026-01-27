@@ -10,7 +10,10 @@ public class Buy
     public int MovementId { get; set; }
 
     [Required, Column("supplier_id")]
-    public int SupplierId {get; set;}
+    public int SupplierId { get; set; }
+
+    [Column("delivery_status")]
+    public DeliveryStatus DeliveryStatus { get; set; }
 
     [Column("unitary_cost")]
     public decimal UnitaryCost { get; set; }
@@ -23,5 +26,5 @@ public class Buy
     public required virtual Movement Movement { get; set; }
 
     [ForeignKey("SupplierId")]
-    public required virtual User User {get; set;}
+    public required virtual User User { get; set; }
 }
