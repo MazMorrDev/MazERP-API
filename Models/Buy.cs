@@ -9,6 +9,9 @@ public class Buy
     [Key, Column("movement_id")]
     public int MovementId { get; set; }
 
+    [Required, Column("supplier_id")]
+    public int SupplierId {get; set;}
+
     [Column("unitary_cost")]
     public decimal UnitaryCost { get; set; }
 
@@ -18,4 +21,7 @@ public class Buy
     // Navigation Property
     [ForeignKey("MovementId")]
     public required virtual Movement Movement { get; set; }
+
+    [ForeignKey("SupplierId")]
+    public required virtual User User {get; set;}
 }
