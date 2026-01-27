@@ -1,6 +1,18 @@
-﻿namespace MazErpBack;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace MazErpBack.Models;
+
+[Table("Buy")]
 public class Buy
 {
+    [Key, Column("movement_id")]
+    public int MovementId { get; set; }
 
+    [Column("unitary_cost")]
+    public decimal UnitaryCost { get; set; }
+
+    // Navigation Property
+    [ForeignKey("MovementId")]
+    public required virtual Movement Movement { get; set; }
 }
