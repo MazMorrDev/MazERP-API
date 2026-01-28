@@ -8,10 +8,10 @@ namespace MazErpBack.Models;
 [Table("Product_Supplier")]
 public class ProductSupplier
 {
-    [Required, Column("product_id")]
+    [Key, Column("product_id", Order = 0)]
     public required int ProductId { get; set; }
 
-    [Required, Column("supplier_id")]
+    [Key, Column("supplier_id", Order = 1)]
     public required int SupplierId { get; set; }
 
     [Column("cost_price")]
