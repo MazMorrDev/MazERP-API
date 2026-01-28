@@ -1,4 +1,4 @@
-﻿namespace MazErpBack;
+﻿namespace MazErpBack.Enums;
 
 public enum DevolutionActionTake
 {
