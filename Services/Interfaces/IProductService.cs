@@ -1,4 +1,5 @@
 ﻿using MazErpBack.Dtos.Products;
+using MazErpBack.Models;
 
 namespace MazErpBack.Services.Interfaces;
 

@@ -1,5 +1,6 @@
 ﻿using MazErpBack.Context;
 using MazErpBack.Dtos.Products;
+using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 
 namespace MazErpBack.Services;
@@ -14,8 +15,7 @@ public class ProductService(AppDbContext context) : IProductService
         {
             var product = new Product()
             {
-                Name = productDto.Name,
-                SellPrice = productDto.SellPrice
+                Name = productDto.Name
             };
 
             _context.Products.Add(product);
@@ -37,7 +37,7 @@ public class ProductService(AppDbContext context) : IProductService
             var product = await _context.Products.FindAsync(id);
             ArgumentNullException.ThrowIfNull(product);
 
-            product.IsActive = false;
+            // product.IsActive = false;
             await _context.SaveChangesAsync();
 
             return product;

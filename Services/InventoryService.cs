@@ -1,5 +1,6 @@
 ﻿using MazErpBack.Context;
 using MazErpBack.Dtos.Inventory;
+using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
