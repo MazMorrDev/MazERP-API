@@ -1,5 +1,6 @@
 using MazErpBack.Context;
 using MazErpBack.Dtos.Users;
+using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
