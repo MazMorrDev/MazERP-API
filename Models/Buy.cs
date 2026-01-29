@@ -27,5 +27,5 @@ public class Buy
     public required virtual Movement Movement { get; set; }
 
     [ForeignKey("SupplierId")]
-    public required virtual User User { get; set; }
+    public required virtual Supplier Supplier { get; set; }
 }
