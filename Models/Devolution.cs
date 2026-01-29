@@ -13,13 +13,13 @@ public class Devolution
     [Column("sell_id")]
     public required int SellId { get; set; }
 
-    [Column("reason")]
+    [Column("reason"), MaxLength(99, ErrorMessage = " No puedes tener más de 99 letras")]
     public string? Reason { get; set; }
 
     [Column("refund_amount")]
     public int RefundAmount { get; set; }
 
-    [Column("notes")]
+    [Column("notes"), MaxLength(99, ErrorMessage = " No puedes tener más de 99 letras")]
     public string? Notes { get; set; }
 
     [Column("devolution_status")]
