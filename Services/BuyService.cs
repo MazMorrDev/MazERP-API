@@ -1,6 +1,8 @@
-﻿namespace MazErpBack.Services;
+﻿using MazErpBack.Services.Interfaces;
 
-public class BuyService
+namespace MazErpBack.Services;
+
+public class BuyService : IBuyService
 {
 
 }

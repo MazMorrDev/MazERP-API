@@ -1,6 +1,8 @@
-﻿namespace MazErpBack;
+﻿using MazErpBack.Services.Interfaces;
 
-public class DevolutionService
+namespace MazErpBack.Services;
+
+public class DevolutionService : IDevolutionService
 {
 
 }

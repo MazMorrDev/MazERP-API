@@ -82,7 +82,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasIndex(e => new { e.WarehouseId, e.ProductId }).IsUnique();
-            entity.ToTable(t => t.HasCheckConstraint("CK_Inventory_Stock", "\"Stock\" >= 0"));
+
+            // CORREGIDO: Usar minúscula "stock"
+            entity.ToTable(t => t.HasCheckConstraint("CK_Inventory_Stock", "\"stock\" >= 0"));
 
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.BasePrice).HasPrecision(12, 2);
@@ -106,8 +108,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            // Check constraint para PostgreSQL
-            entity.ToTable(t => t.HasCheckConstraint("CK_Movement_Quantity", "\"Quantity\" > 0"));
+            // CORREGIDO: Usar minúscula "quantity"
+            entity.ToTable(t => t.HasCheckConstraint("CK_Movement_Quantity", "\"quantity\" > 0"));
         });
 
         // CONFIGURACIÓN PARA BUY

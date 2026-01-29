@@ -1,6 +1,8 @@
-﻿namespace MazErpBack;
+﻿using MazErpBack.Services.Interfaces;
 
-public class UserWorkflowService
+namespace MazErpBack.Services;
+
+public class UserWorkflowService : IUserWorkflowService
 {
 
 }

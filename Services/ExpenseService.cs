@@ -1,6 +1,8 @@
-﻿namespace MazErpBack;
+﻿using MazErpBack.Services.Interfaces;
 
-public class ExpenseService
+namespace MazErpBack.Services;
+
+public class ExpenseService : IExpenseService
 {
 
 }
