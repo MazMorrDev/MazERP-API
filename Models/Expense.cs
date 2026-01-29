@@ -4,8 +4,7 @@ using MazErpBack.Enums;
 
 namespace MazErpBack.Models;
 
-[Table("Movement")]
-public class Movement
+public class Expense
 {
     [Key, Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -17,22 +16,22 @@ public class Movement
     [Required, Column("inventory_id")]
     public int InventoryId { get; set; }
 
-    [Column("description"), MaxLength(225)]
+    [Column("description")]
     public string? Description { get; set; }
 
-    [Required, Column("movement_type")]
-    public MovementType MovementType { get; set; }
+    [Required, Column("category")]
+    public required ExpenseCategory Category { get; set; }
 
-    [Required, Column("quantity")]
-    public int Quantity { get; set; }
+    [Column("amount", TypeName = "decimal(12,2)")]
+    public decimal Amount { get; set; }
 
-    [Column("currency")]
-    public Currency Currency { get; set; }
-
-    [Required, Column("movement_date")]
-    public DateTimeOffset MovementDate { get; set; }
+    [Column("payment_method")]
+    public PaymentMethod PaymentMethod { get; set; }
 
     // Auditoría
+    [Column("date_paid")]
+    public DateTimeOffset DatePaid { get; set; }
+
     [Column("created_at")]
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 

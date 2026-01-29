@@ -1,9 +1,9 @@
 namespace MazErpBack.Dtos.Users;
 
-public class TokenDto
+public record class TokenDto
 {
-   public required string Token { get; set; }
-   public required DateTime Expiration { get; set; }
+   public required string Token { get; init; }
+   public required DateTime Expiration { get; init; }
 
    //TODO: revisar agregar permisos o se hace el fetch desde otro endpoint distinto a login
 }

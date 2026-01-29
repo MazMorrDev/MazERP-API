@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services;
 
-public class UserService(AppDbContext context, TokenService tokenService) : IUserService
+public class UserService(AppDbContext context, ITokenService tokenService) : IUserService
 {
     private readonly AppDbContext _context = context;
-    private readonly TokenService _tokenService = tokenService;
+    private readonly ITokenService _tokenService = tokenService;
 
     public async Task<TokenDto?> LoginUserAsync(LoginDto loginDto)
     {

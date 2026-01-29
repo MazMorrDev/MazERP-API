@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MazErpBack.Models;
 
-namespace MazErpBack;
+namespace MazErpBack.Models;
 
 [Table("Warehouse")]
 public class Warehouse
@@ -21,7 +20,11 @@ public class Warehouse
     [Column("description"), MaxLength(255)]
     public string? Description { get; set; }
 
-    public bool IsActive {get; set;} = true;
+    [Column("updated_at")]
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
 
     // Navigation property
     [ForeignKey("WorkflowId")]

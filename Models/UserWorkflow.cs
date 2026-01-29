@@ -20,6 +20,11 @@ public class UserWorkflow
     [Column("assigned_at")]
     public DateTimeOffset AssignedAt { get; set; } = DateTimeOffset.UtcNow;
 
+    [Column("updated_at")]
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
 
     // Navigation properties
     [ForeignKey("UserId")]

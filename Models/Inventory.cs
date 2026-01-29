@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MazErpBack;
+namespace MazErpBack.Models;
 
 [Table("Inventory")]
 public class Inventory
@@ -19,6 +19,16 @@ public class Inventory
     [Required, Column("stock")]
     public int Stock { get; set; }
 
+    [Column("base_price", TypeName = "decimal(12,2)")]
+    public decimal BasePrice { get; set; }
+
+    [Column("actual_discount", TypeName = "decimal(5,2)")]
+    [Range(0, 100, ErrorMessage = "El descuento debe estar entre 0 y 100%")]
+    public decimal? ActualDiscount { get; set; }
+
+    [Column("average_cost")]
+    public decimal AverageCost { get; set; }
+
     // // Lógica para alertas
     // public bool IsBelowAlertStock => AlertStock.HasValue && Stock < AlertStock.Value;
 
@@ -29,6 +39,13 @@ public class Inventory
 
     [Column("warning_stock")]
     public int? WarningStock { get; set; }
+
+    // Auditoría
+    [Column("last_sale_date")]
+    public DateTimeOffset LastSaleDate { get; set; }
+
+    [Column("updated_at")]
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     [Column("is_active")]
     public bool IsActive { get; set; } = true;

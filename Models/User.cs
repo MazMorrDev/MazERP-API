@@ -1,8 +1,7 @@
-﻿using MazErpBack.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MazErpBack;
+namespace MazErpBack.Models;
 
 [Table("User")]
 public class User
@@ -40,6 +39,9 @@ public class User
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     [Column("updated_at")]
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
 
     // Navigation Properties
     public virtual ICollection<UserWorkflow> UserWorkflows { get; set; } = new HashSet<UserWorkflow>();

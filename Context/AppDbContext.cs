@@ -5,11 +5,17 @@ namespace MazErpBack.Context;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<User> Users { get; set; }
-    public DbSet<UserWorkflow> UserWorkflows { get; set; }
+    public DbSet<Buy> Buys { get; set; }
+    public DbSet<Devolution> Devolutions { get; set; }
+    public DbSet<Expense> Expenses { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<Movement> Movements { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<ProductSupplier> ProductSuppliers { get; set; }
+    public DbSet<Sell> Sells { get; set; }
+    public DbSet<Supplier> Suppliers { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<UserWorkflow> UserWorkflows { get; set; }
     public DbSet<Warehouse> Warehouses { get; set; }
     public DbSet<Workflow> Workflows { get; set; }
 
@@ -17,92 +23,52 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         base.OnModelCreating(modelBuilder);
 
-        /*
-        CONFIGURACIÓN PARA USER:
-        - Índice único en Email: Garantiza que no existan usuarios con el mismo email
-        - Valores por defecto en CreatedAt y UpdatedAt: Establece automáticamente la fecha UTC actual
-          al crear o actualizar un registro
-        */
+        // CONFIGURACIÓN PARA USER
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasIndex(e => e.Email).IsUnique();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("NOW()");
-            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("NOW()");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        /*
-        CONFIGURACIÓN PARA USERWORKFLOW (TABLA DE UNIÓN):
-        - Clave primaria compuesta: Combina UserId y WorkflowId como clave única
-        - Relación muchos a muchos entre User y Workflow
-        - Eliminación en cascada: Si se elimina un User o Workflow, se eliminan automáticamente
-          sus relaciones en esta tabla
-        - Valor por defecto en AssignedAt: Fecha UTC actual al asignar un workflow a un user
-        */
+        // CONFIGURACIÓN PARA USERWORKFLOW
         modelBuilder.Entity<UserWorkflow>(entity =>
         {
             entity.HasKey(e => new { e.UserId, e.WorkflowId });
 
-            entity.HasOne(cw => cw.User)
-                .WithMany(c => c.UserWorkflows)
-                .HasForeignKey(cw => cw.UserId)
+            entity.HasOne(uw => uw.User)
+                .WithMany(u => u.UserWorkflows)
+                .HasForeignKey(uw => uw.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(cw => cw.Workflow)
+            entity.HasOne(uw => uw.Workflow)
                 .WithMany(w => w.UserWorkflows)
-                .HasForeignKey(cw => cw.WorkflowId)
+                .HasForeignKey(uw => uw.WorkflowId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.Property(e => e.AssignedAt).HasDefaultValueSql("NOW()");
+            entity.Property(e => e.AssignedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        /*
-        CONFIGURACIÓN PARA WORKFLOW:
-        - Valor por defecto en CreatedAt: Fecha UTC actual al crear un workflow
-        - Relación uno a muchos con Warehouse: Un workflow puede tener múltiples warehouses
-        - Eliminación en cascada: Al eliminar un workflow, se eliminan todos sus warehouses asociados
-        */
+        // CONFIGURACIÓN PARA WORKFLOW
         modelBuilder.Entity<Workflow>(entity =>
         {
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("NOW()");
-
-            entity.HasMany(w => w.Warehouses)
-                .WithOne(wh => wh.Workflow)
-                .HasForeignKey(wh => wh.WorkflowId)
-                .OnDelete(DeleteBehavior.Cascade);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        /*
-        CONFIGURACIÓN PARA WAREHOUSE:
-        - Relación muchos a uno con Workflow: Cada warehouse pertenece a un workflow
-        - Eliminación en cascada: Si se elimina el workflow padre, se eliminan sus warehouses
-        */
+        // CONFIGURACIÓN PARA WAREHOUSE
         modelBuilder.Entity<Warehouse>(entity =>
         {
-            entity.HasOne(wh => wh.Workflow)
-                .WithMany(w => w.Warehouses)
-                .HasForeignKey(wh => wh.WorkflowId)
+            entity.HasOne(w => w.Workflow)
+                .WithMany(wf => wf.Warehouses)
+                .HasForeignKey(w => w.WorkflowId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        /*
-        CONFIGURACIÓN PARA PRODUCT:
-        - Precisión decimal para SellPrice: Define el formato de almacenamiento para precios
-          (18 dígitos totales, 4 decimales) para evitar errores de redondeo
-        */
-        modelBuilder.Entity<Product>(entity =>
-        {
-            entity.Property(e => e.SellPrice).HasPrecision(18, 4);
-        });
-
-        /*
-        CONFIGURACIÓN PARA INVENTORY:
-        - Relación con Warehouse y Product: Cada registro de inventario vincula un producto 
-          con un warehouse específico
-        - Índice único compuesto: Evita registros duplicados de inventario para la misma
-          combinación warehouse-producto
-        - Check constraint: Garantiza que el stock nunca sea negativo
-        - Eliminación en cascada: Si se elimina un producto o warehouse, se eliminan sus registros de inventario
-        */
+        // CONFIGURACIÓN PARA INVENTORY
         modelBuilder.Entity<Inventory>(entity =>
         {
             entity.HasOne(i => i.Warehouse)
@@ -116,54 +82,177 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasIndex(e => new { e.WarehouseId, e.ProductId }).IsUnique();
+            entity.ToTable(t => t.HasCheckConstraint("CK_Inventory_Stock", "\"Stock\" >= 0"));
 
-            entity.ToTable(t => t.HasCheckConstraint("CK_Inventory_Stock", "Stock >= 0"));
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.BasePrice).HasPrecision(12, 2);
+            entity.Property(e => e.AverageCost).HasPrecision(18, 2);
         });
 
-        /*
-        CONFIGURACIÓN PARA MOVEMENT:
-        - Relaciones con User, Warehouse y Product: Registra movimientos vinculados a estas entidades
-        - Precisión decimal para UnitaryCost: Formato consistente para costos unitarios
-        - Valor por defecto en MovementDate: Fecha UTC actual al crear un movimiento
-        - Check constraint: Asegura que la cantidad de movimiento sea siempre positiva
-        - Eliminación en cascada: Mantiene la integridad referencial al eliminar entidades relacionadas
-        */
+        // CONFIGURACIÓN PARA MOVEMENT
         modelBuilder.Entity<Movement>(entity =>
         {
             entity.HasOne(m => m.User)
-                .WithMany(c => c.Movements)
+                .WithMany(u => u.Movements)
                 .HasForeignKey(m => m.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(m => m.Warehouse)
-                .WithMany()
-                .HasForeignKey(m => m.WarehouseId)
+            entity.HasOne(m => m.Inventory)
+                .WithMany(i => i.Movements)
+                .HasForeignKey(m => m.InventoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(m => m.Product)
-                .WithMany(p => p.Movements)
-                .HasForeignKey(m => m.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+            entity.Property(e => e.MovementDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.Property(e => e.UnitaryCost).HasPrecision(18, 2);
-            entity.Property(e => e.MovementDate).HasDefaultValueSql("NOW()");
-
-            entity.ToTable(t => t.HasCheckConstraint("CK_Movement_Quantity", "Quantity > 0"));
+            // Check constraint para PostgreSQL
+            entity.ToTable(t => t.HasCheckConstraint("CK_Movement_Quantity", "\"Quantity\" > 0"));
         });
 
-        /*
-        CONFIGURACIÓN DE ENUMS:
-        - Conversión a string: Almacena los valores de enum como cadenas legibles en la BD
-        - Longitud máxima: Limita el tamaño de almacenamiento para los campos de enum
-        - Esto mejora la legibilidad de la base de datos y facilita consultas directas
-        */
+        // CONFIGURACIÓN PARA BUY
+        modelBuilder.Entity<Buy>(entity =>
+        {
+            entity.HasKey(e => e.MovementId);
+
+            entity.HasOne(b => b.Movement)
+                .WithOne()
+                .HasForeignKey<Buy>(b => b.MovementId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(b => b.Supplier)
+                .WithMany()
+                .HasForeignKey(b => b.SupplierId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // CONFIGURACIÓN PARA SELL
+        modelBuilder.Entity<Sell>(entity =>
+        {
+            entity.HasKey(e => e.MovementId);
+
+            entity.HasOne(s => s.Movement)
+                .WithOne()
+                .HasForeignKey<Sell>(s => s.MovementId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // CONFIGURACIÓN PARA DEVOLUTION
+        modelBuilder.Entity<Devolution>(entity =>
+        {
+            entity.HasOne(d => d.Sell)
+                .WithMany()
+                .HasForeignKey(d => d.SellId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // CONFIGURACIÓN PARA EXPENSE
+        modelBuilder.Entity<Expense>(entity =>
+        {
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Inventory)
+                .WithMany()
+                .HasForeignKey(e => e.InventoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(e => e.Amount).HasPrecision(12, 2);
+            entity.Property(e => e.DatePaid).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        // CONFIGURACIÓN PARA PRODUCT_SUPPLIER
+        modelBuilder.Entity<ProductSupplier>(entity =>
+        {
+            entity.HasKey(e => new { e.ProductId, e.SupplierId });
+
+            entity.HasOne(ps => ps.Product)
+                .WithMany()
+                .HasForeignKey(ps => ps.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(ps => ps.Supplier)
+                .WithMany()
+                .HasForeignKey(ps => ps.SupplierId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.LastPurchaseDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        // CONFIGURACIÓN PARA SUPPLIER
+        modelBuilder.Entity<Supplier>(entity =>
+        {
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        // CONFIGURACIÓN DE ENUMS PARA POSTGRESQL
+        // Para PostgreSQL, es mejor almacenar enums como text
         modelBuilder.Entity<UserWorkflow>()
             .Property(e => e.Role)
             .HasConversion<string>()
-            .HasMaxLength(20);
+            .HasMaxLength(50);
 
         modelBuilder.Entity<Movement>()
             .Property(e => e.MovementType)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        modelBuilder.Entity<Movement>()
+            .Property(e => e.Currency)
+            .HasConversion<string>()
+            .HasMaxLength(20);
+
+        modelBuilder.Entity<Buy>()
+            .Property(e => e.DeliveryStatus)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        modelBuilder.Entity<Devolution>()
+            .Property(e => e.DevolutionStatus)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        modelBuilder.Entity<Devolution>()
+            .Property(e => e.ActionTake)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        modelBuilder.Entity<Expense>()
+            .Property(e => e.Category)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        modelBuilder.Entity<Expense>()
+            .Property(e => e.PaymentMethod)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        modelBuilder.Entity<Product>()
+            .Property(e => e.Category)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        modelBuilder.Entity<ProductSupplier>()
+            .Property(e => e.Currency)
+            .HasConversion<string>()
+            .HasMaxLength(20);
+
+        modelBuilder.Entity<Sell>()
+            .Property(e => e.PaymentStatus)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        modelBuilder.Entity<Sell>()
+            .Property(e => e.SaleType)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        modelBuilder.Entity<Workflow>()
+            .Property(e => e.Currency)
             .HasConversion<string>()
             .HasMaxLength(20);
     }
