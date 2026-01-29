@@ -25,6 +25,13 @@ public class WebAppBuilderConfig
         builder.Services.AddScoped<IWarehouseService, WarehouseService>();
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IInventoryService, InventoryService>();
+        builder.Services.AddScoped<IBuyService, BuyService>();
+        builder.Services.AddScoped<IDevolutionService, DevolutionService>();
+        builder.Services.AddScoped<ISellService, SellService>();
+        builder.Services.AddScoped<ISupplierService, SupplierService>();
+        builder.Services.AddScoped<IProductSupplierService, ProductSupplierService>();
+        builder.Services.AddScoped<IUserWorkflowService, UserWorkflowService>();
+        builder.Services.AddScoped<IExpenseService, ExpenseService>();
         // TODO: map and register Mapster DI
         builder.Services.AddControllers();
 
