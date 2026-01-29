@@ -7,9 +7,8 @@ namespace MazErpBack.Models;
 [Table("Sell")]
 public class Sell
 {
-    [Key, Column("id")]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    [Key, Column("movement_id")]
+    public int MovementId { get; set; }
 
     [Required, Column("invoice_number")]
     public required int InvoiceNumber { get; set; }
@@ -26,4 +25,8 @@ public class Sell
 
     [Column("seller_notes")]
     public string? SellerNotes { get; set; }
+
+    //Navigation Properties
+    [ForeignKey("MovementId")]
+    public required virtual Movement Movement {get; set;}
 }
