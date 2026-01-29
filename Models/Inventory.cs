@@ -19,7 +19,7 @@ public class Inventory
     [Required, Column("stock")]
     public int Stock { get; set; }
 
-    [Column("base_price")]
+    [Column("base_price", TypeName = "decimal(12,2)")]
     public decimal BasePrice { get; set; }
 
     [Column("actual_discount", TypeName = "decimal(5,2)")]
