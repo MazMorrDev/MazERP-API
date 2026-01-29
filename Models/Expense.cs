@@ -22,8 +22,8 @@ public class Expense
     [Required, Column("category")]
     public required ExpenseCategory Category { get; set; }
 
-    [Column("amount")]
-    public int Amount { get; set; }
+    [Column("amount", TypeName = "decimal(12,2)")]
+    public decimal Amount { get; set; }
 
     [Column("payment_method")]
     public PaymentMethod PaymentMethod { get; set; }

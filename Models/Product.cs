@@ -11,7 +11,7 @@ public class Product
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required, Column("name"), MaxLength(40)]
+    [Required, Column("name"), MaxLength(60)]
     public string Name { get; set; } = string.Empty;
 
     // Hay q decidir en q moneda gestionamos los price dentro de la base de datos
