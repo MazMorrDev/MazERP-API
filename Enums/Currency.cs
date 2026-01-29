@@ -12,5 +12,6 @@ public enum Currency
     COP,  // Peso colombiano
     ARS,  // Peso argentino
     BRL,  // Real brasileño
-    CLP   // Peso chileno
+    CLP,   // Peso chileno
+    CUP // Peso Cubano
 }
