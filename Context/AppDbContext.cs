@@ -68,13 +68,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        // CONFIGURACIÓN PARA PRODUCT
-        modelBuilder.Entity<Product>(entity =>
-        {
-            // No hay SellPrice en tu modelo actual, pero si lo agregas en el futuro:
-            // entity.Property(e => e.SellPrice).HasPrecision(18, 4);
-        });
-
         // CONFIGURACIÓN PARA INVENTORY
         modelBuilder.Entity<Inventory>(entity =>
         {
