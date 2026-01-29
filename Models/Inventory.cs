@@ -19,6 +19,9 @@ public class Inventory
     [Required, Column("stock")]
     public int Stock { get; set; }
 
+    [Column("base_price")]
+    public decimal BasePrice { get; set; }
+
     [Column("actual_discount", TypeName = "decimal(5,2)")]
     [Range(0, 100, ErrorMessage = "El descuento debe estar entre 0 y 100%")]
     public decimal? ActualDiscount { get; set; }
