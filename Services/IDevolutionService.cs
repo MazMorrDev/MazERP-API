@@ -7,8 +7,8 @@ public interface IDevolutionService
 {
     // Only avaible for admin pannel or backend operations
     public Task<List<Devolution>> GetDevolutionsAsync();
-    public Task<Devolution> GetDevolutionById(int DevolutionId);
-    public Task<Devolution> DeleteDevolutionAsync(int DevolutionId);
+    public Task<Devolution> GetDevolutionById(int devolutionId);
+    public Task<Devolution> DeleteDevolutionAsync(int devolutionId);
 
     // For common users
     public Task<List<Devolution>> GetDevolutionsByWorkflowAsync(int workflowId);

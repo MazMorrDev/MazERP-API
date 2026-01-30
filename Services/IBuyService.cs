@@ -5,14 +5,14 @@ namespace MazErpBack.Services;
 public interface IBuyService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<Buy>> GetDevolutionsAsync();
-    public Task<Buy> GetDevolutionById(int DevolutionId);
-    public Task<Buy> DeleteDevolutionAsync(int DevolutionId);
+    public Task<List<Buy>> GetBuysAsync();
+    public Task<Buy> GetBuyById(int buyId);
+    public Task<Buy> DeleteBuyAsync(int buyId);
 
     // For common users
-    public Task<List<Buy>> GetDevolutionsByWorkflowAsync(int workflowId);
-    public Task<List<Buy>> GetDevolutionsByWarehouseAsync(int warehouseId);
-    public Task<Buy> CreateDevolutionAsync(CreateDevolutionDto devolutionDto);
-    public Task<Buy> UpdateDevolutionAsync(UpdateDevolutionDto devolutionDto);
-    public Task<Buy> SoftDeleteDevolutionAsync(int devolutionID);
+    public Task<List<Buy>> GetBuysByWorkflowAsync(int workflowId);
+    public Task<List<Buy>> GetBuysByWarehouseAsync(int warehouseId);
+    public Task<Buy> CreateBuyAsync(CreateBuyDto buyDto);
+    public Task<Buy> UpdateBuyAsync(UpdateBuyDto buyDto);
+    public Task<Buy> SoftDeleteBuyAsync(int buyID);
 }
