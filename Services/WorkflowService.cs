@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services;
 
-public class WfService(AppDbContext context, ILogger<WfService> logger) : IWorkflowService
+public class WorkflowService(AppDbContext context, ILogger<WorkflowService> logger) : IWorkflowService
 {
     private readonly AppDbContext _context = context;
-    private readonly ILogger<WfService> _logger = logger;
+    private readonly ILogger<WorkflowService> _logger = logger;
 
     public async Task<WorkflowUserDto> AssignWorkflowToUser(int userId, int workflowId, UserWorkflowRole role = UserWorkflowRole.Admin)
     {
