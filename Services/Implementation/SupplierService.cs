@@ -25,6 +25,11 @@ public class SupplierService : ISupplierService
         throw new NotImplementedException();
     }
 
+    public Task<List<Supplier>> GetSuppliersByWarehouseAsync(int warehouseId)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<List<Supplier>> GetSuppliersByWorkflowAsync(int workflowId)
     {
         throw new NotImplementedException();

@@ -12,6 +12,7 @@ public interface IDevolutionService
 
     // For common users
     public Task<List<Devolution>> GetDevolutionsByWorkflowAsync(int workflowId);
+    public Task<List<Devolution>> GetDevolutionsByWarehouseAsync(int warehouseId);
     public Task<Devolution> CreateDevolutionAsync(CreateDevolutionDto devolutionDto);
     public Task<Devolution> UpdateDevolutionAsync(UpdateDevolutionDto devolutionDto);
     public Task<Devolution> SoftDeleteDevolutionAsync(int devolutionID);

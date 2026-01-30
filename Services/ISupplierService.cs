@@ -12,6 +12,7 @@ public interface ISupplierService
 
     // For common users
     public Task<List<Supplier>> GetSuppliersByWorkflowAsync(int workflowId);
+    public Task<List<Supplier>> GetSuppliersByWarehouseAsync(int warehouseId);
     public Task<Supplier> CreateSupplierAsync(CreateSupplierDto supplierDto);
     public Task<Supplier> UpdateSupplierAsync(UpdateSupplierDto supplierDto);
     public Task<Supplier> SoftDeleteSupplierAsync(int supplierId);
