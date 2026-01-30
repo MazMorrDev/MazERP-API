@@ -1,4 +1,5 @@
-﻿using MazErpBack.Models;
+﻿using MazErpBack.DTOs.Devolution;
+using MazErpBack.Models;
 
 namespace MazErpBack.Services;
 

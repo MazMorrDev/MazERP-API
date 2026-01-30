@@ -1,5 +1,5 @@
 ﻿using MazErpBack.Context;
-using MazErpBack.Dtos.Warehouse;
+using MazErpBack.DTOs.Warehouse;
 using MazErpBack.Models;
 using Microsoft.EntityFrameworkCore;
 

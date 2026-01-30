@@ -1,4 +1,4 @@
-﻿using MazErpBack.Dtos.Warehouse;
+﻿using MazErpBack.DTOs.Warehouse;
 using MazErpBack.Models;
 
 namespace MazErpBack.Services;

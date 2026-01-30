@@ -1,6 +1,42 @@
-﻿namespace MazErpBack.Services.Implementation;
+﻿using MazErpBack.DTOs.Expense;
+using MazErpBack.Models;
+
+namespace MazErpBack.Services.Implementation;
 
 public class ExpenseService : IExpenseService
 {
+    public Task<Expense> CreateExpenseAsync(CreateExpenseDto expenseDto)
+    {
+        throw new NotImplementedException();
+    }
 
+    public Task<Expense> DeleteExpenseAsync(int expenseId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Expense> GetExpenseById(int expenseId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<Expense>> GetExpensesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<Expense>> GetExpensesByWorkflowAsync(int workflowId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Expense> SoftDeleteExpenseAsync(int expenseId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Expense> UpdateExpenseAsync(UpdateExpenseDto expenseDto)
+    {
+        throw new NotImplementedException();
+    }
 }

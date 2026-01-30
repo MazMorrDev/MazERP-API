@@ -1,5 +1,5 @@
 ﻿using MazErpBack.Context;
-using MazErpBack.Dtos.Products;
+using MazErpBack.DTOs.Products;
 using MazErpBack.Models;
 
 namespace MazErpBack.Services.Implementation;

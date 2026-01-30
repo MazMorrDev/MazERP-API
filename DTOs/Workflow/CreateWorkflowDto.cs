@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MazErpBack.Dtos.Workflow;
+namespace MazErpBack.DTOs.Workflow;
 
 public class CreateWorkflowDto
 {

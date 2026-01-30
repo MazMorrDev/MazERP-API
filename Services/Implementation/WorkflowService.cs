@@ -1,5 +1,5 @@
 ﻿using MazErpBack.Context;
-using MazErpBack.Dtos.Workflow;
+using MazErpBack.DTOs.Workflow;
 using MazErpBack.Enums;
 using MazErpBack.Models;
 using Microsoft.EntityFrameworkCore;
