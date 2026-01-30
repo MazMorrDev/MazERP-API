@@ -5,8 +5,9 @@ namespace MazErpBack.Services;
 
 public interface ISupplierService
 {
-    // Only avaible for admin pannel
+    // Only avaible for admin pannel or backend operations
     public Task<List<Supplier>> GetSuppliersAsync();
+    public Task<Supplier> GetSupplierById(int id);
     public Task<Supplier> DeleteSupplierAsync(int supplierId);
 
     // For common users
