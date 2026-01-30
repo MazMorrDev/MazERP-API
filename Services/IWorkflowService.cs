@@ -2,7 +2,7 @@
 using MazErpBack.Enums;
 using MazErpBack.Models;
 
-namespace MazErpBack.Services.Interfaces;
+namespace MazErpBack.Services;
 
 public interface IWorkflowService
 {

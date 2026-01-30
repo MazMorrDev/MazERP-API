@@ -1,11 +1,10 @@
 using MazErpBack.Context;
 using MazErpBack.Dtos.Users;
 using MazErpBack.Models;
-using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services;
+namespace MazErpBack.Services.Implementation;
 
 public class UserService(AppDbContext context, ITokenService tokenService, ILogger<UserService> logger) : IUserService
 {

@@ -1,7 +1,7 @@
 ﻿using MazErpBack.Dtos.Inventory;
 using MazErpBack.Models;
 
-namespace MazErpBack.Services.Interfaces;
+namespace MazErpBack.Services;
 
 public interface IInventoryService
 {

@@ -2,10 +2,9 @@
 using MazErpBack.Dtos.Workflow;
 using MazErpBack.Enums;
 using MazErpBack.Models;
-using MazErpBack.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services;
+namespace MazErpBack.Services.Implementation;
 
 public class WorkflowService(AppDbContext context, ILogger<WorkflowService> logger) : IWorkflowService
 {

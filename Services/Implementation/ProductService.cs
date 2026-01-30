@@ -1,9 +1,8 @@
 ﻿using MazErpBack.Context;
 using MazErpBack.Dtos.Products;
 using MazErpBack.Models;
-using MazErpBack.Services.Interfaces;
 
-namespace MazErpBack.Services;
+namespace MazErpBack.Services.Implementation;
 
 public class ProductService(AppDbContext context) : IProductService
 {

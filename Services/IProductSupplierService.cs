@@ -1,4 +1,4 @@
-﻿namespace MazErpBack.Services.Interfaces;
+﻿namespace MazErpBack.Services;
 
 public interface IProductSupplierService
 {

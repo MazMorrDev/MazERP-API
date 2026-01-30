@@ -1,7 +1,7 @@
 ﻿using MazErpBack.Dtos.Warehouse;
 using MazErpBack.Models;
 
-namespace MazErpBack.Services.Interfaces;
+namespace MazErpBack.Services;
 
 public interface IWarehouseService
 {

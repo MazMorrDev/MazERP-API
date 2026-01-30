@@ -1,10 +1,9 @@
 ﻿using MazErpBack.Context;
 using MazErpBack.Dtos.Inventory;
 using MazErpBack.Models;
-using MazErpBack.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services;
+namespace MazErpBack.Services.Implementation;
 
 public class InventoryService(AppDbContext context) : IInventoryService
 {
