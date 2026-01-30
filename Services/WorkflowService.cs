@@ -71,7 +71,7 @@ public class WfService(AppDbContext context, ILogger<WfService> logger) : IWorkf
         }
     }
 
-    public async Task<List<Workflow>> GetWfAsync()
+    public async Task<List<Workflow>> GetWorkflowsAsync()
     {
         try
         {

@@ -6,7 +6,7 @@ namespace MazErpBack.Services.Interfaces;
 
 public interface IWorkflowService
 {
-    public Task<List<Workflow>> GetWfAsync();
+    public Task<List<Workflow>> GetWorkflowsAsync();
 
     public Task<Workflow> CreateWorkflow(CreateWorkflowDto workflowDto);
 
