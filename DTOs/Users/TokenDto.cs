@@ -1,4 +1,4 @@
-namespace MazErpBack.Dtos.Users;
+namespace MazErpBack.DTOs.Users;
 
 public record class TokenDto
 {

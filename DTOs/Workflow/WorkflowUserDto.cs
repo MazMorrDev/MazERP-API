@@ -1,6 +1,6 @@
 using MazErpBack.Enums;
 
-namespace MazErpBack.Dtos.Workflow;
+namespace MazErpBack.DTOs.Workflow;
 public class WorkflowUserDto
 {
     public int UserId { get; set; }

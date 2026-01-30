@@ -1,4 +1,4 @@
-﻿namespace MazErpBack.Dtos.Expense;
+﻿namespace MazErpBack.DTOs.Expense;
 
 public record class UpdateExpenseDto
 {

@@ -1,6 +1,6 @@
-﻿namespace MazErpBack.Dtos.Workflow;
+﻿namespace MazErpBack.DTOs.Workflow;
 
-public class GetWfDto
+public class GetWorkflowDto
 {
     public int Id { get; set; }
 

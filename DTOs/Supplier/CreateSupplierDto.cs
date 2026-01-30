@@ -1,4 +1,4 @@
-﻿namespace MazErpBack.Dtos.Supplier;
+﻿namespace MazErpBack.DTOs.Supplier;
 
 public record class CreateSupplierDto
 {
