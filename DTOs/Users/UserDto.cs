@@ -1,13 +1,11 @@
 namespace MazErpBack.DTOs.Users;
 
-public class UserDto
+public record UserDto
 {
-    public int Id { get; set; }
-    public required string Email { get; set; }
-    public required string Name { get; set; }
-    public string? ProfilePhotoUrl { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public int Id { get; init; }
+    public required string Email { get; init; }
+    public required string Name { get; init; }
+    public string? ProfilePhotoUrl { get; init; }
 
     //TODO: agregar propiedades de la relacion con Workflow y Movement
 }
