@@ -1,4 +1,4 @@
-﻿using MazErpBack.DTOs.Supplier;
+﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 
 namespace MazErpBack.Services;

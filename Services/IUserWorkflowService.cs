@@ -1,4 +1,4 @@
-﻿using MazErpBack.DTOs.Users;
+﻿using MazErpBack.DTOs.Workflow;
 using MazErpBack.Models;
 
 namespace MazErpBack.Services;
