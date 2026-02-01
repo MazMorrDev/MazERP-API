@@ -5,7 +5,7 @@ using MazErpBack.Enums;
 namespace MazErpBack.Models;
 
 [Table("Buy")]
-public class Buy
+public class Product
 {
     [Key, Column("movement_id")]
     public int MovementId { get; set; }

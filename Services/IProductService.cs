@@ -5,7 +5,15 @@ namespace MazErpBack.Services;
 
 public interface IProductService
 {
-    public Task<Product> CreateProductAsync(CreateProductDto productDto);
+    // Only avaible for admin pannel or backend operations
+    public Task<List<Product>> GetProductsAsync();
+    public Task<Product> GetProductByIdAsync(int productId);
+    public Task DeleteProductAsync(int buyId);
 
-    public Task DeleteProductAsync(int id);
+    // For common users
+    public Task<List<Product>> GetProductsByWorkflowAsync(int workflowId);
+    public Task<List<Product>> GetProductsByWarehouseAsync(int warehouseId);
+    public Task<Product> CreateProductAsync(CreateProductDto productDto);
+    public Task<Product> UpdateProductAsync(UpdateProductDto productDto);
+    public Task<Product> SoftDeleteProductAsync(int productID);
 }

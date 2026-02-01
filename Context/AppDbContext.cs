@@ -5,7 +5,7 @@ namespace MazErpBack.Context;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<Buy> Buys { get; set; }
+    public DbSet<Product> Buys { get; set; }
     public DbSet<Movement> Devolutions { get; set; }
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
@@ -111,13 +111,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         });
 
         // CONFIGURACIÓN PARA BUY
-        modelBuilder.Entity<Buy>(entity =>
+        modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(e => e.MovementId);
 
             entity.HasOne(b => b.Movement)
                 .WithOne()
-                .HasForeignKey<Buy>(b => b.MovementId)
+                .HasForeignKey<Product>(b => b.MovementId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(b => b.Supplier)
@@ -206,7 +206,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasConversion<string>()
             .HasMaxLength(20);
 
-        modelBuilder.Entity<Buy>()
+        modelBuilder.Entity<Product>()
             .Property(e => e.DeliveryStatus)
             .HasConversion<string>()
             .HasMaxLength(50);
