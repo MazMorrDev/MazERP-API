@@ -5,8 +5,8 @@ using MazErpBack.Enums;
 
 namespace MazErpBack.Models;
 
-[Table("Product_Supplier")]
-public class ProductSupplier
+[Table("Inventory_Supplier")]
+public class InventorySupplier
 {
     [Key, Column("product_id", Order = 0)]
     public required int ProductId { get; set; }

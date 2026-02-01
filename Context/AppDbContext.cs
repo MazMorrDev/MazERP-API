@@ -11,7 +11,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<Movement> Movements { get; set; }
     public DbSet<Product> Products { get; set; }
-    public DbSet<ProductSupplier> ProductSuppliers { get; set; }
+    public DbSet<InventorySupplier> ProductSuppliers { get; set; }
     public DbSet<Sell> Sells { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<User> Users { get; set; }
@@ -166,7 +166,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         });
 
         // CONFIGURACIÓN PARA PRODUCT_SUPPLIER
-        modelBuilder.Entity<ProductSupplier>(entity =>
+        modelBuilder.Entity<InventorySupplier>(entity =>
         {
             entity.HasKey(e => new { e.ProductId, e.SupplierId });
 
@@ -236,7 +236,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasConversion<string>()
             .HasMaxLength(50);
 
-        modelBuilder.Entity<ProductSupplier>()
+        modelBuilder.Entity<InventorySupplier>()
             .Property(e => e.Currency)
             .HasConversion<string>()
             .HasMaxLength(20);
