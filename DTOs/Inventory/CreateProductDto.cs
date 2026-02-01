@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MazErpBack.DTOs.Products;
+namespace MazErpBack.DTOs.Inventory;
 
 public record class CreateProductDto
 {
