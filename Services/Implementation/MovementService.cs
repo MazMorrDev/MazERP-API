@@ -1,6 +1,6 @@
 ﻿namespace MazErpBack.Services.Implementation;
 
-public class MovementService
+public class MovementService : IMovementService
 {
 
 }
