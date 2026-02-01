@@ -5,8 +5,8 @@ namespace MazErpBack.Services;
 
 public interface IUserWorkflowService
 {
-    public Task<UserWorkflow> AssignUserToWorkflow(AssignUserToWorkflowDto userWorkflowDto);
-    public Task<UserWorkflow> ChangeUserRoleInWorkflow(ChangeUserRoleInWorkflowDto changeUserRoleInWorkflowDto);
+    public Task<UserWorkflow> AssignUserToWorkflow(AssignUserRoleToWorkflowDto userWorkflowDto);
+    public Task<UserWorkflow> ChangeUserRoleInWorkflow(AssignUserRoleToWorkflowDto userWorkflowDto);
     public Task<UserWorkflow> UpdateUserWorkflow(UpdateUserWorkflowDto userWorkflowDto);
     public Task<UserWorkflow> SoftDeleteUserWorkflow(DeleteUserWorkflowDto userWorkflowDto);
 

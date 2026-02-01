@@ -2,6 +2,6 @@
 
 public record class DeleteUserWorkflowDto
 {
-    int UserId { get; init; }
-    int WorkflowId { get; init; }
+    public int UserId { get; init; }
+    public int WorkflowId { get; init; }
 }
