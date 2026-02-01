@@ -8,7 +8,7 @@ public interface IWorkflowService
 {
     public Task<List<Workflow>> GetWorkflowsAsync();
 
-    public Task<Workflow> CreateWorkflow(CreateWorkflowDto workflowDto);
+    public Task<Workflow> CreateWorkflowAsync(CreateWorkflowDto workflowDto);
 
-    public Task<WorkflowUserDto> AssignWorkflowToUser(int userId, int workflowId, UserWorkflowRole role = UserWorkflowRole.Admin);
+    public Task<WorkflowUserDto> AssignWorkflowToUserAsync(int userId, int workflowId, UserWorkflowRole role = UserWorkflowRole.Admin);
 }

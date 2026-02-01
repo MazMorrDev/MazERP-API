@@ -1,26 +1,35 @@
-﻿using MazErpBack.DTOs.Devolution;
+﻿using MazErpBack.Context;
+using MazErpBack.DTOs.Devolution;
 using MazErpBack.Models;
 
 namespace MazErpBack.Services.Implementation;
 
-public class DevolutionService : IDevolutionService
+public class DevolutionService(AppDbContext context) : IDevolutionService
 {
+    private readonly AppDbContext _context = context;
+
     public Task<Devolution> CreateDevolutionAsync(CreateDevolutionDto devolutionDto)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Devolution> DeleteDevolutionAsync(int DevolutionId)
+    public async Task DeleteDevolutionAsync(int devolutionId)
     {
-        throw new NotImplementedException();
+        var devolution = await _context.Devolutions.FindAsync(devolutionId);
+        if(devolution != null) _context.Devolutions.Remove(devolution);
     }
 
-    public Task<Devolution> GetDevolutionById(int DevolutionId)
+    public Task<Devolution> GetDevolutionByIdAsync(int devolutionId)
     {
         throw new NotImplementedException();
     }
 
     public Task<List<Devolution>> GetDevolutionsAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<Devolution>> GetDevolutionsByWarehouseAsync(int warehouseId)
     {
         throw new NotImplementedException();
     }

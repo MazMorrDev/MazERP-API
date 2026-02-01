@@ -1,4 +1,5 @@
-﻿using MazErpBack.Models;
+﻿using MazErpBack.DTOs.Movement;
+using MazErpBack.Models;
 
 namespace MazErpBack.Services;
 
@@ -6,7 +7,7 @@ public interface IBuyService
 {
     // Only avaible for admin pannel or backend operations
     public Task<List<Buy>> GetBuysAsync();
-    public Task<Buy> GetBuyById(int buyId);
+    public Task<Buy> GetBuyByIdAsync(int buyId);
     public Task<Buy> DeleteBuyAsync(int buyId);
 
     // For common users

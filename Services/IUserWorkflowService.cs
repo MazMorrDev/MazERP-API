@@ -5,10 +5,10 @@ namespace MazErpBack.Services;
 
 public interface IUserWorkflowService
 {
-    // This method have to ensure that if an user is already at the wf then update the values
-    public Task<UserWorkflow> AssignUserToWorkflow(AssignUserRoleToWorkflowDto userWorkflowDto);
-    public Task<UserWorkflow> SoftDeleteUserWorkflow(DeleteUserWorkflowDto userWorkflowDto);
+    // This method has to ensure that if an user is already at the wf then update the values
+    public Task<UserWorkflow> AssignUserWithRoleToWorkflowAsync(AssignUserRoleToWorkflowDto userWorkflowDto);
+    public Task<UserWorkflow> SoftDeleteUserWorkflowAsync(DeleteUserWorkflowDto userWorkflowDto);
 
     // For very old registries that we don't want
-    public Task DeleteUserWorkflow(DeleteUserWorkflowDto userWorkflowDto);
+    public Task DeleteUserWorkflowAsync(DeleteUserWorkflowDto userWorkflowDto);
 }
