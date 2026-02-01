@@ -1,4 +1,4 @@
-﻿namespace MazErpBack.DTOs.Movement;
+﻿namespace MazErpBack.DTOs.Movements;
 
 public record class UpdateBuyDto
 {

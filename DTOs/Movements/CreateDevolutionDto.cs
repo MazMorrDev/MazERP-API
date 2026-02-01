@@ -1,4 +1,4 @@
-﻿namespace MazErpBack.DTOs.Devolution;
+﻿namespace MazErpBack.DTOs.Movements;
 
 public record class CreateDevolutionDto
 {

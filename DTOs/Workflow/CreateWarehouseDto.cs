@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MazErpBack.DTOs.Warehouse;
+namespace MazErpBack.DTOs.Workflow;
 
 public record class CreateWarehouseDto
 {

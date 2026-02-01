@@ -1,4 +1,4 @@
-﻿namespace MazErpBack.DTOs.Expense;
+﻿namespace MazErpBack.DTOs.Movements;
 
 public record class CreateExpenseDto
 {

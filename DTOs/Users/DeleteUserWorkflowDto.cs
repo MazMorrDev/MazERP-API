@@ -1,4 +1,4 @@
-﻿namespace MazErpBack.DTOs.UserWorkflow;
+﻿namespace MazErpBack.DTOs.Users;
 
 public record class DeleteUserWorkflowDto
 {

@@ -1,6 +1,6 @@
 ﻿using MazErpBack.Enums;
 
-namespace MazErpBack.DTOs.UserWorkflow;
+namespace MazErpBack.DTOs.Users;
 
 public record class AssignUserRoleToWorkflowDto
 {
