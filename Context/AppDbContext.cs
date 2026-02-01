@@ -6,7 +6,7 @@ namespace MazErpBack.Context;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<Buy> Buys { get; set; }
-    public DbSet<Devolution> Devolutions { get; set; }
+    public DbSet<Movement> Devolutions { get; set; }
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<Movement> Movements { get; set; }
@@ -138,7 +138,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         });
 
         // CONFIGURACIÓN PARA DEVOLUTION
-        modelBuilder.Entity<Devolution>(entity =>
+        modelBuilder.Entity<Movement>(entity =>
         {
             entity.HasOne(d => d.Sell)
                 .WithMany()
@@ -211,12 +211,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasConversion<string>()
             .HasMaxLength(50);
 
-        modelBuilder.Entity<Devolution>()
+        modelBuilder.Entity<Movement>()
             .Property(e => e.DevolutionStatus)
             .HasConversion<string>()
             .HasMaxLength(50);
 
-        modelBuilder.Entity<Devolution>()
+        modelBuilder.Entity<Movement>()
             .Property(e => e.ActionTake)
             .HasConversion<string>()
             .HasMaxLength(50);

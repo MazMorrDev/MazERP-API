@@ -8,7 +8,7 @@ public class DevolutionService(AppDbContext context) : IDevolutionService
 {
     private readonly AppDbContext _context = context;
 
-    public Task<Devolution> CreateDevolutionAsync(CreateDevolutionDto devolutionDto)
+    public Task<Movement> CreateDevolutionAsync(CreateDevolutionDto devolutionDto)
     {
         throw new NotImplementedException();
     }
@@ -19,32 +19,32 @@ public class DevolutionService(AppDbContext context) : IDevolutionService
         if(devolution != null) _context.Devolutions.Remove(devolution);
     }
 
-    public Task<Devolution> GetDevolutionByIdAsync(int devolutionId)
+    public Task<Movement> GetDevolutionByIdAsync(int devolutionId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<Devolution>> GetDevolutionsAsync()
+    public Task<List<Movement>> GetDevolutionsAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<Devolution>> GetDevolutionsByWarehouseAsync(int warehouseId)
+    public Task<List<Movement>> GetDevolutionsByWarehouseAsync(int warehouseId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<Devolution>> GetDevolutionsByWorkflowAsync(int workflowId)
+    public Task<List<Movement>> GetDevolutionsByWorkflowAsync(int workflowId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Devolution> SoftDeleteDevolutionAsync(int devolutionID)
+    public Task<Movement> SoftDeleteDevolutionAsync(int devolutionID)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Devolution> UpdateDevolutionAsync(UpdateDevolutionDto devolutionDto)
+    public Task<Movement> UpdateDevolutionAsync(UpdateDevolutionDto devolutionDto)
     {
         throw new NotImplementedException();
     }

@@ -6,14 +6,14 @@ namespace MazErpBack.Services;
 public interface IDevolutionService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<Devolution>> GetDevolutionsAsync();
-    public Task<Devolution> GetDevolutionByIdAsync(int devolutionId);
+    public Task<List<Movement>> GetDevolutionsAsync();
+    public Task<Movement> GetDevolutionByIdAsync(int devolutionId);
     public Task DeleteDevolutionAsync(int devolutionId);
 
     // For common users
-    public Task<List<Devolution>> GetDevolutionsByWorkflowAsync(int workflowId);
-    public Task<List<Devolution>> GetDevolutionsByWarehouseAsync(int warehouseId);
-    public Task<Devolution> CreateDevolutionAsync(CreateDevolutionDto devolutionDto);
-    public Task<Devolution> UpdateDevolutionAsync(UpdateDevolutionDto devolutionDto);
-    public Task<Devolution> SoftDeleteDevolutionAsync(int devolutionID);
+    public Task<List<Movement>> GetDevolutionsByWorkflowAsync(int workflowId);
+    public Task<List<Movement>> GetDevolutionsByWarehouseAsync(int warehouseId);
+    public Task<Movement> CreateDevolutionAsync(CreateDevolutionDto devolutionDto);
+    public Task<Movement> UpdateDevolutionAsync(UpdateDevolutionDto devolutionDto);
+    public Task<Movement> SoftDeleteDevolutionAsync(int devolutionID);
 }

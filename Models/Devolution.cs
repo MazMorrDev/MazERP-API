@@ -4,7 +4,7 @@ using MazErpBack.Enums;
 
 namespace MazErpBack.Models;
 
-public class Devolution
+public class Movement
 {
     [Key, Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
