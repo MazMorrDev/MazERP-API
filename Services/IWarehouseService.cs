@@ -5,7 +5,10 @@ namespace MazErpBack.Services;
 
 public interface IWarehouseService
 {
-    public Task<Warehouse> CreateWarehouseAsync(CreateWarehouseDto warehouseDto);
+    // For admin pannel or back operations
     public Task<Warehouse> DeleteWarehouseAsync(int id);
+
+    // For common users
+    public Task<Warehouse> CreateWarehouseAsync(CreateWarehouseDto warehouseDto);
     public Task<List<Warehouse>> GetWarehousesByWorkflowAsync(int workflowId);
 }

@@ -7,8 +7,8 @@ public interface IExpenseService
 {
     // Only avaible for admin pannel or backend operations
     public Task<List<Expense>> GetExpensesAsync();
-    public Task<Expense> GetExpenseById(int expenseId);
-    public Task<Expense> DeleteExpenseAsync(int expenseId);
+    public Task<Expense> GetExpenseByIdAsync(int expenseId);
+    public Task DeleteExpenseAsync(int expenseId);
 
     // For common users
     public Task<List<Expense>> GetExpensesByWorkflowAsync(int workflowId);

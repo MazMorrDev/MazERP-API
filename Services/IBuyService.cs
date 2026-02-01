@@ -8,7 +8,7 @@ public interface IBuyService
     // Only avaible for admin pannel or backend operations
     public Task<List<Buy>> GetBuysAsync();
     public Task<Buy> GetBuyByIdAsync(int buyId);
-    public Task<Buy> DeleteBuyAsync(int buyId);
+    public Task DeleteBuyAsync(int buyId);
 
     // For common users
     public Task<List<Buy>> GetBuysByWorkflowAsync(int workflowId);

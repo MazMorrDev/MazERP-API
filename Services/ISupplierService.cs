@@ -8,7 +8,7 @@ public interface ISupplierService
     // Only avaible for admin pannel or backend operations
     public Task<List<Supplier>> GetSuppliersAsync();
     public Task<Supplier> GetSupplierById(int id);
-    public Task<Supplier> DeleteSupplierAsync(int supplierId);
+    public Task DeleteSupplierAsync(int supplierId);
 
     // For common users
     public Task<List<Supplier>> GetSuppliersByWorkflowAsync(int workflowId);
