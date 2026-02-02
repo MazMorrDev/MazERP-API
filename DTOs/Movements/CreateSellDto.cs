@@ -2,7 +2,7 @@
 
 namespace MazErpBack.DTOs.Movements;
 
-public record class SellOperationDto : MovementOperationDto
+public record class CreateSellDto : CreateMovementDto
 {
     public decimal DiscountPercentage { get; init; }
     public PaymentStatus PaymentStatus { get; init; }

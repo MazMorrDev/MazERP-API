@@ -2,7 +2,7 @@
 
 namespace MazErpBack.DTOs.Movements;
 
-public record class DevolutionOperationDto
+public record class CreateDevolutionDto
 {
     public int SellId { get; init; }
     public required string Reason { get; init; }

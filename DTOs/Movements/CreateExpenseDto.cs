@@ -2,7 +2,7 @@
 
 namespace MazErpBack.DTOs.Movements;
 
-public record class ExpenseOperationDto
+public record class CreateExpenseDto
 {
     public required int UserId { get; init; }
     public required int InventoryId { get; init; }
