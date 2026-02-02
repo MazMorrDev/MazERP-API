@@ -56,6 +56,4 @@ public class Inventory
 
     [ForeignKey("ProductId")]
     public virtual Product Product { get; set; } = null!;
-
-    public virtual ICollection<Movement> Movements { get; set; } = new HashSet<Movement>();
 }
