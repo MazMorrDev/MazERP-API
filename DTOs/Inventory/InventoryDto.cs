@@ -1,20 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace MazErpBack.DTOs.Inventory;
+﻿namespace MazErpBack.DTOs.Inventory;
 
 public record class InventoryDto
 {
-    [Required]
-    public int WarehouseId { get; set; }
-
-    [Required]
-    public int ProductId { get; set; }
-
-    [Required]
-    public int Stock { get; set; }
-
-    public int? AlertStock { get; set; }
-
-    public int? WarningStock { get; set; }
-
+    public required int InventoryId { get; init; }
+    public required int WarehouseId { get; init; }
+    public required int ProductId { get; init; }
+    public required int Stock { get; init; }
+    public decimal ActualDiscount { get; init; }
+    public decimal? BasePrice { get; init; }
+    public decimal AverageCost { get; init; }
+    public int? AlertStock { get; init; }
+    public int? WarningStock { get; init; }
+    public DateTimeOffset? LastSaleDate { get; init; }
 }
