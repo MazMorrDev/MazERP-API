@@ -21,17 +21,17 @@ public class InventorySupplier
     public Currency Currency { get; set; }
 
     [Column("load_time_days")]
-    public int LoadTimeDays { get; set; }
+    public int? LoadTimeDays { get; set; }
 
     [Column("min_order_quantity")]
-    public int MinOrderQuantity { get; set; }
+    public int? MinOrderQuantity { get; set; }
 
     [Column("rating")]
     [Range(0, 5, ErrorMessage = "el rating no puede ser menor que 0 ni mayor que 5")]
-    public int Rating { get; set; }
+    public int? Rating { get; set; }
 
     [Column("is_preferred")]
-    public bool IsPreferred { get; set; }
+    public bool? IsPreferred { get; set; }
 
     [Column("last_purchase_date")]
     public DateTimeOffset LastPurchaseDate { get; set; } = DateTimeOffset.UtcNow;
