@@ -1,6 +1,6 @@
 ﻿namespace MazErpBack.DTOs.Movements;
 
-public record class UpdateMovementDto
+public record class SellDto : MovementDto
 {
 
 }

@@ -12,6 +12,7 @@ public record class CreateUserDto
     public required string Password { get; init; }
 
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
-
+    
+    [Url]
     public string? ProfilePhotoUrl { get; init; }
 }
