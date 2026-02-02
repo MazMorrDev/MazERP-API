@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MazErpBack.Enums;
 
 namespace MazErpBack.DTOs.Inventory;
 
 public record class ProductDto
 {
-    [Required(ErrorMessage = "The product name is required")]
-    [MaxLength(40)]
-    public string Name { get; init; } = string.Empty;
-
-    public decimal? SellPrice { get; init; }
+    public required int ProductId { get; init; }
+    public required string Name { get; init; }
+    public string? Description { get; init; }
+    [Url]
+    public string? PhotoUrl { get; init; }
+    public required ProductCategory ProductCategory { get; init; }
 }
