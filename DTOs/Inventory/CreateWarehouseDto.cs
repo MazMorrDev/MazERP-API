@@ -13,4 +13,7 @@ public record class CreateWarehouseDto
 
     [MaxLength(255)]
     public string? Description { get; init; }
+
+    // Notes: the DTOs that the user use must have [annotations]
+    // the ones that are sended its unnecesary to use annotations
 }
