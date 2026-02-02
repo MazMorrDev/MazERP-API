@@ -1,6 +1,6 @@
 namespace MazErpBack.DTOs.Users;
 
-public record UserDto
+public record class UserDto
 {
     public int Id { get; init; }
     public required string Email { get; init; }

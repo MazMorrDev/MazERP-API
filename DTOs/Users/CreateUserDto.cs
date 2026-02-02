@@ -2,16 +2,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MazErpBack.DTOs.Users;
 
-public class CreateUserDto
+public record class CreateUserDto
 {
     [EmailAddress]
-    public required string Email { get; set; }
+    public required string Email { get; init; }
 
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
-    public required string Password { get; set; }
+    public required string Password { get; init; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    public string? ProfilePhotoUrl { get; set; }
+    public string? ProfilePhotoUrl { get; init; }
 }

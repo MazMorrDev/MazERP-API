@@ -1,6 +1,6 @@
 ﻿namespace MazErpBack.DTOs.Workflow;
 
-public record GetWorkflowDto
+public record class GetWorkflowDto
 {
     public int Id { get; init; }
     public string Name { get; init; } = string.Empty;

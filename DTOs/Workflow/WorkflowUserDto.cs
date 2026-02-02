@@ -1,7 +1,7 @@
 using MazErpBack.Enums;
 
 namespace MazErpBack.DTOs.Workflow;
-public record WorkflowUserDto
+public record class WorkflowUserDto
 {
     public int UserId { get; init; }
     public int WorkflowId { get; init; }
