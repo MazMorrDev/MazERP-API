@@ -1,15 +1,10 @@
 ﻿namespace MazErpBack.DTOs.Workflow;
 
-public class GetWorkflowDto
+public record GetWorkflowDto
 {
-    public int Id { get; set; }
-
-    public string Name { get; set; } = string.Empty;
-
-    public string? Description { get; set; }
-
-    public string? WorkflowPhotoUrl { get; set; }
-
-    public required DateTimeOffset CreatedAt { get; set; }
-
+    public int Id { get; init; }
+    public string Name { get; init; } = string.Empty;
+    public string? Description { get; init; }
+    public string? WorkflowPhotoUrl { get; init; }
+    public required DateTimeOffset CreatedAt { get; init; }
 }
