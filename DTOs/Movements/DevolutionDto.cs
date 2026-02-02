@@ -2,5 +2,5 @@
 
 public record class DevolutionDto
 {
-
+    public int SellId { get; init; }
 }

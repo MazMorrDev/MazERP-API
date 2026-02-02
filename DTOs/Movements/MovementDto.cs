@@ -4,6 +4,7 @@ namespace MazErpBack.DTOs.Movements;
 
 public record class MovementDto
 {
+    public required int MovementId { get; init; }
     public required int UserId { get; init; }
     public required int InventoryId { get; init; }
     public string? Description { get; init; }
