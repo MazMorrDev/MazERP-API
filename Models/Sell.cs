@@ -10,9 +10,6 @@ public class Sell
     [Key, Column("movement_id")]
     public int MovementId { get; set; }
 
-    [Required, Column("invoice_number")]
-    public required int InvoiceNumber { get; set; }
-
     [Column("discount_percentage", TypeName = "decimal(5,2)")]
     [Range(0, 100, ErrorMessage = "El porcentage de descuento no puede ser menor a 0 ni mayor a 100")]
     public decimal DiscountPercentage { get; set; }

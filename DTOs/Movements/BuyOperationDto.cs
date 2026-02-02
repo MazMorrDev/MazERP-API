@@ -2,7 +2,7 @@
 
 namespace MazErpBack.DTOs.Movements;
 
-public record class BuyOperationDto
+public record class BuyOperationDto : MovementOperationDto
 {
     public required int SupplierId { get; init; }
     public required DeliveryStatus DeliveryStatus { get; init; }
