@@ -20,4 +20,14 @@ public class DevolutionMapper
         };
         return devolutionDto;
     }
+
+    public List<DevolutionDto> MapListDevolutionToDto(List<Devolution> devolutions)
+    {
+        List<DevolutionDto> devolutionsDto = [];
+        foreach (var devolution in devolutions)
+        {
+            devolutionsDto.Add(MapDevolutionToDto(devolution));
+        }
+        return devolutionsDto;
+    }
 }

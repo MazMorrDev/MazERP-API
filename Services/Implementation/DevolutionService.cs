@@ -2,13 +2,15 @@
 using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 using MazErpBack.Utils.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class DevolutionService(AppDbContext context, DevolutionMapper mapper) : IDevolutionService
+public class DevolutionService(AppDbContext context, DevolutionMapper mapper, ILogger logger) : IDevolutionService
 {
     private readonly AppDbContext _context = context;
     private readonly DevolutionMapper _mapper = mapper;
+    private readonly ILogger _logger = logger;
 
     public async Task<DevolutionDto> CreateDevolutionAsync(CreateDevolutionDto devolutionDto)
     {
@@ -17,13 +19,28 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper) : 
 
     public async Task<bool> DeleteDevolutionAsync(int devolutionId)
     {
-        var devolution = await _context.Devolutions.FindAsync(devolutionId);
-        if (devolution != null)
+        try
         {
+            var devolution = await _context.Devolutions.FindAsync(devolutionId);
+            if (devolution == null)
+            {
+                _logger.LogWarning("Devolución {Id} no encontrada para eliminar", devolutionId);
+                return false;
+            }
+
             _context.Devolutions.Remove(devolution);
-            return true;
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if (result)
+                _logger.LogInformation("Devolución {Id} eliminada", devolutionId);
+
+            return result;
         }
-        return false;
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al eliminar devolución {Id}", devolutionId);
+            return false;
+        }
     }
 
     public async Task<DevolutionDto> GetDevolutionByIdAsync(int devolutionId)
@@ -43,7 +60,11 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper) : 
 
     public async Task<List<DevolutionDto>> GetDevolutionsAsync()
     {
-        throw new NotImplementedException();
+        var devolutions = await _context.Devolutions.ToListAsync();
+        ArgumentNullException.ThrowIfNull(devolutions);
+
+        var devolutionsDto = _mapper.MapListDevolutionToDto(devolutions);
+        return devolutionsDto;
     }
 
     public async Task<List<DevolutionDto>> GetDevolutionsByWarehouseAsync(int warehouseId)
