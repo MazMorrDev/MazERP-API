@@ -7,8 +7,8 @@ public enum UserWorkflowRole
     Finance,        // Contable/Finanzas
     Sales,          // Ventas y comerciales
     Inventory,      // Inventario y almacén
-    // He comentado producción puesto que no es parte del mvp
+    // Comentados puesto que no son parte del mvp
     // Production,     // Producción y operaciones
-    // HumanResources,
+    // HumanResources,  // Manejo del personal
     Spectator        // Puede ver pero no tocar, para auditorías
 }
