@@ -1,18 +1,17 @@
 ﻿using MazErpBack.DTOs.Inventory;
-using MazErpBack.Models;
 
 namespace MazErpBack.Services;
 
 public interface IWarehouseService
 {
     // For admin pannel or back operations
-    public Task<List<Warehouse>> GetWarehousesAsync();
-    public Task<Warehouse> GetWarehouseByIdAsync(int warehouseId);
-    public Task DeleteWarehouseAsync(int id);
+    public Task<List<WarehouseDto>> GetWarehousesAsync();
+    public Task<WarehouseDto> GetWarehouseByIdAsync(int warehouseId);
+    public Task<bool> DeleteWarehouseAsync(int id);
 
     // For common users
-    public Task<List<Warehouse>> GetWarehousesByWorkflowAsync(int workflowId);
-    public Task<Warehouse> CreateWarehouseAsync(CreateWarehouseDto warehouseDto);
-    public Task<Warehouse> UpdateWarehouseAsync(CreateWarehouseDto warehouseDto);
-    public Task<Warehouse> SoftDeleteWarehouseAsync(int warehouseId);
+    public Task<List<WarehouseDto>> GetWarehousesByWorkflowAsync(int workflowId);
+    public Task<WarehouseDto> CreateWarehouseAsync(CreateWarehouseDto warehouseDto);
+    public Task<WarehouseDto> UpdateWarehouseAsync(CreateWarehouseDto warehouseDto);
+    public Task<bool> SoftDeleteWarehouseAsync(int warehouseId);
 }
