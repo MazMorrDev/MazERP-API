@@ -26,7 +26,7 @@ public class Devolution
     public DevolutionStatus DevolutionStatus { get; set; }
 
     [Column("action_take")]
-    public DevolutionActionTake ActionTake { get; set; }
+    public DevolutionActionTake DevolutionActionTake { get; set; }
 
     [Column("date")]
     public DateTimeOffset DevolutionDate { get; set; }

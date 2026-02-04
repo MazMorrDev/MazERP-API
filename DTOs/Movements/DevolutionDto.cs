@@ -6,7 +6,7 @@ public record class DevolutionDto
 {
     public int DevolutionId { get; init; }
     public int SellId { get; init; }
-    public required string Reason { get; init; }
+    public required string? Reason { get; init; }
     public int RefundAmount { get; init; }
     public string? Notes { get; init; }
     public DevolutionStatus DevolutionStatus { get; init; }
