@@ -37,6 +37,7 @@ public class TokenService(IConfiguration config) : ITokenService
             claims,
             expires: DateTime.Now.AddMinutes(35),
             signingCredentials: credentials);
+
             var tokenResponse = new TokenDto
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
