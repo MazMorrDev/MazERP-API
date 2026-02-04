@@ -1,5 +1,4 @@
 ﻿using MazErpBack.DTOs.Movements;
-using MazErpBack.Models;
 
 namespace MazErpBack.Services;
 
@@ -7,12 +6,12 @@ namespace MazErpBack.Services;
 public interface IMovementService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<Movement>> GetMovementsAsync();
-    public Task<Movement> GetMovementByIdAsync(int movementId);
-    public Task DeleteMovementAsync(int movementId);
-    public Task<List<Movement>> GetMovementsByWorkflowAsync(int workflowId);
-    public Task<List<Movement>> GetMovementsByWarehouseAsync(int warehouseId);
-    public Task<Movement> CreateMovementAsync(CreateMovementDto movementDto);
-    public Task<Movement> UpdateMovementAsync(CreateMovementDto movementDto);
-    public Task<Movement> SoftDeleteMovementAsync(int movementID);
+    public Task<List<MovementDto>> GetMovementsAsync();
+    public Task<MovementDto> GetMovementByIdAsync(int movementId);
+    public Task<bool> DeleteMovementAsync(int movementId);
+    public Task<List<MovementDto>> GetMovementsByWorkflowAsync(int workflowId);
+    public Task<List<MovementDto>> GetMovementsByWarehouseAsync(int warehouseId);
+    public Task<MovementDto> CreateMovementAsync(CreateMovementDto movementDto);
+    public Task<MovementDto> UpdateMovementAsync(CreateMovementDto movementDto);
+    public Task<bool> SoftDeleteMovementAsync(int movementID);
 }
