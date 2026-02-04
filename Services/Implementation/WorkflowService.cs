@@ -74,7 +74,6 @@ public class WorkflowService(AppDbContext context, ILogger<WorkflowService> logg
     {
         try
         {
-            // FIX: cualquier cliente no debería tener acceso a todos los workflows
             var result = await _context.Workflows.ToListAsync();
             return result;
         }
