@@ -3,7 +3,7 @@ using MazErpBack.Enums;
 
 namespace MazErpBack.DTOs.Inventory;
 
-public record class CreateInventorySupplierDto
+public record class InventorySupplierDto
 {
     [Required]
     public int InventoryId { get; init; }

@@ -1,19 +1,18 @@
 ﻿using MazErpBack.DTOs.Movements;
-using MazErpBack.Models;
 
 namespace MazErpBack.Services;
 
 public interface IBuyService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<Product>> GetBuysAsync();
-    public Task<Product> GetBuyByIdAsync(int buyId);
-    public Task DeleteBuyAsync(int buyId);
+    public Task<List<BuyDto>> GetBuysAsync();
+    public Task<BuyDto> GetBuyByIdAsync(int buyId);
+    public Task<bool> DeleteBuyAsync(int buyId);
 
     // For common users
-    public Task<List<Product>> GetBuysByWorkflowAsync(int workflowId);
-    public Task<List<Product>> GetBuysByWarehouseAsync(int warehouseId);
-    public Task<Product> CreateBuyAsync(CreateBuyDto buyDto);
-    public Task<Product> UpdateBuyAsync(UpdateBuyDto buyDto);
-    public Task<Product> SoftDeleteBuyAsync(int buyID);
+    public Task<List<BuyDto>> GetBuysByWorkflowAsync(int workflowId);
+    public Task<List<BuyDto>> GetBuysByWarehouseAsync(int warehouseId);
+    public Task<BuyDto> CreateBuyAsync(CreateBuyDto buyDto);
+    public Task<BuyDto> UpdateBuyAsync(CreateBuyDto buyDto);
+    public Task<bool> SoftDeleteBuyAsync(int buyID);
 }

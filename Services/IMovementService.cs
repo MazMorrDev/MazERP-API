@@ -13,6 +13,6 @@ public interface IMovementService
     public Task<List<Movement>> GetMovementsByWorkflowAsync(int workflowId);
     public Task<List<Movement>> GetMovementsByWarehouseAsync(int warehouseId);
     public Task<Movement> CreateMovementAsync(CreateMovementDto movementDto);
-    public Task<Movement> UpdateMovementAsync(UpdateMovementDto movementDto);
+    public Task<Movement> UpdateMovementAsync(CreateMovementDto movementDto);
     public Task<Movement> SoftDeleteMovementAsync(int movementID);
 }

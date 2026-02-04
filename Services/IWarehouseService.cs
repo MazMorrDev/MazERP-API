@@ -13,6 +13,6 @@ public interface IWarehouseService
     // For common users
     public Task<List<Warehouse>> GetWarehousesByWorkflowAsync(int workflowId);
     public Task<Warehouse> CreateWarehouseAsync(CreateWarehouseDto warehouseDto);
-    public Task<Warehouse> UpdateWarehouseAsync(UpdateWarehouseDto warehouseDto);
+    public Task<Warehouse> UpdateWarehouseAsync(CreateWarehouseDto warehouseDto);
     public Task<Warehouse> SoftDeleteWarehouseAsync(int warehouseId);
 }

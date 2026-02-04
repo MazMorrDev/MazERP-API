@@ -14,5 +14,5 @@ public interface IProductService
     public Task<List<Product>> GetProductsByWorkflowAsync(int workflowId);
     public Task<List<Product>> GetProductsByWarehouseAsync(int warehouseId);
     public Task<Product> CreateProductAsync(CreateProductDto productDto);
-    public Task<Product> UpdateProductAsync(UpdateProductDto productDto);
+    public Task<Product> UpdateProductAsync(CreateProductDto productDto);
 }
