@@ -5,8 +5,8 @@ namespace MazErpBack.Context;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<Product> Buys { get; set; }
-    public DbSet<Movement> Devolutions { get; set; }
+    public DbSet<Buy> Buys { get; set; }
+    public DbSet<Devolution> Devolutions { get; set; }
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<Movement> Movements { get; set; }
@@ -111,13 +111,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         });
 
         // CONFIGURACIÓN PARA BUY
-        modelBuilder.Entity<Product>(entity =>
+        modelBuilder.Entity<Buy>(entity =>
         {
             entity.HasKey(e => e.MovementId);
 
             entity.HasOne(b => b.Movement)
                 .WithOne()
-                .HasForeignKey<Product>(b => b.MovementId)
+                .HasForeignKey<Buy>(b => b.MovementId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(b => b.Supplier)
@@ -138,7 +138,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         });
 
         // CONFIGURACIÓN PARA DEVOLUTION
-        modelBuilder.Entity<Movement>(entity =>
+        modelBuilder.Entity<Devolution>(entity =>
         {
             entity.HasOne(d => d.Sell)
                 .WithMany()
@@ -206,18 +206,18 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasConversion<string>()
             .HasMaxLength(20);
 
-        modelBuilder.Entity<Product>()
+        modelBuilder.Entity<Buy>()
             .Property(e => e.DeliveryStatus)
             .HasConversion<string>()
             .HasMaxLength(50);
 
-        modelBuilder.Entity<Movement>()
+        modelBuilder.Entity<Devolution>()
             .Property(e => e.DevolutionStatus)
             .HasConversion<string>()
             .HasMaxLength(50);
 
-        modelBuilder.Entity<Movement>()
-            .Property(e => e.ActionTake)
+        modelBuilder.Entity<Devolution>()
+            .Property(e => e.DevolutionActionTake)
             .HasConversion<string>()
             .HasMaxLength(50);
 

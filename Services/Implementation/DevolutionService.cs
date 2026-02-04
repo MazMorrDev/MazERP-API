@@ -1,12 +1,14 @@
 ﻿using MazErpBack.Context;
 using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
+using MazErpBack.Utils.Mappers;
 
 namespace MazErpBack.Services.Implementation;
 
-public class DevolutionService(AppDbContext context) : IDevolutionService
+public class DevolutionService(AppDbContext context, DevolutionMapper mapper) : IDevolutionService
 {
     private readonly AppDbContext _context = context;
+    private readonly DevolutionMapper _mapper = mapper;
 
     public async Task<DevolutionDto> CreateDevolutionAsync(CreateDevolutionDto devolutionDto)
     {
@@ -27,7 +29,7 @@ public class DevolutionService(AppDbContext context) : IDevolutionService
     public async Task<DevolutionDto> GetDevolutionByIdAsync(int devolutionId)
     {
         var devolution = await _context.Devolutions.FindAsync(devolutionId);
-        return
+        return _mapper.MapDevolutionToDto(devolution);
     }
 
     public async Task<List<DevolutionDto>> GetDevolutionsAsync()
