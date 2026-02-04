@@ -6,14 +6,14 @@ namespace MazErpBack.Services;
 public interface ISellService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<Sell>> GetSellsAsync();
-    public Task<Sell> GetSellById(int sellId);
-    public Task DeleteSellAsync(int sellId);
+    public Task<List<SellDto>> GetSellsAsync();
+    public Task<SellDto> GetSellById(int sellId);
+    public Task<bool> DeleteSellAsync(int sellId);
 
     // For common users
-    public Task<List<Sell>> GetSellsByWorkflowAsync(int workflowId);
-    public Task<List<Sell>> GetSellsByWarehouseAsync(int warehouseId);
-    public Task<Sell> CreateSellAsync(CreateSellDto sellDto);
-    public Task<Sell> UpdateSellAsync(CreateSellDto sellDto);
-    public Task<Sell> SoftDeleteSellAsync(int sellID);
+    public Task<List<SellDto>> GetSellsByWorkflowAsync(int workflowId);
+    public Task<List<SellDto>> GetSellsByWarehouseAsync(int warehouseId);
+    public Task<SellDto> CreateSellAsync(CreateSellDto sellDto);
+    public Task<SellDto> UpdateSellAsync(CreateSellDto sellDto);
+    public Task<bool> SoftDeleteSellAsync(int sellID);
 }
