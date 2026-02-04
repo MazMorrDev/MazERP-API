@@ -28,8 +28,17 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper) : 
 
     public async Task<DevolutionDto> GetDevolutionByIdAsync(int devolutionId)
     {
-        var devolution = await _context.Devolutions.FindAsync(devolutionId);
-        return _mapper.MapDevolutionToDto(devolution);
+        try
+        {
+            var devolution = await _context.Devolutions.FindAsync(devolutionId);
+            ArgumentNullException.ThrowIfNull(devolution);
+            return _mapper.MapDevolutionToDto(devolution);
+        }
+        catch (Exception e)
+        {
+            throw;
+        }
+
     }
 
     public async Task<List<DevolutionDto>> GetDevolutionsAsync()
