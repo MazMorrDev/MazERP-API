@@ -1,4 +1,4 @@
-﻿namespace MazErpBack;
+﻿namespace MazErpBack.Services;
 
 public interface ISellPointService
 {
