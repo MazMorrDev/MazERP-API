@@ -4,7 +4,7 @@ namespace MazErpBack.Services;
 
 public interface IInventorySupplierService
 {
-    // This method has to ensure that if an user is already at the wf then update the values
+    // This method has to ensure that if an inventory is already at the sellPoint then update the values
     public Task<InventorySupplierDto> AssignSupplierToInventoryAsync(InventorySupplierDto userWorkflowDto);
     public Task<bool> SoftDeleteInventorySupplierAsync(DeleteInventorySupplierDto userWorkflowDto);
 
