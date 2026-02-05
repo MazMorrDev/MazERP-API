@@ -23,10 +23,10 @@ public class SellPointInventory
     public required int Stock { get; set; }
 
     [Column("warning_stock")]
-    public int WarningStock { get; set; }
+    public int? WarningStock { get; set; }
 
     [Column("alert_stock")]
-    public int AlertStock { get; set; }
+    public int? AlertStock { get; set; }
 
     [Column("last_sale_date")]
     public DateTimeOffset? LastSaleDate { get; set; }
