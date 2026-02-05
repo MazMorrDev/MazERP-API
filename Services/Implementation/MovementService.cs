@@ -1,4 +1,5 @@
 ﻿using MazErpBack.DTOs.Movements;
+using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 
 namespace MazErpBack.Services.Implementation;
@@ -15,12 +16,12 @@ public class MovementService : IMovementService
         throw new NotImplementedException();
     }
 
-    public Task<MovementDto> GetMovementByIdAsync(int movementId)
+    public Task<Movement> GetMovementByIdAsync(int movementId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<MovementDto>> GetMovementsAsync()
+    public Task<List<Movement>> GetMovementsAsync()
     {
         throw new NotImplementedException();
     }
