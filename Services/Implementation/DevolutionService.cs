@@ -21,11 +21,18 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         var devolution = new Devolution
         {
             SellId = devolutionDto.SellId,
-            
-
-
+            Reason = devolutionDto.Reason,
+            RefundAmount = devolutionDto.RefundAmount,
+            Notes = devolutionDto.Notes,
+            DevolutionStatus = devolutionDto.DevolutionStatus,
+            DevolutionActionTake = devolutionDto.DevolutionActionTake,
+            DevolutionDate = devolutionDto.Date,
             Sell = sell,
-        }
+        };
+        await _context.Devolutions.AddAsync(devolution);
+        await _context.SaveChangesAsync();
+
+        return _mapper.MapDevolutionToDto(devolution);
     }
 
     public async Task<bool> DeleteDevolutionAsync(int devolutionId)
@@ -95,11 +102,25 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
         devolution.IsActive = false;
         devolution.UpdatedAt = DateTimeOffset.Now;
+
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public async Task<DevolutionDto> UpdateDevolutionAsync(CreateDevolutionDto devolutionDto)
+    public async Task<DevolutionDto> UpdateDevolutionAsync(int devolutionId, CreateDevolutionDto devolutionDto)
     {
-        throw new NotImplementedException();
+        var devolution = await _context.Devolutions.FindAsync(devolutionId);
+        ArgumentNullException.ThrowIfNull(devolution);
+
+        devolution.SellId = devolutionDto.SellId;
+        devolution.Reason = devolutionDto.Reason;
+        devolution.RefundAmount = devolutionDto.RefundAmount;
+        devolution.Notes = devolutionDto.Notes;
+        devolution.DevolutionStatus = devolutionDto.DevolutionStatus;
+        devolution.DevolutionActionTake = devolutionDto.DevolutionActionTake;
+        devolution.DevolutionDate = devolutionDto.Date;
+        await _context.SaveChangesAsync();
+
+        return _mapper.MapDevolutionToDto(devolution);
     }
 }
