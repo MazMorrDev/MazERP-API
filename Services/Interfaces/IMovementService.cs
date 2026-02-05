@@ -15,6 +15,6 @@ public interface IMovementService
     public Task<List<MovementDto>> GetMovementsByWorkflowAsync(int workflowId);
     public Task<List<MovementDto>> GetMovementsByWarehouseAsync(int warehouseId);
     public Task<MovementDto> CreateMovementAsync(CreateMovementDto movementDto);
-    public Task<MovementDto> UpdateMovementAsync(CreateMovementDto movementDto);
+    public Task<MovementDto> UpdateMovementAsync(int movementId, CreateMovementDto movementDto);
     public Task<bool> SoftDeleteMovementAsync(int movementID);
 }
