@@ -7,8 +7,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<Buy> Buys { get; set; }
     public DbSet<Devolution> Devolutions { get; set; }
-    public DbSet<SellPoint> SellPoints {get; set;}
-    public DbSet<SellPointInventory> SellPointInventories {get; set;}
+    public DbSet<SellPoint> SellPoints { get; set; }
+    public DbSet<SellPointInventory> SellPointInventories { get; set; }
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<Movement> Movements { get; set; }
@@ -31,6 +31,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.LicenseStartDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
         // CONFIGURACIÓN PARA USERWORKFLOW
@@ -70,6 +71,32 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
+        // CONFIGURACIÓN PARA SELLPOINT
+        modelBuilder.Entity<SellPoint>(entity =>
+        {
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        // CONFIGURACIÓN PARA SELLPOINTINVENTORY
+        modelBuilder.Entity<SellPointInventory>(entity =>
+        {
+            entity.HasKey(e => new { e.SellPointId, e.InventoryId });
+
+            entity.HasOne(spi => spi.SellPoint)
+                .WithMany()
+                .HasForeignKey(spi => spi.SellPointId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(spi => spi.Inventory)
+                .WithMany()
+                .HasForeignKey(spi => spi.InventoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.Discount).HasPrecision(5, 2);
+            entity.Property(e => e.SellPrice).HasPrecision(12, 2);
+        });
+
         // CONFIGURACIÓN PARA INVENTORY
         modelBuilder.Entity<Inventory>(entity =>
         {
@@ -89,6 +116,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.BasePrice).HasPrecision(12, 2);
+            entity.Property(e => e.BaseDiscount).HasPrecision(5, 2);
             entity.Property(e => e.AverageCost).HasPrecision(18, 2);
         });
 
@@ -137,6 +165,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithOne()
                 .HasForeignKey<Sell>(s => s.MovementId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.DiscountPercentage).HasPrecision(5, 2);
         });
 
         // CONFIGURACIÓN PARA DEVOLUTION
@@ -146,6 +176,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithMany()
                 .HasForeignKey(d => d.SellId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(e => e.DevolutionDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
         // CONFIGURACIÓN PARA EXPENSE
@@ -183,12 +215,19 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.Property(e => e.LastPurchaseDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.CostPrice).HasPrecision(12, 2);
         });
 
         // CONFIGURACIÓN PARA SUPPLIER
         modelBuilder.Entity<Supplier>(entity =>
         {
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        // CONFIGURACIÓN PARA PRODUCT
+        modelBuilder.Entity<Product>(entity =>
+        {
+            // Configuración adicional si es necesaria
         });
 
         // CONFIGURACIÓN DE ENUMS PARA POSTGRESQL
