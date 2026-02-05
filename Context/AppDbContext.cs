@@ -7,6 +7,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<Buy> Buys { get; set; }
     public DbSet<Devolution> Devolutions { get; set; }
+    public DbSet<SellPoint> SellPoints {get; set;}
+    public DbSet<SellPointInventory> SellPointInventories {get; set;}
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<Movement> Movements { get; set; }

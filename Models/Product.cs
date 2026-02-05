@@ -16,6 +16,7 @@ public class Product
 
     // Hay q decidir en q moneda gestionamos los price dentro de la base de datos
     [Column("photo_url")]
+    [Url]
     public string? PhotoUrl { get; set; }
 
     [Column("category")]

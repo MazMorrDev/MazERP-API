@@ -24,7 +24,7 @@ public class Inventory
 
     [Column("actual_discount", TypeName = "decimal(5,2)")]
     [Range(0, 100, ErrorMessage = "El descuento debe estar entre 0 y 100%")]
-    public decimal? ActualDiscount { get; set; }
+    public decimal BaseDiscount { get; set; } = 0;
 
     [Column("average_cost")]
     public decimal AverageCost { get; set; }
@@ -41,9 +41,6 @@ public class Inventory
     public int? WarningStock { get; set; }
 
     // Auditoría
-    [Column("last_sale_date")]
-    public DateTimeOffset LastSaleDate { get; set; }
-
     [Column("updated_at")]
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
