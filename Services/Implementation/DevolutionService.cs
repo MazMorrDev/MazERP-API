@@ -43,13 +43,13 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         }
     }
 
-    public async Task<DevolutionDto> GetDevolutionByIdAsync(int devolutionId)
+    public async Task<Devolution> GetDevolutionByIdAsync(int devolutionId)
     {
         try
         {
             var devolution = await _context.Devolutions.FindAsync(devolutionId);
             ArgumentNullException.ThrowIfNull(devolution);
-            return _mapper.MapDevolutionToDto(devolution);
+            return devolution;
         }
         catch (Exception e)
         {
@@ -58,13 +58,11 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
     }
 
-    public async Task<List<DevolutionDto>> GetDevolutionsAsync()
+    public async Task<List<Devolution>> GetDevolutionsAsync()
     {
         var devolutions = await _context.Devolutions.ToListAsync();
         ArgumentNullException.ThrowIfNull(devolutions);
-
-        var devolutionsDto = _mapper.MapListDevolutionToDto(devolutions);
-        return devolutionsDto;
+        return devolutions;
     }
 
     public async Task<List<DevolutionDto>> GetDevolutionsByWarehouseAsync(int warehouseId)
@@ -75,11 +73,14 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
     public async Task<List<DevolutionDto>> GetDevolutionsByWorkflowAsync(int workflowId)
     {
+        // TODO: we have to use a lot of services to know this
         throw new NotImplementedException();
     }
 
     public async Task<bool> SoftDeleteDevolutionAsync(int devolutionId)
     {
+        var devolution = await _context.Devolutions.FindAsync(devolutionId);
+        devolution
         throw new NotImplementedException();
     }
 

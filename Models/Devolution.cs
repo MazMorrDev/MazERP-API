@@ -31,6 +31,12 @@ public class Devolution
     [Column("date")]
     public DateTimeOffset DevolutionDate { get; set; }
 
+    [Column("updated_at")]
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
+
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
+
     // Navigation Properties
     [ForeignKey("SellId")]
     public required virtual Sell Sell { get; set; }
