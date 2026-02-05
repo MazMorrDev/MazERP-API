@@ -5,7 +5,7 @@ namespace MazErpBack.Utils.Mappers;
 
 public class DevolutionMapper
 {
-    public DevolutionDto MapDevolutionToDto(Devolution devolution)
+    public DevolutionDto MapToDto(Devolution devolution)
     {
         var devolutionDto = new DevolutionDto
         {
@@ -21,12 +21,12 @@ public class DevolutionMapper
         return devolutionDto;
     }
 
-    public List<DevolutionDto> MapListDevolutionToDto(List<Devolution> devolutions)
+    public List<DevolutionDto> MapListToDto(List<Devolution> devolutions)
     {
         List<DevolutionDto> devolutionsDto = [];
         foreach (var devolution in devolutions)
         {
-            devolutionsDto.Add(MapDevolutionToDto(devolution));
+            devolutionsDto.Add(MapToDto(devolution));
         }
         return devolutionsDto;
     }

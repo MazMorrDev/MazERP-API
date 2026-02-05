@@ -5,7 +5,7 @@ namespace MazErpBack.Utils.Mappers;
 
 public class MovementMapper
 {
-    public MovementDto MapMovementToDto(Movement movement)
+    public MovementDto MapToDto(Movement movement)
     {
         var movementDto = new MovementDto
         {
@@ -21,12 +21,12 @@ public class MovementMapper
         return movementDto;
     }
 
-    public List<MovementDto> MapListMovementToDto(List<Movement> movements)
+    public List<MovementDto> MapListToDto(List<Movement> movements)
     {
         List<MovementDto> movementsDto = [];
         foreach (var movement in movements)
         {
-            movementsDto.Add(MapMovementToDto(movement));
+            movementsDto.Add(MapToDto(movement));
         }
         return movementsDto;
     }
