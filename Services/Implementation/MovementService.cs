@@ -1,4 +1,5 @@
 ﻿using MazErpBack.DTOs.Movements;
+using MazErpBack.Services.Interfaces;
 
 namespace MazErpBack.Services.Implementation;
 

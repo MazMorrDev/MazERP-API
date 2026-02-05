@@ -1,5 +1,6 @@
-﻿using MazErpBack.DTOs.Supplier;
+﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
+using MazErpBack.Services.Interfaces;
 
 namespace MazErpBack.Services.Implementation;
 

@@ -2,6 +2,7 @@
 using MazErpBack.DTOs.Company;
 using MazErpBack.Enums;
 using MazErpBack.Models;
+using MazErpBack.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;

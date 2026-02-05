@@ -2,7 +2,7 @@
 
 namespace MazErpBack.Services.Implementation;
 
-public class SellPointInventoryService : ISellPointInventoryService
+public class UserCompanyService : IUserCompanyService
 {
 
 }
