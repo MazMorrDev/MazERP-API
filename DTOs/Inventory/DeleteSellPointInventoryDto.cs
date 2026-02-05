@@ -1,6 +1,11 @@
-﻿namespace MazErpBack.DTOs.Inventory;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MazErpBack.DTOs.Inventory;
 
 public record class DeleteSellPointInventoryDto
 {
-
+    [Required]
+    public int SellPointId { get; init; }
+    [Required]
+    public int InventoryId { get; init; }
 }

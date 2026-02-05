@@ -5,7 +5,9 @@ namespace MazErpBack.DTOs.Inventory;
 
 public record class CreateSellPointInventoryDto
 {
+    [Required]
     public int SellPointId { get; init; }
+    [Required]
     public int InventoryId { get; init; }
 
     [Column(TypeName = "decimal(12,2)")]
