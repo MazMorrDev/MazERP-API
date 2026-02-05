@@ -8,10 +8,10 @@ public interface ICompanyService
 {
     // Para el panel de administración
     public Task<List<Company>> GetCompaniesAsync();
-    public Task DeleteCompanyAsync(int CompanyId);
+    public Task<bool> DeleteCompanyAsync(int companyId);
 
     // Para el usuario común
-    public Task<Company> CreateCompanyAsync(CreateCompanyDto CompanyDto);
-    public Task<Company> SoftDeleteCompany(int CompanyId);
+    public Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto CompanyDto);
+    public Task<bool> SoftDeleteCompany(int CompanyId);
     public Task<CompanyUserDto> AssignCompanyToUserAsync(int userId, int CompanyId, UserCompanyRole role = UserCompanyRole.Owner);
 }

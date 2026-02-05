@@ -1,12 +1,13 @@
 ﻿using MazErpBack.DTOs.Inventory;
+using MazErpBack.Models;
 
 namespace MazErpBack.Services;
 
 public interface IInventoryService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<InventoryDto>> GetInventoriesAsync();
-    public Task<InventoryDto> GetInventoryByIdAsync();
+    public Task<List<Inventory>> GetInventoriesAsync();
+    public Task<Inventory> GetInventoryByIdAsync();
     public Task<bool> DeleteInventoryAsync(int id);
 
     // For common users
