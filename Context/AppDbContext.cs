@@ -17,9 +17,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Sell> Sells { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<UserWorkflow> UserWorkflows { get; set; }
+    public DbSet<UserCompany> UserCompanies { get; set; }
     public DbSet<Warehouse> Warehouses { get; set; }
-    public DbSet<Workflow> Workflows { get; set; }
+    public DbSet<Company> Companies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,27 +34,27 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.LicenseStartDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        // CONFIGURACIÓN PARA USERWORKFLOW
-        modelBuilder.Entity<UserWorkflow>(entity =>
+        // CONFIGURACIÓN PARA USERCOMPANY
+        modelBuilder.Entity<UserCompany>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.WorkflowId });
+            entity.HasKey(e => new { e.UserId, e.CompanyId });
 
-            entity.HasOne(uw => uw.User)
-                .WithMany(u => u.UserWorkflows)
-                .HasForeignKey(uw => uw.UserId)
+            entity.HasOne(com => com.User)
+                .WithMany(u => u.UserCompanies)
+                .HasForeignKey(com => com.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(uw => uw.Workflow)
-                .WithMany(w => w.UserWorkflows)
-                .HasForeignKey(uw => uw.WorkflowId)
+            entity.HasOne(com => com.Company)
+                .WithMany(w => w.UserCompanies)
+                .HasForeignKey(com => com.CompanyId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.Property(e => e.AssignedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        // CONFIGURACIÓN PARA WORKFLOW
-        modelBuilder.Entity<Workflow>(entity =>
+        // CONFIGURACIÓN PARA Company
+        modelBuilder.Entity<Company>(entity =>
         {
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -63,9 +63,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         // CONFIGURACIÓN PARA WAREHOUSE
         modelBuilder.Entity<Warehouse>(entity =>
         {
-            entity.HasOne(w => w.Workflow)
-                .WithMany(wf => wf.Warehouses)
-                .HasForeignKey(w => w.WorkflowId)
+            entity.HasOne(w => w.Company)
+                .WithMany(com => com.Warehouses)
+                .HasForeignKey(w => w.CompanyId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -188,9 +188,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(e => e.Inventory)
+            entity.HasOne(e => e.Company)
                 .WithMany()
-                .HasForeignKey(e => e.InventoryId)
+                .HasForeignKey(e => e.CompanyId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.Property(e => e.Amount).HasPrecision(12, 2);
@@ -232,7 +232,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         // CONFIGURACIÓN DE ENUMS PARA POSTGRESQL
         // Para PostgreSQL, es mejor almacenar enums como text
-        modelBuilder.Entity<UserWorkflow>()
+        modelBuilder.Entity<UserCompany>()
             .Property(e => e.Role)
             .HasConversion<string>()
             .HasMaxLength(50);
@@ -292,7 +292,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasConversion<string>()
             .HasMaxLength(50);
 
-        modelBuilder.Entity<Workflow>()
+        modelBuilder.Entity<Company>()
             .Property(e => e.Currency)
             .HasConversion<string>()
             .HasMaxLength(20);

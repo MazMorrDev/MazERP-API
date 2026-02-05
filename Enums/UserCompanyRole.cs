@@ -1,9 +1,9 @@
 ﻿namespace MazErpBack.Enums;
 
-public enum UserWorkflowRole
+public enum UserCompanyRole
 {
     Owner,          // Acceso total
-    Admin,          // Acceso total excepto a cambiar info del workflow
+    Admin,          // Acceso total excepto a cambiar info del company
     Finance,        // Contable/Finanzas
     Sales,          // Ventas y comerciales
     Inventory,      // Inventario y almacén

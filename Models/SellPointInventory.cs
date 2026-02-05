@@ -6,10 +6,10 @@ namespace MazErpBack.Models;
 [Table("Sell_Point_Inventory")]
 public class SellPointInventory
 {
-    [Key, Column("sell_point_id")]
+    [Key, Column("sell_point_id", Order = 0)]
     public int SellPointId { get; set; }
 
-    [Key, Column("inventory_id")]
+    [Key, Column("inventory_id", Order = 1)]
     public int InventoryId { get; set; }
 
     [Column("sell_price", TypeName = "decimal(12,2)")]

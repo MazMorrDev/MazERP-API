@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MazErpBack.DTOs.Workflow;
+namespace MazErpBack.DTOs.Company;
 
-public record class DeleteUserWorkflowDto
+public record class DeleteUserCompanyDto
 {
     [Required]
     public int UserId { get; init; }
     
     [Required]
-    public int WorkflowId { get; init; }
+    public int CompanyId { get; init; }
 }

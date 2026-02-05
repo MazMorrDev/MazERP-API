@@ -4,8 +4,8 @@ using MazErpBack.Enums;
 
 namespace MazErpBack.Models;
 
-[Table("Workflow")]
-public class Workflow
+[Table("Company")]
+public class Company
 {
     [Key, Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -17,8 +17,8 @@ public class Workflow
     [Column("description"), MaxLength(255)]
     public string? Description { get; set; }
 
-    [Column("workflow_photo_url"), MaxLength(500)]
-    public string? WorkflowPhotoUrl { get; set; }
+    [Column("Company_photo_url"), MaxLength(500)]
+    public string? CompanyPhotoUrl { get; set; }
 
     [Column("currency")]
     public Currency Currency { get; set; }
@@ -35,5 +35,5 @@ public class Workflow
 
     // Navigation Properties
     public virtual ICollection<Warehouse> Warehouses { get; set; } = new HashSet<Warehouse>();
-    public virtual ICollection<UserWorkflow> UserWorkflows { get; set; } = new HashSet<UserWorkflow>();
+    public virtual ICollection<UserCompany> UserCompanies { get; set; } = new HashSet<UserCompany>();
 }

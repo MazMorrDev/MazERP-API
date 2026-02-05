@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MazErpBack.DTOs.Workflow;
+namespace MazErpBack.DTOs.Company;
 
-public record class CreateWorkflowDto
+public record class CreateCompanyDto
 {
     [Required]
     [MaxLength(30)]
@@ -10,7 +10,7 @@ public record class CreateWorkflowDto
 
     public string? Description { get; init; }
 
-    public string? WorkflowPhotoUrl { get; init; } = null;
+    public string? CompanyPhotoUrl { get; init; } = null;
 
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
 }
