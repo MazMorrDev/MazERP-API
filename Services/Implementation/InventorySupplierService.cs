@@ -1,6 +1,6 @@
 ﻿namespace MazErpBack.Services.Implementation;
 
-public class ProductInventoryService : IInventorySupplierService
+public class InventorySupplierService : IInventorySupplierService
 {
 
 }

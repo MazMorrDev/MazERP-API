@@ -1,6 +1,6 @@
-﻿namespace MazErpBack;
+﻿namespace MazErpBack.Services.Implementation;
 
-public class SellPointService
+public class SellPointService : ISellPointService
 {
 
 }
