@@ -14,5 +14,5 @@ public interface IProductService
     public Task<List<ProductDto>> GetProductsByCompanyAsync(int companyId);
     public Task<List<ProductDto>> GetProductsByWarehouseAsync(int warehouseId);
     public Task<ProductDto> CreateProductAsync(CreateProductDto productDto);
-    public Task<ProductDto> UpdateProductAsync(CreateProductDto productDto);
+    public Task<ProductDto> UpdateProductAsync(int productId, CreateProductDto productDto);
 }

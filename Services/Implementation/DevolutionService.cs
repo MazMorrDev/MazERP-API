@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class DevolutionService(AppDbContext context, DevolutionMapper mapper, ILogger logger) : IDevolutionService
+public class DevolutionService(AppDbContext context, DevolutionMapper mapper, ILogger<DevolutionService> logger) : IDevolutionService
 {
     private readonly AppDbContext _context = context;
     private readonly DevolutionMapper _mapper = mapper;
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<DevolutionService> _logger = logger;
 
     public async Task<DevolutionDto> CreateDevolutionAsync(CreateDevolutionDto devolutionDto)
     {
@@ -71,7 +71,8 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         }
         catch (Exception e)
         {
-            throw e;
+            _logger.LogInformation(e.Message);
+            throw;
         }
 
     }

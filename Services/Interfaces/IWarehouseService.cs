@@ -12,6 +12,6 @@ public interface IWarehouseService
     // For common users
     public Task<List<WarehouseDto>> GetWarehousesByWorkflowAsync(int workflowId);
     public Task<WarehouseDto> CreateWarehouseAsync(CreateWarehouseDto warehouseDto);
-    public Task<WarehouseDto> UpdateWarehouseAsync(CreateWarehouseDto warehouseDto);
+    public Task<WarehouseDto> UpdateWarehouseAsync(int WarehouseId, CreateWarehouseDto warehouseDto);
     public Task<bool> SoftDeleteWarehouseAsync(int warehouseId);
 }

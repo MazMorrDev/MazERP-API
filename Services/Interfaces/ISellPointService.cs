@@ -14,5 +14,5 @@ public interface ISellPointService
     public Task<List<SellPointDto>> GetSellPointsByCompanyAsync(int companyId);
     public Task<List<SellPointDto>> GetSellPointsByWarehouseAsync(int warehouseId);
     public Task<SellPointDto> CreateSellPointAsync(CreateSellPointDto sellPointDto);
-    public Task<SellPointDto> UpdateSellPointAsync(CreateSellPointDto sellPointDto);
+    public Task<SellPointDto> UpdateSellPointAsync(int sellPointId, CreateSellPointDto sellPointDto);
 }

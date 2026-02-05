@@ -9,5 +9,5 @@ public interface ISellPointInventoryService
     public Task<bool> SoftDeleteSellPointInventoryAsync(DeleteSellPointInventoryDto sellPointInventoryDto);
 
     // For very old registries that we don't want
-    public Task<bool> DeleteSellPointInventoryAsync(DeleteSellPointInventoryDto sellPointInventoryDto);
+    public Task<bool> DeleteSellPointInventoryAsync(int sellId,DeleteSellPointInventoryDto sellPointInventoryDto);
 }
