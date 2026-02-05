@@ -1,4 +1,5 @@
-﻿using MazErpBack.DTOs.Expense;
+﻿
+using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 
 namespace MazErpBack.Services.Implementation;
@@ -35,7 +36,7 @@ public class ExpenseService : IExpenseService
         throw new NotImplementedException();
     }
 
-    public Task<Expense> UpdateExpenseAsync(UpdateExpenseDto expenseDto)
+    public Task<Expense> UpdateExpenseAsync(CreateExpenseDto expenseDto)
     {
         throw new NotImplementedException();
     }
