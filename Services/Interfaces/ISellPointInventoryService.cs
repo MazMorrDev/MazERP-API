@@ -1,6 +1,6 @@
 ﻿using MazErpBack.DTOs.Inventory;
 
-namespace MazErpBack.Services;
+namespace MazErpBack.Services.Interfaces;
 
 public interface ISellPointInventoryService
 {

@@ -14,7 +14,17 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
     public async Task<DevolutionDto> CreateDevolutionAsync(CreateDevolutionDto devolutionDto)
     {
-        throw new NotImplementedException();
+        var sell = await _context.Sells.FindAsync(devolutionDto.SellId);
+        ArgumentNullException.ThrowIfNull(sell);
+
+        var devolution = new Devolution
+        {
+            SellId = devolutionDto.SellId,
+            
+
+
+            Sell = sell,
+        }
     }
 
     public async Task<bool> DeleteDevolutionAsync(int devolutionId)
@@ -71,7 +81,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         throw new NotImplementedException();
     }
 
-    public async Task<List<DevolutionDto>> GetDevolutionsByWorkflowAsync(int workflowId)
+    public async Task<List<DevolutionDto>> GetDevolutionsByCompanyAsync(int companyId)
     {
         // TODO: we have to use a lot of services to know this
         throw new NotImplementedException();
@@ -80,8 +90,11 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
     public async Task<bool> SoftDeleteDevolutionAsync(int devolutionId)
     {
         var devolution = await _context.Devolutions.FindAsync(devolutionId);
-        devolution
-        throw new NotImplementedException();
+        if (devolution == null) return false;
+
+        devolution.IsActive = false;
+        devolution.UpdatedAt = DateTimeOffset.Now;
+        return true;
     }
 
     public async Task<DevolutionDto> UpdateDevolutionAsync(CreateDevolutionDto devolutionDto)

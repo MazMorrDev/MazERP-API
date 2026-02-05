@@ -1,7 +1,7 @@
 ﻿using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 
-namespace MazErpBack.Services;
+namespace MazErpBack.Services.Interfaces;
 
 public interface ISellService
 {

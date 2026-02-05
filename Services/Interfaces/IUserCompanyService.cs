@@ -1,6 +1,6 @@
 ﻿using MazErpBack.DTOs.Company;
 
-namespace MazErpBack.Services;
+namespace MazErpBack.Services.Interfaces;
 
 public interface IUserCompanyService
 {

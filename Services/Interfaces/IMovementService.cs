@@ -1,7 +1,7 @@
 ﻿using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 
-namespace MazErpBack.Services;
+namespace MazErpBack.Services.Interfaces;
 
 // MovementService is only for use of his childrens (Buy, Sell) following the design of the database
 public interface IMovementService

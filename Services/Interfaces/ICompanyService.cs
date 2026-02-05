@@ -2,7 +2,7 @@
 using MazErpBack.Enums;
 using MazErpBack.Models;
 
-namespace MazErpBack.Services;
+namespace MazErpBack.Services.Interfaces;
 
 public interface ICompanyService
 {

@@ -1,6 +1,6 @@
 using MazErpBack.DTOs.Users;
 
-namespace MazErpBack.Services;
+namespace MazErpBack.Services.Interfaces;
 
 public interface IUserService
 {
