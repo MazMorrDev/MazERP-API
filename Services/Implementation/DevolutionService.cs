@@ -53,7 +53,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         }
         catch (Exception e)
         {
-            throw;
+            throw e;
         }
 
     }
@@ -69,6 +69,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
     public async Task<List<DevolutionDto>> GetDevolutionsByWarehouseAsync(int warehouseId)
     {
+        // TODO: we have to use a lot of services to know this
         throw new NotImplementedException();
     }
 
