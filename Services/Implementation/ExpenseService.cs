@@ -7,17 +7,17 @@ namespace MazErpBack.Services.Implementation;
 
 public class ExpenseService : IExpenseService
 {
-    public Task<Expense> CreateExpenseAsync(CreateExpenseDto expenseDto)
+    public Task<ExpenseDto> CreateExpenseAsync(CreateExpenseDto expenseDto)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Expense> DeleteExpenseAsync(int expenseId)
+    public Task<bool> DeleteExpenseAsync(int expenseId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Expense> GetExpenseById(int expenseId)
+    public Task<Expense> GetExpenseByIdAsync(int expenseId)
     {
         throw new NotImplementedException();
     }
@@ -27,17 +27,17 @@ public class ExpenseService : IExpenseService
         throw new NotImplementedException();
     }
 
-    public Task<List<Expense>> GetExpensesByWorkflowAsync(int workflowId)
+    public Task<List<ExpenseDto>> GetExpensesByCompanyAsync(int companyId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Expense> SoftDeleteExpenseAsync(int expenseId)
+    public Task<bool> SoftDeleteExpenseAsync(int expenseId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Expense> UpdateExpenseAsync(CreateExpenseDto expenseDto)
+    public Task<ExpenseDto> UpdateExpenseAsync(int id, CreateExpenseDto expenseDto)
     {
         throw new NotImplementedException();
     }
