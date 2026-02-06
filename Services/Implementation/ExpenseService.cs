@@ -16,8 +16,12 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
     {
         var user = await _context.Users.FindAsync(expenseDto.UserId);
         var company = await _context.Companies.FindAsync(expenseDto.CompanyId);
-        ArgumentNullException.ThrowIfNull(user);
-        ArgumentNullException.ThrowIfNull(company);
+        if (user == null || company == null)
+        {
+            _logger.LogDebug("No existe el suuario o la compañia brindados");
+            ArgumentNullException.ThrowIfNull(user);
+            ArgumentNullException.ThrowIfNull(company);
+        }
 
         var expense = _mapper.MapModelToDto(user, company, expenseDto);
         await _context.Expenses.AddAsync(expense);
