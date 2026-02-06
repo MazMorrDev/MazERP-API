@@ -19,25 +19,25 @@ public class MovementService(AppDbContext context, ILogger<MovementService> logg
         ArgumentNullException.ThrowIfNull(user);
         ArgumentNullException.ThrowIfNull(inventory);
 
-        var movement = new Movement
-        {
-            UserId = movementDto.UserId,
-            InventoryId = movementDto.InventoryId,
-            Description = movementDto.Description,
-            MovementType = movementDto.MovementType,
-            Quantity = movementDto.Quantity,
-            Currency = movementDto.Currency,
-            MovementDate = movementDto.MovementDate,
-            Inventory = inventory,
-            User = user
-        };
+        var movement = _mapper.MapDtoToModel(inventory, user, movementDto);
+        
+        await _context.Movements.AddAsync(movement);
         await _context.SaveChangesAsync();
         return _mapper.MapToDto(movement);
     }
 
     public async Task<bool> DeleteMovementAsync(int movementId)
     {
-        throw new NotImplementedException();
+        var movement = await _context.Movements.FindAsync(movementId);
+        if (movement == null)
+        {
+            _logger.LogError("No existe un movement con el id que se pasa");
+            return false;
+        }
+
+        _context.Movements.Remove(movement);
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<Movement> GetMovementByIdAsync(int movementId)

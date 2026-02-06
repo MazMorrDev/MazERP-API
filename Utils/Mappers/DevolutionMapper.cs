@@ -7,7 +7,7 @@ public class DevolutionMapper
 {
     public DevolutionDto MapToDto(Devolution devolution)
     {
-        var devolutionDto = new DevolutionDto
+        return new DevolutionDto
         {
             DevolutionId = devolution.Id,
             SellId = devolution.SellId,
@@ -18,7 +18,6 @@ public class DevolutionMapper
             DevolutionActionTake = devolution.DevolutionActionTake,
             Date = devolution.DevolutionDate
         };
-        return devolutionDto;
     }
 
     public List<DevolutionDto> MapListToDto(List<Devolution> devolutions)

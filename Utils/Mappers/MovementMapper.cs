@@ -7,7 +7,7 @@ public class MovementMapper
 {
     public MovementDto MapToDto(Movement movement)
     {
-        var movementDto = new MovementDto
+        return new MovementDto
         {
             MovementId = movement.Id,
             UserId = movement.UserId,
@@ -18,7 +18,22 @@ public class MovementMapper
             Currency = movement.Currency,
             MovementDate = movement.MovementDate
         };
-        return movementDto;
+    }
+
+    public Movement MapDtoToModel(Inventory inventory, User user, CreateMovementDto movementDto)
+    {
+        return new Movement
+        {
+            UserId = movementDto.UserId,
+            InventoryId = movementDto.InventoryId,
+            Description = movementDto.Description,
+            MovementType = movementDto.MovementType,
+            Quantity = movementDto.Quantity,
+            Currency = movementDto.Currency,
+            MovementDate = movementDto.MovementDate,
+            Inventory = inventory,
+            User = user
+        };
     }
 
     public List<MovementDto> MapListToDto(List<Movement> movements)
