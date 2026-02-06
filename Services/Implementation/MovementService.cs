@@ -3,6 +3,7 @@ using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using MazErpBack.Utils.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
@@ -20,7 +21,7 @@ public class MovementService(AppDbContext context, ILogger<MovementService> logg
         ArgumentNullException.ThrowIfNull(inventory);
 
         var movement = _mapper.MapDtoToModel(inventory, user, movementDto);
-        
+
         await _context.Movements.AddAsync(movement);
         await _context.SaveChangesAsync();
         return _mapper.MapToDto(movement);
@@ -42,12 +43,16 @@ public class MovementService(AppDbContext context, ILogger<MovementService> logg
 
     public async Task<Movement> GetMovementByIdAsync(int movementId)
     {
-        throw new NotImplementedException();
+        var movement = await _context.Movements.FindAsync(movementId);
+        ArgumentNullException.ThrowIfNull(movement);
+        return movement;
     }
 
     public async Task<List<Movement>> GetMovementsAsync()
     {
-        throw new NotImplementedException();
+        var movements = await _context.Movements.ToListAsync();
+        ArgumentNullException.ThrowIfNull(movements);
+        return movements;
     }
 
     public async Task<List<MovementDto>> GetMovementsByWarehouseAsync(int warehouseId)
@@ -62,11 +67,33 @@ public class MovementService(AppDbContext context, ILogger<MovementService> logg
 
     public async Task<bool> SoftDeleteMovementAsync(int movementID)
     {
-        throw new NotImplementedException();
+        var movement = await _context.Movements.FindAsync(movementID);
+        if (movement == null)
+        {
+            _logger.LogDebug("movimiento no encontrado para hacer softDelete");
+            return false;
+        }
+        movement.IsActive = false;
+        movement.UpdatedAt = DateTimeOffset.UtcNow;
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<MovementDto> UpdateMovementAsync(int movementId, CreateMovementDto movementDto)
     {
-        throw new NotImplementedException();
+        var movement = await _context.Movements.FindAsync(movementId);
+        ArgumentNullException.ThrowIfNull(movement);
+
+        movement.UserId = movementDto.UserId;
+        movement.InventoryId = movementDto.InventoryId;
+        movement.Description = movementDto.Description;
+        movement.MovementType = movementDto.MovementType;
+        movement.Quantity = movementDto.Quantity;
+        movement.Currency = movementDto.Currency;
+        movement.MovementDate = movementDto.MovementDate;
+
+        await _context.SaveChangesAsync();
+
+        return _mapper.MapToDto(movement);
     }
 }
