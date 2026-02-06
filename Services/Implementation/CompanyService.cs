@@ -96,11 +96,6 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
 
     public async Task<List<Company>> GetCompaniesAsync()
     {
-        throw new NotImplementedException();
-    }
-
-    public async Task<List<Company>> GetCompanysAsync()
-    {
         try
         {
             var result = await _context.Companies.ToListAsync();
@@ -112,8 +107,16 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         }
     }
 
-    public async Task<bool> SoftDeleteCompany(int CompanyId)
+    public async Task<bool> SoftDeleteCompanyAsync(int CompanyId)
     {
-        throw new NotImplementedException();
+        var company = await _context.Companies.FindAsync(CompanyId);
+        if (company == null)
+        {
+            _logger.LogDebug("No se encontró una compañía con ese id");
+            return false;
+        }
+        company.IsActive = false;
+        await _context.SaveChangesAsync();
+        return true;
     }
 }
