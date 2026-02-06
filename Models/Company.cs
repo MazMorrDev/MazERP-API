@@ -17,7 +17,7 @@ public class Company
     [Column("description"), MaxLength(255)]
     public string? Description { get; set; }
 
-    [Column("Company_photo_url"), MaxLength(500)]
+    [Column("Company_photo_url"), MaxLength(500), Url]
     public string? CompanyPhotoUrl { get; set; }
 
     [Column("currency")]
@@ -26,7 +26,7 @@ public class Company
     // Auditoría
     [Column("created_at")]
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
-    
+
     [Column("updated_at")]
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 

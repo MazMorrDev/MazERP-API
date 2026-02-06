@@ -3,28 +3,30 @@ using MazErpBack.DTOs.Company;
 using MazErpBack.Enums;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class CompanyService(AppDbContext context, ILogger<CompanyService> logger) : ICompanyService
+public class CompanyService(AppDbContext context, ILogger<CompanyService> logger, CompanyMapper mapper) : ICompanyService
 {
     private readonly AppDbContext _context = context;
     private readonly ILogger<CompanyService> _logger = logger;
+    private readonly CompanyMapper _mapper = mapper;
 
-    public async Task<CompanyUserDto> AssignCompanyToUser(int userId, int CompanyId, UserCompanyRole role = UserCompanyRole.Admin)
+    public async Task<CompanyUserDto> AssignCompanyToUserAsync(int userId, int companyId, UserCompanyRole role = UserCompanyRole.Owner)
     {
         try
         {
-            var existingUserWf = await _context.UserCompanies.FirstOrDefaultAsync(cw => cw.UserId == userId && cw.CompanyId == CompanyId);
+            var existingUserWf = await _context.UserCompanies.FirstOrDefaultAsync(cw => cw.UserId == userId && cw.CompanyId == companyId);
             if (existingUserWf != null)
             {
-                throw new BadHttpRequestException($"Company {CompanyId} is already assigned to user {userId}.");
+                throw new BadHttpRequestException($"Company {companyId} is already assigned to user {userId}.");
             }
             var userWfAdd = new UserCompany
             {
                 UserId = userId,
-                CompanyId = CompanyId,
+                CompanyId = companyId,
                 Role = role,
                 AssignedAt = DateTimeOffset.UtcNow
             };
@@ -41,7 +43,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error assigning Company with id:{CompanyId} to client with id:{userId}");
+            _logger.LogError(ex, $"Error assigning Company with id:{companyId} to client with id:{userId}");
             throw;
         }
     }
@@ -58,7 +60,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
                 CreatedAt = CompanyDto.CreatedAt
             };
 
-            _context.Companys.Add(Company);
+            _context.Companies.Add(Company);
 
             await _context.SaveChangesAsync();
 
@@ -71,16 +73,47 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         }
     }
 
+    public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto)
+    {
+        var company = _mapper.MapDtoToModel(companyDto);
+        await _context.Companies.AddAsync(company);
+        await _context.SaveChangesAsync();
+        return _mapper.MapToDto(company);
+    }
+
+    public async Task<bool> DeleteCompanyAsync(int companyId)
+    {
+        var company = await _context.Companies.FindAsync(companyId);
+        if (company == null)
+        {
+            _logger.LogDebug("");
+            return false;
+        }
+        _context.Companies.Remove(company);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<List<Company>> GetCompaniesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<List<Company>> GetCompanysAsync()
     {
         try
         {
-            var result = await _context.Companys.ToListAsync();
+            var result = await _context.Companies.ToListAsync();
             return result;
         }
         catch (Exception)
         {
             throw;
         }
+    }
+
+    public async Task<bool> SoftDeleteCompany(int CompanyId)
+    {
+        throw new NotImplementedException();
     }
 }

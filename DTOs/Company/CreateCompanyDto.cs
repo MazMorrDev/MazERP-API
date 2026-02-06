@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MazErpBack.Enums;
 
 namespace MazErpBack.DTOs.Company;
 
@@ -10,7 +11,9 @@ public record class CreateCompanyDto
 
     public string? Description { get; init; }
 
+    [Url]
     public string? CompanyPhotoUrl { get; init; } = null;
+    public Currency Currency { get; init; }
 
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
 }
