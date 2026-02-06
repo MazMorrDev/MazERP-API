@@ -1,43 +1,56 @@
 ﻿
+using MazErpBack.Context;
 using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils.Mappers;
 
 namespace MazErpBack.Services.Implementation;
 
-public class ExpenseService : IExpenseService
+public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger, AppDbContext context) : IExpenseService
 {
-    public Task<ExpenseDto> CreateExpenseAsync(CreateExpenseDto expenseDto)
+    private readonly ExpenseMapper _mapper = mapper;
+    private readonly ILogger<ExpenseService> _logger = logger;
+    private readonly AppDbContext _context = context;
+    public async Task<ExpenseDto> CreateExpenseAsync(CreateExpenseDto expenseDto)
+    {
+        var user = await _context.Users.FindAsync(expenseDto.UserId);
+        var company = await _context.Companies.FindAsync(expenseDto.CompanyId);
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentNullException.ThrowIfNull(company);
+
+        var expense = _mapper.MapModelToDto(user, company, expenseDto);
+        await _context.Expenses.AddAsync(expense);
+        await _context.SaveChangesAsync();
+        return _mapper.MapToDto(expense);
+    }
+
+    public async Task<bool> DeleteExpenseAsync(int expenseId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> DeleteExpenseAsync(int expenseId)
+    public async Task<Expense> GetExpenseByIdAsync(int expenseId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Expense> GetExpenseByIdAsync(int expenseId)
+    public async Task<List<Expense>> GetExpensesAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<Expense>> GetExpensesAsync()
+    public async Task<List<ExpenseDto>> GetExpensesByCompanyAsync(int companyId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<ExpenseDto>> GetExpensesByCompanyAsync(int companyId)
+    public async Task<bool> SoftDeleteExpenseAsync(int expenseId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> SoftDeleteExpenseAsync(int expenseId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ExpenseDto> UpdateExpenseAsync(int id, CreateExpenseDto expenseDto)
+    public async Task<ExpenseDto> UpdateExpenseAsync(int id, CreateExpenseDto expenseDto)
     {
         throw new NotImplementedException();
     }
