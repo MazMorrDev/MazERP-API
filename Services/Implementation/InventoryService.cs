@@ -10,9 +10,48 @@ public class InventoryService(AppDbContext context) : IInventoryService
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<Inventory> CreateInventoryAsync(CreateInventoryDto inventoryDto)
+    public async Task<Inventory> DeleteInventoryAsync(int id)
     {
         try
+        {
+            var inventory = await _context.Inventories.FindAsync(id);
+            ArgumentNullException.ThrowIfNull(inventory);
+
+            inventory.IsActive = false;
+            await _context.SaveChangesAsync();
+
+            return inventory;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public Task<List<Inventory>> GetInventoriesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Inventory> GetInventoryByIdAsync()
+    {
+        var inventory = await
+        return
+    }
+
+    public async Task<bool> SoftDeleteInventoryAsync(int inventoryId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryDto inventoryDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto inventoryDto)
+    {
+                try
         {
             var inventory = new Inventory()
             {
@@ -34,29 +73,16 @@ public class InventoryService(AppDbContext context) : IInventoryService
         }
     }
 
-    public async Task<Inventory> DeleteInventoryAsync(int id)
+    public async Task<bool> IInventoryService.DeleteInventoryAsync(int inventoryId)
     {
-        try
-        {
-            var inventory = await _context.Inventories.FindAsync(id);
-            ArgumentNullException.ThrowIfNull(inventory);
-
-            inventory.IsActive = false;
-            await _context.SaveChangesAsync();
-
-            return inventory;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        throw new NotImplementedException();
     }
 
-    public async Task<List<Inventory>> GetInventoriesByWarehouseAsync(int id)
+    public async Task<List<InventoryDto>> IInventoryService.GetInventoriesByWarehouseAsync(int inventoryId)
     {
         try
         {
-            var inventories = await _context.Inventories.Where(w => w.WarehouseId.Equals(id)).ToListAsync();
+            var inventories = await _context.Inventories.Where(w => w.WarehouseId.Equals(inventoryId)).ToListAsync();
             return inventories;
         }
         catch (Exception)

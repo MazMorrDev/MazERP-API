@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class ProductService(AppDbContext context, ProductMapper mapper) : IProductService
+public class ProductService(AppDbContext context, ProductMapper mapper, ILogger<ProductService> logger) : IProductService
 {
     private readonly AppDbContext _context = context;
     private readonly ProductMapper _mapper = mapper;
