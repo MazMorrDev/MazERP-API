@@ -6,10 +6,9 @@ public record class InventoryDto
     public required int WarehouseId { get; init; }
     public required int ProductId { get; init; }
     public required int Stock { get; init; }
-    public decimal ActualDiscount { get; init; }
+    public decimal BaseDiscount { get; init; }
     public decimal? BasePrice { get; init; }
     public decimal AverageCost { get; init; }
     public int? AlertStock { get; init; }
     public int? WarningStock { get; init; }
-    public DateTimeOffset? LastSaleDate { get; init; }
 }

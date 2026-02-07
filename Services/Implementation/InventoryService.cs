@@ -2,31 +2,15 @@
 using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class InventoryService(AppDbContext context) : IInventoryService
+public class InventoryService(AppDbContext context, InventoryMapper mapper) : IInventoryService
 {
     private readonly AppDbContext _context = context;
-
-    public async Task<Inventory> DeleteInventoryAsync(int id)
-    {
-        try
-        {
-            var inventory = await _context.Inventories.FindAsync(id);
-            ArgumentNullException.ThrowIfNull(inventory);
-
-            inventory.IsActive = false;
-            await _context.SaveChangesAsync();
-
-            return inventory;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
+    private readonly InventoryMapper _mapper = mapper;
 
     public Task<List<Inventory>> GetInventoriesAsync()
     {
@@ -51,7 +35,7 @@ public class InventoryService(AppDbContext context) : IInventoryService
 
     public async Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto inventoryDto)
     {
-                try
+        try
         {
             var inventory = new Inventory()
             {
@@ -73,17 +57,33 @@ public class InventoryService(AppDbContext context) : IInventoryService
         }
     }
 
-    public async Task<bool> IInventoryService.DeleteInventoryAsync(int inventoryId)
+    public async Task<bool> DeleteInventoryAsync(int inventoryId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var inventory = await _context.Inventories.FindAsync(inventoryId);
+            if (inventory == null)
+            {
+                // poner el logger
+                return false;
+            }
+
+            inventory.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
-    public async Task<List<InventoryDto>> IInventoryService.GetInventoriesByWarehouseAsync(int inventoryId)
+    public async Task<List<InventoryDto>> GetInventoriesByWarehouseAsync(int inventoryId)
     {
         try
         {
             var inventories = await _context.Inventories.Where(w => w.WarehouseId.Equals(inventoryId)).ToListAsync();
-            return inventories;
+            return _mapper.MapListToDto(inventories);
         }
         catch (Exception)
         {

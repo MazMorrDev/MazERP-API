@@ -10,7 +10,7 @@ public record class CreateInventoryDto
     public int ProductId { get; init; }
     [Required]
     public int Stock { get; init; }
-    public decimal ActualDiscount { get; init; }
+    public decimal BaseDiscount { get; init; }
     public decimal? BasePrice { get; init; }
     public decimal AverageCost { get; init; }
     public int? AlertStock { get; init; }
