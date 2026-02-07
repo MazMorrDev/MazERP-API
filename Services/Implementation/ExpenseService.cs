@@ -31,7 +31,15 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
 
     public async Task<bool> DeleteExpenseAsync(int expenseId)
     {
-        throw new NotImplementedException();
+        var expense = await _context.Expenses.FindAsync(expenseId);
+        if (expense == null)
+        {
+            _logger.LogDebug("");
+            return false;
+        }
+        _context.Expenses.Remove(expense);
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<Expense> GetExpenseByIdAsync(int expenseId)

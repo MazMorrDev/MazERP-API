@@ -14,8 +14,8 @@ public class Movement
     [Required, Column("user_id")]
     public required int UserId { get; set; }
 
-    [Required, Column("inventory_id")]
-    public required int InventoryId { get; set; }
+    [Required, Column("sell_point_id")]
+    public required int SellPointId { get; set; }
 
     [Column("description"), MaxLength(225)]
     public string? Description { get; set; }
@@ -46,6 +46,6 @@ public class Movement
     [ForeignKey("UserId")]
     public required virtual User User { get; set; }
 
-    [ForeignKey("InventoryId")]
-    public required virtual Inventory Inventory { get; set; }
+    [ForeignKey("SellPointId")]
+    public required virtual SellPoint SellPoint { get; set; }
 }
