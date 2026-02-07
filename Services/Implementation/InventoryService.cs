@@ -37,19 +37,22 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
     {
         try
         {
-            var inventory = new Inventory()
+            var warehouse = await _context.Warehouses.FindAsync(inventoryDto.WarehouseId);
+            var product = await _context.Products.FindAsync(inventoryDto.ProductId);
+
+
+            if (warehouse == null || product == null)
             {
-                WarehouseId = inventoryDto.WarehouseId,
-                ProductId = inventoryDto.ProductId,
-                Stock = inventoryDto.Stock,
-                AlertStock = inventoryDto.AlertStock,
-                WarningStock = inventoryDto.WarningStock,
-            };
+                // logging
+                throw new ArgumentException("Almacén o Producto no encontrados");
+            }
+
+            var inventory = _mapper.MapDtoToModel(warehouse, product, inventoryDto);
 
             await _context.Inventories.AddAsync(inventory);
             await _context.SaveChangesAsync();
 
-            return inventory;
+            return _mapper.MapToDto(inventory);
         }
         catch (Exception)
         {
