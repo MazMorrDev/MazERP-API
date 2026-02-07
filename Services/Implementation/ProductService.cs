@@ -2,26 +2,26 @@
 using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class ProductService(AppDbContext context) : IProductService
+public class ProductService(AppDbContext context, ProductMapper mapper) : IProductService
 {
     private readonly AppDbContext _context = context;
+    private readonly ProductMapper _mapper = mapper;
 
-    public async Task<Product> CreateProductAsync(CreateProductDto productDto)
+    public async Task<ProductDto> CreateProductAsync(CreateProductDto productDto)
     {
         try
         {
-            var product = new Product()
-            {
-                Name = productDto.Name
-            };
+            var product = _mapper.MapDtoToModel(productDto);
 
-            _context.Products.Add(product);
+            await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
 
-            return product;
+            return _mapper.MapToDto(product);
         }
         catch (Exception)
         {
@@ -30,17 +30,57 @@ public class ProductService(AppDbContext context) : IProductService
         }
     }
 
-    public async Task<Product> DeleteProductAsync(int id)
+    public async Task<Product> GetProductByIdAsync(int productId)
+    {
+        var product = await _context.Products.FindAsync(productId);
+        ArgumentNullException.ThrowIfNull(product);
+        return product;
+    }
+
+    public async Task<List<Product>> GetProductsAsync()
+    {
+        var products = await _context.Products.ToListAsync();
+        ArgumentNullException.ThrowIfNull(products);
+        return products;
+    }
+
+    public async Task<List<ProductDto>> GetProductsByCompanyAsync(int companyId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<List<ProductDto>> GetProductsByWarehouseAsync(int warehouseId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<ProductDto> UpdateProductAsync(int productId, CreateProductDto productDto)
+    {
+        var product = await _context.Products.FindAsync(productId);
+        ArgumentNullException.ThrowIfNull(product);
+        product.Name = productDto.Name;
+        product.Description = productDto.Description;
+        product.PhotoUrl = productDto.PhotoUrl;
+        product.Category = productDto.ProductCategory;
+
+        await _context.SaveChangesAsync();
+        return _mapper.MapToDto(product);
+    }
+
+    public async Task<bool> DeleteProductAsync(int productId)
     {
         try
         {
-            var product = await _context.Products.FindAsync(id);
-            ArgumentNullException.ThrowIfNull(product);
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null)
+            {
+                return false;
+            }
 
-            // product.IsActive = false;
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
-            return product;
+            return true;
         }
         catch (NullReferenceException)
         {
