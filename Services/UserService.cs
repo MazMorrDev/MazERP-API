@@ -7,10 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services;
 
-public class UserService(AppDbContext context, ITokenService tokenService) : IUserService
+public class UserService(AppDbContext context, ITokenService tokenService, ILogger<UserService> logger) : IUserService
 {
     private readonly AppDbContext _context = context;
     private readonly ITokenService _tokenService = tokenService;
+    private readonly ILogger<UserService> _logger = logger;
 
     public async Task<TokenDto?> LoginUserAsync(LoginDto loginDto)
     {
@@ -27,9 +28,11 @@ public class UserService(AppDbContext context, ITokenService tokenService) : IUs
             var result = hasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
+                _logger.LogWarning("Failed login attempt for email: {Email}", loginDto.Email);
                 return null;
             }
             var token = _tokenService.CreateTokenAsync(user);
+            _logger.LogInformation("User logged in: {Email}", loginDto.Email);
             return token;
         }
         catch (Exception)
