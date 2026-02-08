@@ -2,6 +2,7 @@
 using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;

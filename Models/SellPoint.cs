@@ -13,6 +13,9 @@ public class SellPoint
     [Required, Column("name")]
     public required string Name { get; set; }
 
+    [Column("description")]
+    public string? Description { get; set; }
+
     [Column("location")]
     public string? Location { get; set; }
 
