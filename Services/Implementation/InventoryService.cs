@@ -104,16 +104,31 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
         }
     }
 
-    public async Task<List<InventoryDto>> GetInventoriesByWarehouseAsync(int inventoryId)
+    public async Task<List<InventoryDto>> GetInventoriesByWarehouseAsync(int warehouseId)
     {
         try
         {
-            var inventories = await _context.Inventories.Where(w => w.WarehouseId.Equals(inventoryId)).ToListAsync();
+            var inventories = await _context.Inventories.Where(i => i.WarehouseId.Equals(warehouseId)).ToListAsync();
             return _mapper.MapListToDto(inventories);
         }
         catch (Exception)
         {
             throw;
         }
+    }
+
+    public async Task<List<InventoryDto>> GetInventoriesByCompanyAsync(int companyId)
+    {
+        var warehouses = await _context.Warehouses.Where(c => c.CompanyId.Equals(companyId)).ToListAsync();
+        List<InventoryDto> inventoriesDto = [];
+        foreach (var warehouse in warehouses)
+        {
+            var inventories = await _context.Inventories.Where(i => i.WarehouseId.Equals(warehouse.Id)).ToListAsync();
+            foreach (var inventory in inventories)
+            {
+                inventoriesDto.Add(_mapper.MapToDto(inventory));
+            }
+        }
+        return inventoriesDto;
     }
 }
