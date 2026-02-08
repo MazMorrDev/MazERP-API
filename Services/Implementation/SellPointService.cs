@@ -47,24 +47,26 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
         List<SellPointDto> sellPointsDto = [];
         foreach (var warehouse in warehouses)
         {
-            var inventories = await _context.Inventories.Where(i=>i.WarehouseId == warehouse.Id).ToListAsync();
-            foreach (var inventory in inventories)
-            {
-                // TODO: ver bien como se hace esta consulta teniendo en cuenta que hay 2 keys
-                var sellPointInventories = await _context.SellPointInventories.Where(spi=>spi.InventoryId == inventory.Id).ToListAsync();
-                foreach (var sellPointsInventory in sellPointInventories)
-                {
-                    var sellPoint = await _context.SellPoints.FindAsync(sellPointsInventory.SellPointId);
-                    sellPointsDto.Add(_mapper.MapToDto(sellPoint));
-                }
-            }
+            sellPointsDto.AddRange(GetSellPointsByWarehouseAsync(warehouse.Id).Result);
         }
         return sellPointsDto;
     }
 
     public async Task<List<SellPointDto>> GetSellPointsByWarehouseAsync(int warehouseId)
     {
-        var sellPoint = ;
+        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId).ToListAsync();
+        List<SellPointDto> sellPointsDto = [];
+        foreach (var inventory in inventories)
+        {
+            // TODO: ver bien como se hace esta consulta teniendo en cuenta que hay 2 keys
+            var sellPointInventories = await _context.SellPointInventories.Where(spi => spi.InventoryId == inventory.Id).ToListAsync();
+            foreach (var sellPointsInventory in sellPointInventories)
+            {
+                var sellPoint = await _context.SellPoints.FindAsync(sellPointsInventory.SellPointId);
+                sellPointsDto.Add(_mapper.MapToDto(sellPoint));
+            }
+        }
+        return sellPointsDto;
     }
 
     public async Task<bool> SoftDeleteSellPointAsync(int sellPointId)
