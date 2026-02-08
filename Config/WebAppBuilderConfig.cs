@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Serilog;
 using MazErpBack.Context;
 using MazErpBack.Services;
 using MazErpBack.Services.Interfaces;
@@ -33,6 +34,13 @@ public class WebAppBuilderConfig
             .AddPolicy("Inventory", policy => policy.RequireClaim(ClaimTypes.Role, "Inventory"))
             .AddPolicy("Sales", policy => policy.RequireClaim(ClaimTypes.Role, "Sales"))
             .AddPolicy("Finance", policy => policy.RequireClaim(ClaimTypes.Role, "Finance"));
+
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+            
+        builder.Host.UseSerilog();
     }
 
     public static void ConfigureCorsPolicy(WebApplicationBuilder builder)
