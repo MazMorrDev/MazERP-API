@@ -32,7 +32,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         await _context.Devolutions.AddAsync(devolution);
         await _context.SaveChangesAsync();
 
-        return _mapper.MapDevolutionToDto(devolution);
+        return _mapper.MapToDto(devolution);
     }
 
     public async Task<bool> DeleteDevolutionAsync(int devolutionId)
@@ -122,6 +122,6 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         devolution.DevolutionDate = devolutionDto.Date;
         await _context.SaveChangesAsync();
 
-        return _mapper.MapDevolutionToDto(devolution);
+        return _mapper.MapToDto(devolution);
     }
 }

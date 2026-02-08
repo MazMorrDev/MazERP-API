@@ -19,7 +19,7 @@ public class BuyMapper(ILogger<BuyMapper> logger)
         {
             MovementId = movement.Id,
             UserId = movement.UserId,
-            InventoryId = movement.InventoryId,
+            SellPointId = movement.SellPointId,
             Description = movement.Description,
             MovementType = movement.MovementType,
             Quantity = movement.Quantity,
