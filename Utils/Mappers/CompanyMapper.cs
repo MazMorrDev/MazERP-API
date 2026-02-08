@@ -3,7 +3,7 @@ using MazErpBack.Models;
 
 namespace MazErpBack.Utils.Mappers;
 
-public class CompanyMapper : IMapper<CompanyDto, CreateCompanyDto, Company>
+public class CompanyMapper
 {
     public CompanyDto MapToDto(Company company)
     {

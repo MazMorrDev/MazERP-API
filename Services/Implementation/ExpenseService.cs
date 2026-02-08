@@ -4,6 +4,7 @@ using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using MazErpBack.Utils.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
@@ -18,7 +19,7 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
         var company = await _context.Companies.FindAsync(expenseDto.CompanyId);
         if (user == null || company == null)
         {
-            _logger.LogDebug("No existe el suuario o la compañia brindados");
+            _logger.LogDebug("No existe el usuario o la compañia");
             ArgumentNullException.ThrowIfNull(user);
             ArgumentNullException.ThrowIfNull(company);
         }
@@ -44,26 +45,46 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
 
     public async Task<Expense> GetExpenseByIdAsync(int expenseId)
     {
-        throw new NotImplementedException();
+        var expense = await _context.Expenses.FindAsync(expenseId);
+        ArgumentNullException.ThrowIfNull(expense);
+        return expense;
     }
 
     public async Task<List<Expense>> GetExpensesAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Expenses.ToListAsync();
     }
 
     public async Task<List<ExpenseDto>> GetExpensesByCompanyAsync(int companyId)
     {
-        throw new NotImplementedException();
+        List<ExpenseDto> expenses = _mapper.MapListToDto(await _context.Expenses.Where(e => e.CompanyId == companyId).ToListAsync());
+        return expenses;
     }
 
     public async Task<bool> SoftDeleteExpenseAsync(int expenseId)
     {
-        throw new NotImplementedException();
+        var expense = await _context.Expenses.FindAsync(expenseId);
+        if (expense == null)
+        {
+            // Logging
+            return false;
+        }
+        expense.IsActive = false;
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<ExpenseDto> UpdateExpenseAsync(int id, CreateExpenseDto expenseDto)
     {
-        throw new NotImplementedException();
+        var expense = GetExpenseByIdAsync(id).Result;
+        expense.Amount = expenseDto.Amount;
+        expense.UserId = expenseDto.UserId;
+        expense.Description = expenseDto.Description;
+        expense.Category = expenseDto.ExpenseCategory;
+        expense.PaymentMethod = expenseDto.PaymentMethod;
+        expense.DatePaid = expenseDto.DatePaid;
+
+        await _context.SaveChangesAsync();
+        return _mapper.MapToDto(expense);
     }
 }

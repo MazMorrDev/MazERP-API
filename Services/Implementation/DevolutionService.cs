@@ -32,7 +32,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
             var devolution = await _context.Devolutions.FindAsync(devolutionId);
             if (devolution == null)
             {
-                _logger.LogWarning("Devolución {Id} no encontrada para eliminar", devolutionId);
+                // logging
                 return false;
             }
 
@@ -74,16 +74,22 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         return devolutions;
     }
 
-    public async Task<List<DevolutionDto>> GetDevolutionsByWarehouseAsync(int warehouseId)
+    public async Task<List<DevolutionDto>> GetDevolutionsByCompanyAsync(int companyId)
     {
-        // TODO: we have to use a lot of services to know this
+        // Too much work for the database, I am thinking in not to allow it.
         throw new NotImplementedException();
     }
 
-    public async Task<List<DevolutionDto>> GetDevolutionsByCompanyAsync(int companyId)
+    public async Task<List<DevolutionDto>> GetDevolutionsBySellPointAsync(int sellPointId)
     {
-        // TODO: we have to use a lot of services to know this
-        throw new NotImplementedException();
+        var movements = await _context.Movements.Where(m => m.SellPointId == sellPointId).ToListAsync();
+        List<DevolutionDto> devolutionsDto = [];
+        foreach (var movement in movements)
+        {
+            var devolutions = _mapper.MapListToDto(await _context.Devolutions.Where(d => d.SellId == movement.Id).ToListAsync());
+            devolutionsDto.AddRange(devolutions);
+        }
+        return devolutionsDto;
     }
 
     public async Task<bool> SoftDeleteDevolutionAsync(int devolutionId)
