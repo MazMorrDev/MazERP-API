@@ -3,7 +3,7 @@ using MazErpBack.Models;
 
 namespace MazErpBack.Utils.Mappers;
 
-public class DevolutionMapper: IMapper<DevolutionDto, CreateDevolutionDto, Devolution>
+public class DevolutionMapper
 {
     public DevolutionDto MapToDto(Devolution devolution)
     {
@@ -30,8 +30,18 @@ public class DevolutionMapper: IMapper<DevolutionDto, CreateDevolutionDto, Devol
         return devolutionsDto;
     }
 
-    public Devolution MapDtoToModel(CreateDevolutionDto createDto)
+    public Devolution MapDtoToModel(Sell sell, CreateDevolutionDto createDto)
     {
-        throw new NotImplementedException();
+        return new Devolution
+        {
+            SellId = createDto.SellId,
+            Reason = createDto.Reason,
+            RefundAmount = createDto.RefundAmount,
+            Notes = createDto.Notes,
+            DevolutionStatus = createDto.DevolutionStatus,
+            DevolutionActionTake = createDto.DevolutionActionTake,
+            DevolutionDate = createDto.Date,
+            Sell = sell,
+        };
     }
 }

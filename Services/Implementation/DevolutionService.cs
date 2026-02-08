@@ -18,17 +18,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         var sell = await _context.Sells.FindAsync(devolutionDto.SellId);
         ArgumentNullException.ThrowIfNull(sell);
 
-        var devolution = new Devolution
-        {
-            SellId = devolutionDto.SellId,
-            Reason = devolutionDto.Reason,
-            RefundAmount = devolutionDto.RefundAmount,
-            Notes = devolutionDto.Notes,
-            DevolutionStatus = devolutionDto.DevolutionStatus,
-            DevolutionActionTake = devolutionDto.DevolutionActionTake,
-            DevolutionDate = devolutionDto.Date,
-            Sell = sell,
-        };
+        var devolution = _mapper.MapDtoToModel(sell, devolutionDto);
         await _context.Devolutions.AddAsync(devolution);
         await _context.SaveChangesAsync();
 
