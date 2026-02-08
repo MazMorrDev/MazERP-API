@@ -18,8 +18,8 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
     {
         try
         {
-            var existingUserWf = await _context.UserCompanies.FirstOrDefaultAsync(cw => cw.UserId == userId && cw.CompanyId == companyId);
-            if (existingUserWf != null)
+            var existingUser = await _context.UserCompanies.FirstOrDefaultAsync(c => c.UserId == userId && c.CompanyId == companyId);
+            if (existingUser != null)
             {
                 throw new BadHttpRequestException($"Company {companyId} is already assigned to user {userId}.");
             }
@@ -33,6 +33,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
             // check if Company is already associated to user
             _context.UserCompanies.Add(userWfAdd);
             await _context.SaveChangesAsync();
+            // TODO: esto hay que mapearlo
             return new CompanyUserDto
             {
                 UserId = userWfAdd.UserId,

@@ -43,7 +43,23 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
 
     public async Task<List<SellPointDto>> GetSellPointsByCompanyAsync(int companyId)
     {
-        throw new NotImplementedException();
+        var warehouses = await _context.Warehouses.Where(w => w.CompanyId == companyId).ToListAsync();
+        List<SellPointDto> sellPointsDto = [];
+        foreach (var warehouse in warehouses)
+        {
+            var inventories = await _context.Inventories.Where(i=>i.WarehouseId == warehouse.Id).ToListAsync();
+            foreach (var inventory in inventories)
+            {
+                // TODO: ver bien como se hace esta consulta teniendo en cuenta que hay 2 keys
+                var sellPointInventories = await _context.SellPointInventories.Where(spi=>spi.InventoryId == inventory.Id).ToListAsync();
+                foreach (var sellPointsInventory in sellPointInventories)
+                {
+                    var sellPoint = await _context.SellPoints.FindAsync(sellPointsInventory.SellPointId);
+                    sellPointsDto.Add(_mapper.MapToDto(sellPoint));
+                }
+            }
+        }
+        return sellPointsDto;
     }
 
     public async Task<List<SellPointDto>> GetSellPointsByWarehouseAsync(int warehouseId)

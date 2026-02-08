@@ -1,4 +1,5 @@
 ﻿using MazErpBack.DTOs.Movements;
+using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 
 namespace MazErpBack.Services.Implementation;
@@ -15,12 +16,12 @@ public class BuyService : IBuyService
         throw new NotImplementedException();
     }
 
-    public Task<BuyDto> GetBuyByIdAsync(int buyId)
+    public Task<Buy> GetBuyByIdAsync(int buyId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<BuyDto>> GetBuysAsync()
+    public Task<List<Buy>> GetBuysAsync()
     {
         throw new NotImplementedException();
     }
@@ -40,7 +41,7 @@ public class BuyService : IBuyService
         throw new NotImplementedException();
     }
 
-    public Task<BuyDto> UpdateBuyAsync(CreateBuyDto buyDto)
+    public Task<BuyDto> UpdateBuyAsync(int buyId, CreateBuyDto buyDto)
     {
         throw new NotImplementedException();
     }
