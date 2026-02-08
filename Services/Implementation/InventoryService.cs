@@ -12,25 +12,48 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
     private readonly AppDbContext _context = context;
     private readonly InventoryMapper _mapper = mapper;
 
-    public Task<List<Inventory>> GetInventoriesAsync()
+    public async Task<List<Inventory>> GetInventoriesAsync()
     {
-        throw new NotImplementedException();
+        var inventory = await _context.Inventories.ToListAsync();
+        ArgumentNullException.ThrowIfNull(inventory);
+        return inventory;
     }
 
-    public async Task<Inventory> GetInventoryByIdAsync()
+    public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
     {
-        var inventory = await
-        return
+        var inventory = await _context.Inventories.FindAsync(inventoryId);
+        ArgumentNullException.ThrowIfNull(inventory);
+        return inventory;
     }
 
     public async Task<bool> SoftDeleteInventoryAsync(int inventoryId)
     {
-        throw new NotImplementedException();
+        var inventory = await _context.Inventories.FindAsync(inventoryId);
+        if (inventory == null)
+        {
+            //TODO: Logging
+            return false;
+        }
+        inventory.IsActive = false;
+        return true;
     }
 
     public async Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryDto inventoryDto)
     {
-        throw new NotImplementedException();
+        var inventory = await _context.Inventories.FindAsync(inventoryId);
+        ArgumentNullException.ThrowIfNull(inventory);
+
+        inventory.AlertStock = inventoryDto.AlertStock;
+        inventory.WarehouseId = inventoryDto.WarehouseId;
+        inventory.ProductId = inventoryDto.ProductId;
+        inventory.Stock = inventoryDto.Stock;
+        inventory.BasePrice = inventoryDto.BasePrice;
+        inventory.BaseDiscount = inventoryDto.BaseDiscount;
+        inventory.AverageCost = inventoryDto.AverageCost;
+        inventory.AlertStock = inventoryDto.AlertStock;
+        inventory.AlertStock = inventoryDto.AlertStock;
+
+        return _mapper.MapToDto(inventory);
     }
 
     public async Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto inventoryDto)
@@ -43,7 +66,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
 
             if (warehouse == null || product == null)
             {
-                // logging
+                //TODO: logging
                 throw new ArgumentException("Almacén o Producto no encontrados");
             }
 
