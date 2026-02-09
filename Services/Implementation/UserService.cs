@@ -62,8 +62,6 @@ public class UserService(AppDbContext context, ITokenService tokenService, ILogg
                 Email = user.Email,
                 Name = user.Name,
                 ProfilePhotoUrl = user.ProfilePhotoUrl,
-                CreatedAt = user.CreatedAt,
-                UpdatedAt = user.UpdatedAt
             };
             return response;
         }

@@ -12,13 +12,6 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
     private readonly AppDbContext _context = context;
     private readonly InventoryMapper _mapper = mapper;
 
-    public async Task<List<Inventory>> GetInventoriesAsync()
-    {
-        var inventory = await _context.Inventories.ToListAsync();
-        ArgumentNullException.ThrowIfNull(inventory);
-        return inventory;
-    }
-
     public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
     {
         var inventory = await _context.Inventories.FindAsync(inventoryId);

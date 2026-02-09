@@ -6,7 +6,6 @@ namespace MazErpBack.Services.Interfaces;
 public interface IProductService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<Product>> GetProductsAsync();
     public Task<Product> GetProductByIdAsync(int productId);
     public Task<bool> DeleteProductAsync(int productId);
 

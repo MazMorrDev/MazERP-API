@@ -13,6 +13,7 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
     private readonly ExpenseMapper _mapper = mapper;
     private readonly ILogger<ExpenseService> _logger = logger;
     private readonly AppDbContext _context = context;
+
     public async Task<ExpenseDto> CreateExpenseAsync(CreateExpenseDto expenseDto)
     {
         var user = await _context.Users.FindAsync(expenseDto.UserId);
@@ -48,11 +49,6 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
         var expense = await _context.Expenses.FindAsync(expenseId);
         ArgumentNullException.ThrowIfNull(expense);
         return expense;
-    }
-
-    public async Task<List<Expense>> GetExpensesAsync()
-    {
-        return await _context.Expenses.ToListAsync();
     }
 
     public async Task<List<ExpenseDto>> GetExpensesByCompanyAsync(int companyId)

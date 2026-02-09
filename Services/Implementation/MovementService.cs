@@ -99,22 +99,6 @@ public partial class MovementService(AppDbContext context, ILogger<MovementServi
         return movement;
     }
 
-    public async Task<List<Movement>> GetMovementsAsync()
-    {
-        var movements = await _context.Movements.ToListAsync();
-
-        if (movements == null || movements.Count == 0)
-        {
-            _logger.LogDebug("No se encontraron movimientos");
-        }
-        else
-        {
-            _logger.LogDebug("Se obtuvieron {Count} movimientos", movements.Count);
-        }
-
-        return movements ?? [];
-    }
-
     public async Task<bool> SoftDeleteMovementAsync(int movementID)
     {
         var movement = await _context.Movements.FindAsync(movementID);

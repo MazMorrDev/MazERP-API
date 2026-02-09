@@ -6,22 +6,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class WarehouseService(AppDbContext context) : IWarehouseService
+public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IWarehouseService
 {
     private readonly AppDbContext _context = context;
+    private readonly WarehouseMapper _mapper = mapper;
     public async Task<Warehouse> CreateWarehouse(CreateWarehouseDto warehouseDto)
     {
         try
         {
-            var company = 
-            // Validation
-            ArgumentNullException.ThrowIfNull(warehouseDto);
+            var company = await _context.Companies.FindAsync(warehouseDto.CompanyId);
+            ArgumentNullException.ThrowIfNull(company);
 
             var warehouse = new Warehouse()
             {
-                CompanyId = warehouseDto.WorkflowId,
+                CompanyId = warehouseDto.CompanyId,
                 Name = warehouseDto.Name,
-                Description = warehouseDto.Description
+                Description = warehouseDto.Description,
+                Company = company
             };
 
             _context.Warehouses.Add(warehouse);
@@ -32,6 +33,11 @@ public class WarehouseService(AppDbContext context) : IWarehouseService
         {
             throw;
         }
+    }
+
+    public Task<WarehouseDto> CreateWarehouseAsync(CreateWarehouseDto warehouseDto)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<Warehouse> DeleteWarehouse(int id)
@@ -52,12 +58,32 @@ public class WarehouseService(AppDbContext context) : IWarehouseService
         }
     }
 
-    public async Task<List<Warehouse>> GetWarehousesByWorkflowAsync(int workflowId)
+    public Task<bool> DeleteWarehouseAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<WarehouseDto> GetWarehouseByIdAsync(int warehouseId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> SoftDeleteWarehouseAsync(int warehouseId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<WarehouseDto> UpdateWarehouseAsync(int WarehouseId, CreateWarehouseDto warehouseDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<List<WarehouseDto>> GetWarehousesByCompanyAsync(int companyId)
     {
         try
         {
-            var warehouses = await _context.Warehouses.Where(w => w.WorkflowId.Equals(workflowId)).ToListAsync();
-            return warehouses;
+            var warehouses = await _context.Warehouses.Where(w => w.CompanyId.Equals(companyId)).ToListAsync();
+            return _mapper.MapListToDto(warehouses);
         }
         catch (Exception)
         {

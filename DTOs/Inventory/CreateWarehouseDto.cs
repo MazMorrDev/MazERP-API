@@ -4,9 +4,9 @@ namespace MazErpBack.DTOs.Inventory;
 
 public record class CreateWarehouseDto
 {
-    // Foreign Key para Workflow
+    // Foreign Key para Company
     [Required]
-    public int WorkflowId { get; init; }
+    public int CompanyId { get; init; }
 
     [Required, MaxLength(30)]
     public required string Name { get; init; }

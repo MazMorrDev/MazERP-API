@@ -66,14 +66,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         }
 
     }
-
-    public async Task<List<Devolution>> GetDevolutionsAsync()
-    {
-        var devolutions = await _context.Devolutions.ToListAsync();
-        ArgumentNullException.ThrowIfNull(devolutions);
-        return devolutions;
-    }
-
+    
     public async Task<List<DevolutionDto>> GetDevolutionsByInventoryAsync(int inventoryId)
     {
         throw new NotImplementedException();

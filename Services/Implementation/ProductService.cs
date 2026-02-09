@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class ProductService(AppDbContext context, ProductMapper mapper, ILogger<ProductService> logger) : IProductService
+public class ProductService(AppDbContext context, ProductMapper mapper) : IProductService
 {
     private readonly AppDbContext _context = context;
     private readonly ProductMapper _mapper = mapper;
@@ -37,13 +37,6 @@ public class ProductService(AppDbContext context, ProductMapper mapper, ILogger<
         return product;
     }
 
-    public async Task<List<Product>> GetProductsAsync()
-    {
-        var products = await _context.Products.ToListAsync();
-        ArgumentNullException.ThrowIfNull(products);
-        return products;
-    }
-
     public async Task<List<ProductDto>> GetProductsByCompanyAsync(int companyId)
     {
         throw new NotImplementedException();
@@ -56,8 +49,7 @@ public class ProductService(AppDbContext context, ProductMapper mapper, ILogger<
 
     public async Task<ProductDto> UpdateProductAsync(int productId, CreateProductDto productDto)
     {
-        var product = await _context.Products.FindAsync(productId);
-        ArgumentNullException.ThrowIfNull(product);
+        var product = await GetProductByIdAsync(productId);
         product.Name = productDto.Name;
         product.Description = productDto.Description;
         product.PhotoUrl = productDto.PhotoUrl;

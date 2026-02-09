@@ -41,11 +41,6 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
         return sellPoint;
     }
 
-    public async Task<List<SellPoint>> GetSellPointsAsync()
-    {
-        return await _context.SellPoints.ToListAsync();
-    }
-
     public async Task<List<SellPointDto>> GetSellPointsByCompanyAsync(int companyId)
     {
         var warehouses = await _context.Warehouses.Where(w => w.CompanyId == companyId).ToListAsync();
