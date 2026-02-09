@@ -35,7 +35,9 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
 
     public async Task<Buy> GetBuyByIdAsync(int buyId)
     {
-        throw new NotImplementedException();
+        var buy = await _context.Buys.FindAsync(buyId);
+        ArgumentNullException.ThrowIfNull(buy);
+        return buy;
     }
 
     public async Task<List<Buy>> GetBuysAsync()
