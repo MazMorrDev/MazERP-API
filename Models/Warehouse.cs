@@ -10,9 +10,9 @@ public class Warehouse
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    // Foreign Key para Workflow
-    [Required, Column("workflow_id")]
-    public int WorkflowId { get; set; }
+    // Foreign Key para Company
+    [Required, Column("company_id")]
+    public int CompanyId { get; set; }
 
     [Required, Column("name"), MaxLength(30)]
     public string Name { get; set; } = string.Empty;
@@ -27,6 +27,6 @@ public class Warehouse
     public bool IsActive { get; set; } = true;
 
     // Navigation property
-    [ForeignKey("WorkflowId")]
-    public virtual Workflow Workflow { get; set; } = null!;
+    [ForeignKey("CompanyId")]
+    public required virtual Company Company { get; set; }
 }

@@ -44,7 +44,7 @@ public class User
     public bool IsActive { get; set; } = true;
 
     // Navigation Properties
-    public virtual ICollection<UserWorkflow> UserWorkflows { get; set; } = new HashSet<UserWorkflow>();
+    public virtual ICollection<UserCompany> UserCompanies { get; set; } = new HashSet<UserCompany>();
 
     public virtual ICollection<Movement> Movements { get; set; } = new HashSet<Movement>();
 }

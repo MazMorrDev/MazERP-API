@@ -7,7 +7,6 @@ obj/*
 *.suo
 .vs/
 Migrations/*
-Documentation/*
 
 # Environment file
 .env

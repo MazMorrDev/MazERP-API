@@ -28,7 +28,7 @@ public class Supplier
 
     [Column("rating")]
     [Range(0, 5, ErrorMessage = "El rating debe de estar entre 0 y 5")]
-    public int Rating { get; set; }
+    public int? Rating { get; set; }
 
     [Column("updated_at")]
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;

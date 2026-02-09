@@ -1,5 +1,5 @@
-using MazErpBack.Dtos.Users;
-using MazErpBack.Services.Interfaces;
+using MazErpBack.DTOs.Users;
+using MazErpBack.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

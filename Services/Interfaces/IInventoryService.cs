@@ -1,11 +1,19 @@
-﻿using MazErpBack.Dtos.Inventory;
+﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 
 namespace MazErpBack.Services.Interfaces;
 
 public interface IInventoryService
 {
-    public Task<List<Inventory>> GetInventoriesByWarehouseAsync(int id);
-    public Task<Inventory> CreateInventoryAsync(CreateInventoryDto inventoryDto);
-    public Task<Inventory> DeleteInventoryAsync(int id);
+    // Only avaible for admin pannel or backend operations
+    public Task<Inventory> GetInventoryByIdAsync(int inventoryId);
+    public Task DeleteInventoryAsync(int inventoryId);
+
+    // For common users
+    public Task<List<InventoryDto>> GetInventoriesByWarehouseAsync(int inventoryId);
+    public Task<List<InventoryDto>> GetInventoriesByCompanyAsync(int companyId);
+    public Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto inventoryDto);
+    public Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryDto inventoryDto);
+    public Task SoftDeleteInventoryAsync(int inventoryId);
+
 }

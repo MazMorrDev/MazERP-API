@@ -1,0 +1,18 @@
+﻿using MazErpBack.DTOs.Inventory;
+using MazErpBack.Models;
+
+namespace MazErpBack.Services.Interfaces;
+
+public interface ISellPointService
+{
+    // Only avaible for admin pannel or backend operations
+    public Task<SellPoint> GetSellPointByIdAsync(int sellPointId);
+    public Task DeleteSellPointAsync(int sellPointId);
+
+    // For common users
+    public Task<List<SellPointDto>> GetSellPointsByCompanyAsync(int companyId);
+    public Task<List<SellPointDto>> GetSellPointsByWarehouseAsync(int warehouseId);
+    public Task<SellPointDto> CreateSellPointAsync(CreateSellPointDto sellPointDto);
+    public Task<SellPointDto> UpdateSellPointAsync(int sellPointId, CreateSellPointDto sellPointDto);
+    public Task SoftDeleteSellPointAsync(int sellPointId);
+}

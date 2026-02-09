@@ -1,6 +1,6 @@
-﻿using MazErpBack.Dtos.Workflow;
+﻿using MazErpBack.DTOs.Workflow;
 using MazErpBack.Enums;
-using MazErpBack.Services.Interfaces;
+using MazErpBack.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +17,7 @@ public class WfController(IWorkflowService wfService) : ControllerBase
     [Authorize(Roles = "Client")]
     public async Task<IActionResult> GetWorkflows()
     {
-        var workflows = await _wfService.GetWfAsync();
+        var workflows = await _wfService.GetWorkflowsAsync();
         return Ok(new { data = workflows });
     }
 
