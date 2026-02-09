@@ -3,6 +3,7 @@ using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using MazErpBack.Utils.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
@@ -53,9 +54,19 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         throw new NotImplementedException();
     }
 
-    public async Task<List<BuyDto>> GetBuysByCompanyAsync(int companyId)
+    public async Task<List<BuyDto>> GetBuysBySellPointAsync(int sellPointId)
     {
-        throw new NotImplementedException();
+        var movements = await _context.Movements.Where(m => m.SellPointId.Equals(sellPointId)).ToListAsync();
+        List<BuyDto> buysDto = [];
+        foreach (var movement in movements)
+        {
+            var buy = await _context.Buys.FindAsync(movement.Id);
+            ArgumentNullException.ThrowIfNull(buy);
+            var buyDto = _mapper.MapToDto(movement, buy);
+            ArgumentNullException.ThrowIfNull(buyDto);
+            buysDto.Add(buyDto);
+        }
+        return buysDto;
     }
 
     public async Task SoftDeleteBuyAsync(int movementId)
@@ -78,6 +89,8 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         movement.UserId = buyDto.UserId;
         movement.SellPointId = buyDto.SellPointId;
 
-        return _mapper.MapToDto(movement, buy);
+        var buydto = _mapper.MapToDto(movement, buy);
+        ArgumentNullException.ThrowIfNull(buydto);
+        return buydto;
     }
 }
