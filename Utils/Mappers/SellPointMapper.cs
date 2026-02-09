@@ -15,4 +15,19 @@ public class SellPointMapper
             Location = sellPoint.Location
         };
     }
+
+    public SellPoint MapDtoToModel(CreateSellPointDto sellPointDto)
+    {
+        return new
+    }
+
+    public List<SellPointDto> MapListToDto(List<SellPoint> sellPoints)
+    {
+        List<SellPointDto> sellPointsDto = [];
+        foreach (var sellPoint in sellPoints)
+        {
+            sellPointsDto.Add(MaptoDto(sellPoint));
+        }
+        return sellPointsDto;
+    }
 }
