@@ -52,7 +52,6 @@ public class BuyMapper(ILogger<BuyMapper> logger)
             UserId = buyDto.UserId,
             SellPointId = buyDto.SellPointId,
             Description = buyDto.Description,
-            MovementType = buyDto.MovementType,
             Quantity = buyDto.Quantity,
             Currency = buyDto.Currency,
             MovementDate = buyDto.MovementDate,
