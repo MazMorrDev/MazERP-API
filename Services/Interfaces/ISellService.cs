@@ -10,7 +10,7 @@ public interface ISellService
     public Task DeleteSellAsync(int sellId);
 
     // For common users
-    public Task<List<SellDto>> GetSellsByCompanyAsync(int companyId);
+    public Task<List<SellDto>> GetSellsBySellPointAsync(int sellPointId);
     public Task<List<SellDto>> GetSellsByWarehouseAsync(int warehouseId);
     public Task<SellDto> CreateSellAsync(CreateSellDto sellDto);
     public Task<SellDto> UpdateSellAsync(int sellId, CreateSellDto sellDto);

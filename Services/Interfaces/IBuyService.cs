@@ -12,7 +12,6 @@ public interface IBuyService
 
     // For common users
     public Task<List<BuyDto>> GetBuysBySellPointAsync(int sellPointId);
-    public Task<List<BuyDto>> GetBuysByWarehouseAsync(int warehouseId);
     public Task<BuyDto> CreateBuyAsync(CreateBuyDto buyDto);
     public Task<BuyDto> UpdateBuyAsync(int buyId, CreateBuyDto buyDto);
     public Task SoftDeleteBuyAsync(int buyID);

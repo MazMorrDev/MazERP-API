@@ -45,4 +45,6 @@ public class Movement
 
     [ForeignKey("SellPointId")]
     public required virtual SellPoint SellPoint { get; set; }
+
+    public virtual ICollection<Movement> Movements { get; set; } = new HashSet<Movement>();
 }

@@ -128,7 +128,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasForeignKey(m => m.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(m => m.Inventory)
+            entity.HasOne(m => m.SellPoint)
                 .WithMany(i => i.Movements)
                 .HasForeignKey(m => m.InventoryId)
                 .OnDelete(DeleteBehavior.Restrict);

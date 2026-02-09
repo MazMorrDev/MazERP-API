@@ -13,26 +13,44 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
     private readonly BuyMapper _mapper = mapper;
     public async Task<BuyDto> CreateBuyAsync(CreateBuyDto createBuyDto)
     {
-        var supplier = await _context.Suppliers.FindAsync(createBuyDto.SupplierId);
-        var user = await _context.Users.FindAsync(createBuyDto.UserId);
-        var sellPoint = await _context.SellPoints.FindAsync(createBuyDto.SellPointId);
-        if (supplier == null || user == null || sellPoint == null) throw new ArgumentNullException();
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            var supplier = await _context.Suppliers.FindAsync(createBuyDto.SupplierId);
+            var user = await _context.Users.FindAsync(createBuyDto.UserId);
+            var sellPoint = await _context.SellPoints.FindAsync(createBuyDto.SellPointId);
+            if (supplier == null)
+                throw new KeyNotFoundException($"Supplier with id {createBuyDto.SupplierId} not found");
+            if (user == null)
+                throw new KeyNotFoundException($"User with id {createBuyDto.UserId} not found");
+            if (sellPoint == null)
+                throw new KeyNotFoundException($"SellPoint with id {createBuyDto.SellPointId} not found");
 
-        var movement = _mapper.MapMovement(user, sellPoint, createBuyDto);
-        var buy = _mapper.MapBuy(movement, supplier, createBuyDto);
-        await _context.Movements.AddAsync(movement);
-        await _context.Buys.AddAsync(buy);
-        await _context.SaveChangesAsync();
+            var movement = _mapper.MapMovement(user, sellPoint, createBuyDto);
+            var buy = _mapper.MapBuy(movement, supplier, createBuyDto);
+            await _context.Movements.AddAsync(movement);
+            await _context.Buys.AddAsync(buy);
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
 
-        var buyDto = _mapper.MapToDto(movement, buy);
-        ArgumentNullException.ThrowIfNull(buyDto);
-        return buyDto;
+            var buyDto = _mapper.MapToDto(movement, buy);
+            ArgumentNullException.ThrowIfNull(buyDto);
+            return buyDto;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+
     }
 
     public async Task DeleteBuyAsync(int buyId)
     {
+        var movement = await GetMovementByIdAsync(buyId);
         var buy = await GetBuyByIdAsync(buyId);
         _context.Buys.Remove(buy);
+        _context.Movements.Remove(movement);
         await _context.SaveChangesAsync();
     }
 
@@ -47,11 +65,6 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         var movement = await _context.Movements.FindAsync(movementId);
         ArgumentNullException.ThrowIfNull(movement);
         return movement;
-    }
-
-    public async Task<List<BuyDto>> GetBuysByWarehouseAsync(int warehouseId)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<List<BuyDto>> GetBuysBySellPointAsync(int sellPointId)
@@ -71,7 +84,6 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
 
     public async Task SoftDeleteBuyAsync(int movementId)
     {
-        // TODO: Tengo mis dudas de si esto updatea en la base de datos
         var movement = await GetMovementByIdAsync(movementId);
         movement.IsActive = false;
         await _context.SaveChangesAsync();
@@ -79,18 +91,38 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
 
     public async Task<BuyDto> UpdateBuyAsync(int buyId, CreateBuyDto buyDto)
     {
-        var movement = await GetMovementByIdAsync(buyId);
-        var buy = await GetBuyByIdAsync(buyId);
-        if (movement == null || buy == null) throw new ArgumentNullException();
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
 
-        movement.Currency = buyDto.Currency;
-        movement.Description = buyDto.Description;
-        movement.MovementDate = buyDto.MovementDate;
-        movement.UserId = buyDto.UserId;
-        movement.SellPointId = buyDto.SellPointId;
+            var movement = await GetMovementByIdAsync(buyId);
+            var buy = await GetBuyByIdAsync(buyId);
+            if (movement == null)
+                throw new KeyNotFoundException($"Movement with ID {buyId} not found");
+            if (buy == null)
+                throw new KeyNotFoundException($"Buy with Id {buyId} not found");
 
-        var buydto = _mapper.MapToDto(movement, buy);
-        ArgumentNullException.ThrowIfNull(buydto);
-        return buydto;
+            movement.Currency = buyDto.Currency;
+            movement.Description = buyDto.Description;
+            movement.MovementDate = buyDto.MovementDate;
+            movement.UserId = buyDto.UserId;
+            movement.SellPointId = buyDto.SellPointId;
+            buy.SupplierId = buyDto.SupplierId;
+            buy.DeliveryStatus = buyDto.DeliveryStatus;
+            buy.UnitaryCost = buyDto.UnitaryCost;
+            buy.ReceivedQuantity = buyDto.ReceivedQuantity;
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            var buydto = _mapper.MapToDto(movement, buy);
+            ArgumentNullException.ThrowIfNull(buydto);
+            return buydto;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 }

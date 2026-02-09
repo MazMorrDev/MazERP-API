@@ -7,13 +7,8 @@ public class BuyMapper(ILogger<BuyMapper> logger)
 {
     private readonly ILogger<BuyMapper> _logger = logger;
 
-    public BuyDto? MapToDto(Movement movement, Buy buy)
+    public BuyDto MapToDto(Movement movement, Buy buy)
     {
-        if (movement.Id != buy.MovementId)
-        {
-            _logger.LogError("se está intentando mapear un Buy con un id que no es el mismo del Movement");
-            return null;
-        }
 
         return new BuyDto
         {
@@ -60,7 +55,7 @@ public class BuyMapper(ILogger<BuyMapper> logger)
         };
     }
 
-    public List<BuyDto>? MapListToDto(List<Movement> movements, List<Buy> buys)
+    public List<BuyDto> MapListToDto(List<Movement> movements, List<Buy> buys)
     {
         List<BuyDto> buysDto = [];
         foreach (var buy in buys)
@@ -68,7 +63,6 @@ public class BuyMapper(ILogger<BuyMapper> logger)
             foreach (var movement in movements)
             {
                 var buyDto = MapToDto(movement, buy);
-                if (buyDto == null) return null;
                 buysDto.Add(buyDto);
             }
         }
