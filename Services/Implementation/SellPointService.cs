@@ -14,7 +14,11 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
 
     public async Task<SellPointDto> CreateSellPointAsync(CreateSellPointDto sellPointDto)
     {
-        throw new NotImplementedException();
+        var sellPoint = _mapper.MapDtoToModel(sellPointDto);
+
+        await _context.AddAsync(sellPoint);
+        await _context.SaveChangesAsync();
+        return _mapper.MapToDto(sellPoint);
     }
 
     public async Task<bool> DeleteSellPointAsync(int sellPointId)
@@ -48,7 +52,7 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
         List<SellPointDto> sellPointsDto = [];
         foreach (var warehouse in warehouses)
         {
-            sellPointsDto.AddRange(GetSellPointsByWarehouseAsync(warehouse.Id).Result);
+            sellPointsDto.AddRange(await GetSellPointsByWarehouseAsync(warehouse.Id));
         }
         return sellPointsDto;
     }
@@ -64,7 +68,7 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
             foreach (var sellPointsInventory in sellPointInventories)
             {
                 var sellPoint = await _context.SellPoints.FindAsync(sellPointsInventory.SellPointId);
-                sellPointsDto.Add(_mapper.MapToDto(sellPoint));
+                if (sellPoint != null) sellPointsDto.Add(_mapper.MapToDto(sellPoint));
             }
         }
         return sellPointsDto;
@@ -86,6 +90,11 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
 
     public async Task<SellPointDto> UpdateSellPointAsync(int sellPointId, CreateSellPointDto sellPointDto)
     {
-        throw new NotImplementedException();
+        var sellPoint = await GetSellPointByIdAsync(sellPointId);
+        sellPoint.Name = sellPointDto.Name;
+        sellPoint.Description = sellPointDto.Description;
+        sellPoint.Location = sellPointDto.Location;
+
+        return _mapper.MapToDto(sellPoint);
     }
 }

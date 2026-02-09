@@ -6,7 +6,6 @@ namespace MazErpBack.Services.Interfaces;
 public interface IBuyService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<Buy>> GetBuysAsync();
     public Task<Buy> GetBuyByIdAsync(int buyId);
     public Task<bool> DeleteBuyAsync(int buyId);
 

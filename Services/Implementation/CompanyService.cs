@@ -99,8 +99,8 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
     {
         try
         {
-            var result = await _context.Companies.ToListAsync();
-            return result;
+            var companies = await _context.Companies.ToListAsync();
+            return companies;
         }
         catch (Exception)
         {

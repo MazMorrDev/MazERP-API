@@ -6,7 +6,6 @@ namespace MazErpBack.Services.Interfaces;
 public interface IExpenseService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<Expense>> GetExpensesAsync();
     public Task<Expense> GetExpenseByIdAsync(int expenseId);
     public Task<bool> DeleteExpenseAsync(int expenseId);
 

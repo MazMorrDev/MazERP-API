@@ -6,7 +6,6 @@ namespace MazErpBack.Services.Interfaces;
 public interface IInventoryService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<Inventory>> GetInventoriesAsync();
     public Task<Inventory> GetInventoryByIdAsync(int inventoryId);
     public Task<bool> DeleteInventoryAsync(int inventoryId);
 

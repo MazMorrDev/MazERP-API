@@ -6,7 +6,6 @@ namespace MazErpBack.Services.Interfaces;
 public interface ISellPointService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<SellPoint>> GetSellPointsAsync();
     public Task<SellPoint> GetSellPointByIdAsync(int sellPointId);
     public Task<bool> DeleteSellPointAsync(int sellPointId);
 

@@ -25,9 +25,9 @@ public class TokenService(IConfiguration config) : ITokenService
                 new Claim("userId", user.Id.ToString()),
                 new Claim(ClaimTypes.Role, "Client")
             };
-            if (user.UserWorkflows != null)
+            if (user.UserCompanies != null)
             {
-                foreach (var cw in user.UserWorkflows)
+                foreach (var cw in user.UserCompanies)
                 {
                     claims = claims.Append(new Claim(ClaimTypes.Role, cw.Role.ToString())).ToArray();
                 }

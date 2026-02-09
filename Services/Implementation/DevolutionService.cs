@@ -74,9 +74,8 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         return devolutions;
     }
 
-    public async Task<List<DevolutionDto>> GetDevolutionsByCompanyAsync(int companyId)
+    public async Task<List<DevolutionDto>> GetDevolutionsByInventoryAsync(int inventoryId)
     {
-        // Too much work for the database, I am thinking in not to allow it.
         throw new NotImplementedException();
     }
 

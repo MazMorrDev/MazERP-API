@@ -13,12 +13,13 @@ public class WarehouseService(AppDbContext context) : IWarehouseService
     {
         try
         {
+            var company = 
             // Validation
             ArgumentNullException.ThrowIfNull(warehouseDto);
 
             var warehouse = new Warehouse()
             {
-                WorkflowId = warehouseDto.WorkflowId,
+                CompanyId = warehouseDto.WorkflowId,
                 Name = warehouseDto.Name,
                 Description = warehouseDto.Description
             };

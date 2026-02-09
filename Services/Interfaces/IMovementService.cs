@@ -7,7 +7,6 @@ namespace MazErpBack.Services.Interfaces;
 public interface IMovementService
 {
     // Only avaible for admin pannel or backend operations
-    public Task<List<Movement>> GetMovementsAsync();
     public Task<Movement> GetMovementByIdAsync(int movementId);
     public Task<bool> DeleteMovementAsync(int movementId);
 

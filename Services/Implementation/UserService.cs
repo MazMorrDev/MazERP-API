@@ -18,7 +18,7 @@ public class UserService(AppDbContext context, ITokenService tokenService, ILogg
         try
         {
             var user = await _context.Users
-                .Include(c => c.UserWorkflows)
+                .Include(c => c.UserCompanies)
                 .FirstOrDefaultAsync(c => c.Email == loginDto.Email);
             if (user == null)
             {

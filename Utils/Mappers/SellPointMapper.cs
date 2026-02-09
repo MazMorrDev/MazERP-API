@@ -5,7 +5,7 @@ namespace MazErpBack.Utils.Mappers;
 
 public class SellPointMapper
 {
-    public SellPointDto MaptoDto(SellPoint sellPoint)
+    public SellPointDto MapToDto(SellPoint sellPoint)
     {
         return new SellPointDto
         {
@@ -31,7 +31,7 @@ public class SellPointMapper
         List<SellPointDto> sellPointsDto = [];
         foreach (var sellPoint in sellPoints)
         {
-            sellPointsDto.Add(MaptoDto(sellPoint));
+            sellPointsDto.Add(MapToDto(sellPoint));
         }
         return sellPointsDto;
     }

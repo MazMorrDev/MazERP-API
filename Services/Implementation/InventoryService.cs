@@ -123,11 +123,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
         List<InventoryDto> inventoriesDto = [];
         foreach (var warehouse in warehouses)
         {
-            var inventories = await _context.Inventories.Where(i => i.WarehouseId.Equals(warehouse.Id)).ToListAsync();
-            foreach (var inventory in inventories)
-            {
-                inventoriesDto.Add(_mapper.MapToDto(inventory));
-            }
+            inventoriesDto.AddRange(await GetInventoriesByWarehouseAsync(warehouse.Id));
         }
         return inventoriesDto;
     }
