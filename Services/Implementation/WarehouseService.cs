@@ -2,6 +2,7 @@
 using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
@@ -58,7 +59,7 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
         }
     }
 
-    public Task<bool> DeleteWarehouseAsync(int id)
+    public Task DeleteWarehouseAsync(int id)
     {
         throw new NotImplementedException();
     }
@@ -68,7 +69,7 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
         throw new NotImplementedException();
     }
 
-    public Task<bool> SoftDeleteWarehouseAsync(int warehouseId)
+    public Task SoftDeleteWarehouseAsync(int warehouseId)
     {
         throw new NotImplementedException();
     }
@@ -78,7 +79,12 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
         throw new NotImplementedException();
     }
 
-    Task<List<WarehouseDto>> GetWarehousesByCompanyAsync(int companyId)
+    Task IWarehouseService.DeleteWarehouseAsync(int id)
+    {
+        return DeleteWarehouseAsync(id);
+    }
+
+    public async Task<List<WarehouseDto>> GetWarehousesByCompanyAsync(int companyId)
     {
         try
         {
@@ -90,4 +96,5 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
             throw;
         }
     }
+
 }

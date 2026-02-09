@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
 using Serilog;
 using MazErpBack.Context;
-using MazErpBack.Services;
 using MazErpBack.Services.Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MazErpBack.Services.Interfaces;
 
 namespace MazErpBack.Config;
 
@@ -21,7 +21,7 @@ public class WebAppBuilderConfig
         builder.Services.AddDbContext<AppDbContext>(optionsAction: options => options.UseNpgsql(connectionString));
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
-        builder.Services.AddScoped<IWorkflowService, WorkflowService>();
+        builder.Services.AddScoped<ICompanyService, CompanyService>();
         builder.Services.AddScoped<IWarehouseService, WarehouseService>();
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IInventoryService, InventoryService>();
@@ -30,11 +30,10 @@ public class WebAppBuilderConfig
         builder.Services.AddScoped<ISellService, SellService>();
         builder.Services.AddScoped<ISupplierService, SupplierService>();
         builder.Services.AddScoped<IInventorySupplierService, InventorySupplierService>();
-        builder.Services.AddScoped<IUserWorkflowService, UserWorkflowService>();
+        builder.Services.AddScoped<IUserCompanyService, UserCompanyService>();
         builder.Services.AddScoped<IExpenseService, ExpenseService>();
         builder.Services.AddScoped<ISellPointService, SellPointService>();
         builder.Services.AddScoped<ISellPointInventoryService, SellPointInventoryService>();
-        // TODO: map and register Mapster DI
         builder.Services.AddControllers();
 
         builder.Services.AddAuthorizationBuilder()
