@@ -23,8 +23,8 @@ public class SellService(AppDbContext context, SellMapper mapper) : ISellService
             if (sellPoint == null)
                 throw new KeyNotFoundException($"SellPoint with id {createSellDto.SellPointId} not found");
 
-            var movement = _mapper.MapMovement(user, sellPoint, createSellDto);
-            var Sell = _mapper.MapSell(movement, createSellDto);
+            var movement = _mapper.MapMovement(user, createSellDto);
+            var Sell = _mapper.MapSell(movement, sellPoint, createSellDto);
             await _context.Movements.AddAsync(movement);
             await _context.Sells.AddAsync(Sell);
             await _context.SaveChangesAsync();
@@ -66,13 +66,13 @@ public class SellService(AppDbContext context, SellMapper mapper) : ISellService
 
     public async Task<List<SellDto>> GetSellsBySellPointAsync(int sellPointId)
     {
-        var movements = await _context.Movements.Where(m => m.SellPointId.Equals(sellPointId)).ToListAsync();
+        var sells = await _context.Sells.Where(m => m.SellPointId.Equals(sellPointId)).ToListAsync();
         List<SellDto> SellsDto = [];
-        foreach (var movement in movements)
+        foreach (var sell in sells)
         {
-            var Sell = await _context.Sells.FindAsync(movement.Id);
-            ArgumentNullException.ThrowIfNull(Sell);
-            var SellDto = _mapper.MapToDto(movement, Sell);
+            var movement = await _context.Movements.FindAsync(sell.MovementId);
+            ArgumentNullException.ThrowIfNull(movement);
+            var SellDto = _mapper.MapToDto(movement, sell);
             ArgumentNullException.ThrowIfNull(SellDto);
             SellsDto.Add(SellDto);
         }
@@ -103,7 +103,7 @@ public class SellService(AppDbContext context, SellMapper mapper) : ISellService
             movement.Description = sellDto.Description;
             movement.MovementDate = sellDto.MovementDate;
             movement.UserId = sellDto.UserId;
-            movement.SellPointId = sellDto.SellPointId;
+            sell.SellPointId = sellDto.SellPointId;
             sell.DiscountPercentage = sellDto.DiscountPercentage;
             sell.PaymentStatus = sellDto.PaymentStatus;
             sell.SaleType = sellDto.SaleType;
