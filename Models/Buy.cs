@@ -12,6 +12,9 @@ public class Buy
 
     [Required, Column("supplier_id")]
     public int SupplierId { get; set; }
+    
+    [Required, Column("inventory_id")]
+    public int InventoryId { get; set; }
 
     [Column("delivery_status")]
     public DeliveryStatus DeliveryStatus { get; set; }
@@ -28,4 +31,7 @@ public class Buy
 
     [ForeignKey("SupplierId")]
     public required virtual Supplier Supplier { get; set; }
+
+    [ForeignKey("InventoryId")]
+    public required virtual Inventory Inventory { get; set; }
 }

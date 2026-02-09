@@ -14,9 +14,6 @@ public class Movement
     [Required, Column("user_id")]
     public required int UserId { get; set; }
 
-    [Required, Column("sell_point_id")]
-    public required int SellPointId { get; set; }
-
     [Column("description"), MaxLength(225)]
     public string? Description { get; set; }
 
@@ -42,9 +39,4 @@ public class Movement
     // Navigation Properties
     [ForeignKey("UserId")]
     public required virtual User User { get; set; }
-
-    [ForeignKey("SellPointId")]
-    public required virtual SellPoint SellPoint { get; set; }
-
-    public virtual ICollection<Movement> Movements { get; set; } = new HashSet<Movement>();
 }
