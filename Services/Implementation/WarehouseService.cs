@@ -11,24 +11,18 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
 {
     private readonly AppDbContext _context = context;
     private readonly WarehouseMapper _mapper = mapper;
-    public async Task<Warehouse> CreateWarehouse(CreateWarehouseDto warehouseDto)
+    public async Task<WarehouseDto> CreateWarehouseAsync(CreateWarehouseDto warehouseDto)
     {
         try
         {
             var company = await _context.Companies.FindAsync(warehouseDto.CompanyId);
             ArgumentNullException.ThrowIfNull(company);
 
-            var warehouse = new Warehouse()
-            {
-                CompanyId = warehouseDto.CompanyId,
-                Name = warehouseDto.Name,
-                Description = warehouseDto.Description,
-                Company = company
-            };
+            var warehouse = _mapper.MapDtoToModel(company, warehouseDto);
 
             _context.Warehouses.Add(warehouse);
             await _context.SaveChangesAsync();
-            return warehouse;
+            return _mapper.MapToDto(warehouse);
         }
         catch (Exception)
         {
@@ -36,12 +30,7 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
         }
     }
 
-    public Task<WarehouseDto> CreateWarehouseAsync(CreateWarehouseDto warehouseDto)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<Warehouse> DeleteWarehouse(int id)
+    public async Task DeleteWarehouseAsync(int id)
     {
         try
         {
@@ -51,7 +40,6 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
             warehouse.IsActive = false;
             await _context.SaveChangesAsync();
 
-            return warehouse;
         }
         catch (Exception)
         {
@@ -59,29 +47,28 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
         }
     }
 
-    public Task DeleteWarehouseAsync(int id)
+    public async Task<Warehouse> GetWarehouseByIdAsync(int warehouseId)
     {
-        throw new NotImplementedException();
+        var warehouse = await _context.Warehouses.FindAsync(warehouseId);
+        ArgumentNullException.ThrowIfNull(warehouse);
+        return warehouse;
     }
 
-    public Task<WarehouseDto> GetWarehouseByIdAsync(int warehouseId)
+    public async Task SoftDeleteWarehouseAsync(int warehouseId)
     {
-        throw new NotImplementedException();
+        var warehouse = await GetWarehouseByIdAsync(warehouseId);
+        warehouse.IsActive = false;
+        await _context.SaveChangesAsync();
     }
 
-    public Task SoftDeleteWarehouseAsync(int warehouseId)
+    public async Task<WarehouseDto> UpdateWarehouseAsync(int warehouseId, CreateWarehouseDto warehouseDto)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<WarehouseDto> UpdateWarehouseAsync(int WarehouseId, CreateWarehouseDto warehouseDto)
-    {
-        throw new NotImplementedException();
-    }
-
-    Task IWarehouseService.DeleteWarehouseAsync(int id)
-    {
-        return DeleteWarehouseAsync(id);
+        var warehouse = await GetWarehouseByIdAsync(warehouseId);
+        warehouse.CompanyId = warehouseDto.CompanyId;
+        warehouse.Name = warehouseDto.Name;
+        warehouse.Description = warehouseDto.Description;
+        await _context.SaveChangesAsync();
+        return _mapper.MapToDto(warehouse);
     }
 
     public async Task<List<WarehouseDto>> GetWarehousesByCompanyAsync(int companyId)
@@ -96,5 +83,4 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
             throw;
         }
     }
-
 }

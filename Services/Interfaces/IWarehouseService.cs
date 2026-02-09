@@ -1,11 +1,12 @@
 ﻿using MazErpBack.DTOs.Inventory;
+using MazErpBack.Models;
 
 namespace MazErpBack.Services.Interfaces;
 
 public interface IWarehouseService
 {
     // For admin pannel or back operations
-    public Task<WarehouseDto> GetWarehouseByIdAsync(int warehouseId);
+    public Task<Warehouse> GetWarehouseByIdAsync(int warehouseId);
     public Task DeleteWarehouseAsync(int id);
 
     // For common users
