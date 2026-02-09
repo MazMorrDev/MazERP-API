@@ -128,11 +128,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasForeignKey(m => m.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(m => m.SellPoint)
-                .WithMany(i => i.Movements)
-                .HasForeignKey(m => m.InventoryId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             entity.Property(e => e.MovementDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -154,6 +149,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithMany()
                 .HasForeignKey(b => b.SupplierId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(b => b.Inventory)
+                .WithMany()
+                .HasForeignKey(b => b.InventoryId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         // CONFIGURACIÓN PARA SELL
@@ -165,6 +165,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithOne()
                 .HasForeignKey<Sell>(s => s.MovementId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(s => s.SellPoint)
+                .WithMany()
+                .HasForeignKey(s => s.SellPointId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.Property(e => e.DiscountPercentage).HasPrecision(5, 2);
         });
@@ -178,6 +183,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.Property(e => e.DevolutionDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
         // CONFIGURACIÓN PARA EXPENSE
@@ -199,14 +205,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        // CONFIGURACIÓN PARA PRODUCT_SUPPLIER
+        // CONFIGURACIÓN PARA INVENTORY_SUPPLIER
         modelBuilder.Entity<InventorySupplier>(entity =>
         {
-            entity.HasKey(e => new { e.ProductId, e.SupplierId });
+            entity.HasKey(e => new { e.InventoryId, e.SupplierId });
 
             entity.HasOne(ps => ps.Product)
                 .WithMany()
-                .HasForeignKey(ps => ps.ProductId)
+                .HasForeignKey(ps => ps.InventoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(ps => ps.Supplier)
@@ -234,11 +240,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         // Para PostgreSQL, es mejor almacenar enums como text
         modelBuilder.Entity<UserCompany>()
             .Property(e => e.Role)
-            .HasConversion<string>()
-            .HasMaxLength(50);
-
-        modelBuilder.Entity<Movement>()
-            .Property(e => e.MovementType)
             .HasConversion<string>()
             .HasMaxLength(50);
 
