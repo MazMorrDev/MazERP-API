@@ -18,6 +18,17 @@ public class CompanyMapper
         };
     }
 
+    public CompanyUserDto MapCompanyUserDto(UserCompany userCompany)
+    {
+        return new CompanyUserDto
+        {
+            UserId = userCompany.UserId,
+            CompanyId = userCompany.CompanyId,
+            Role = userCompany.Role,
+            AssignedAt = userCompany.AssignedAt
+        };
+    }
+    
     public Company MapDtoToModel(CreateCompanyDto companyDto)
     {
         return new Company
@@ -26,7 +37,7 @@ public class CompanyMapper
             Description = companyDto.Description,
             CompanyPhotoUrl = companyDto.CompanyPhotoUrl,
             Currency = companyDto.Currency,
-            CreatedAt = companyDto.CreatedAt   
+            CreatedAt = companyDto.CreatedAt
         };
     }
 

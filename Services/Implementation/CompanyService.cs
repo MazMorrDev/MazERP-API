@@ -31,16 +31,10 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
                 AssignedAt = DateTimeOffset.UtcNow
             };
             // check if Company is already associated to user
-            _context.UserCompanies.Add(userWfAdd);
+            await _context.UserCompanies.AddAsync(userWfAdd);
             await _context.SaveChangesAsync();
-            // TODO: esto hay que mapearlo
-            return new CompanyUserDto
-            {
-                UserId = userWfAdd.UserId,
-                CompanyId = userWfAdd.CompanyId,
-                Role = userWfAdd.Role,
-                AssignedAt = userWfAdd.AssignedAt
-            };
+            return _mapper.MapCompanyUserDto(userWfAdd);
+            
         }
         catch (Exception ex)
         {
@@ -49,23 +43,17 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         }
     }
 
-    public async Task<Company> CreateCompany(CreateCompanyDto CompanyDto)
+    public async Task<Company> CreateCompany(CreateCompanyDto companyDto)
     {
         try
         {
-            var Company = new Company()
-            {
-                Name = CompanyDto.Name,
-                Description = CompanyDto.Description,
-                CompanyPhotoUrl = CompanyDto.CompanyPhotoUrl,
-                CreatedAt = CompanyDto.CreatedAt
-            };
+            var company = _mapper.MapDtoToModel(companyDto);
 
-            _context.Companies.Add(Company);
+            _context.Companies.Add(company);
 
             await _context.SaveChangesAsync();
 
-            return Company;
+            return company;
         }
         catch (Exception)
         {
@@ -108,9 +96,9 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         }
     }
 
-    public async Task<bool> SoftDeleteCompanyAsync(int CompanyId)
+    public async Task<bool> SoftDeleteCompanyAsync(int companyId)
     {
-        var company = await _context.Companies.FindAsync(CompanyId);
+        var company = await _context.Companies.FindAsync(companyId);
         if (company == null)
         {
             _logger.LogDebug("No se encontró una compañía con ese id");
