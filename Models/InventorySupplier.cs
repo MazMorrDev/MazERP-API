@@ -8,8 +8,8 @@ namespace MazErpBack.Models;
 [Table("Inventory_Supplier")]
 public class InventorySupplier
 {
-    [Key, Column("product_id", Order = 0)]
-    public required int ProductId { get; set; }
+    [Key, Column("inventory_id", Order = 0)]
+    public required int InventoryId { get; set; }
 
     [Key, Column("supplier_id", Order = 1)]
     public required int SupplierId { get; set; }
@@ -40,8 +40,8 @@ public class InventorySupplier
     public string? Notes { get; set; }
 
     // Navigation Properties
-    [ForeignKey("ProductId")]
-    public required virtual Product Product { get; set; }
+    [ForeignKey("InventoryId")]
+    public required virtual Inventory Product { get; set; }
 
     [ForeignKey("SupplierId")]
     public required virtual Supplier Supplier { get; set; }

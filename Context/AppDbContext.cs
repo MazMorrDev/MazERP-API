@@ -13,7 +13,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<Movement> Movements { get; set; }
     public DbSet<Product> Products { get; set; }
-    public DbSet<InventorySupplier> ProductSuppliers { get; set; }
+    public DbSet<InventorySupplier> InventorySuppliers { get; set; }
     public DbSet<Sell> Sells { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<User> Users { get; set; }
