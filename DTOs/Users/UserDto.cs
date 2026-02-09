@@ -9,6 +9,4 @@ public record class UserDto
     public required string Email { get; init; }
     public required string Name { get; init; }
     public string? ProfilePhotoUrl { get; init; }
-
-    //TODO: agregar propiedades de la relacion con Workflow y Movement
 }
