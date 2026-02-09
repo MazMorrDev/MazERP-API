@@ -2,16 +2,18 @@ using MazErpBack.Context;
 using MazErpBack.DTOs.Users;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class UserService(AppDbContext context, ITokenService tokenService, ILogger<UserService> logger) : IUserService
+public class UserService(AppDbContext context, ITokenService tokenService, ILogger<UserService> logger, UserMapper mapper) : IUserService
 {
     private readonly AppDbContext _context = context;
     private readonly ITokenService _tokenService = tokenService;
     private readonly ILogger<UserService> _logger = logger;
+    private readonly UserMapper _mapper = mapper;
 
     public async Task<TokenDto?> LoginUserAsync(LoginDto loginDto)
     {
@@ -56,14 +58,9 @@ public class UserService(AppDbContext context, ITokenService tokenService, ILogg
             user.PasswordHash = hasher.HashPassword(user, userDto.Password);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            // register wf a user - modificar service para hacerlo en un solo paso
-            var response = new UserDto(){
-                Id = user.Id,
-                Email = user.Email,
-                Name = user.Name,
-                ProfilePhotoUrl = user.ProfilePhotoUrl,
-            };
-            return response;
+            // TODO: register wf a user - modificar service para hacerlo en un solo paso
+
+            return _mapper.MapToDto(user);;
         }
         catch (Exception)
         {

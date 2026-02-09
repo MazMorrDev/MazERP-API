@@ -16,18 +16,6 @@ public class UserMapper
         };
     }
 
-    public User MapDtoToModel(CreateUserDto userDto)
-    {
-        return new User
-        {
-            Name = userDto.Name,
-            Description = userDto.Description,
-            UserPhotoUrl = userDto.UserPhotoUrl,
-            Currency = userDto.Currency,
-            CreatedAt = userDto.CreatedAt
-        };
-    }
-
     public List<UserDto> MapListToDto(List<User> users)
     {
         List<UserDto> companiesDto = [];
