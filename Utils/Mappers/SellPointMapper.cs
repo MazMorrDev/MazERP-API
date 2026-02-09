@@ -18,7 +18,12 @@ public class SellPointMapper
 
     public SellPoint MapDtoToModel(CreateSellPointDto sellPointDto)
     {
-        return new
+        return new SellPoint
+        {
+            Name = sellPointDto.Name,
+            Description = sellPointDto.Description,
+            Location = sellPointDto.Location,
+        };
     }
 
     public List<SellPointDto> MapListToDto(List<SellPoint> sellPoints)
