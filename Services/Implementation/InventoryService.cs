@@ -19,16 +19,11 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
         return inventory;
     }
 
-    public async Task<bool> SoftDeleteInventoryAsync(int inventoryId)
+    public async Task SoftDeleteInventoryAsync(int inventoryId)
     {
-        var inventory = await _context.Inventories.FindAsync(inventoryId);
-        if (inventory == null)
-        {
-            //TODO: Logging
-            return false;
-        }
+        //TODO: Logging
+        var inventory = await _context.Inventories.FindAsync(inventoryId) ?? throw new KeyNotFoundException($"Inventory with id: {inventoryId} not found");
         inventory.IsActive = false;
-        return true;
     }
 
     public async Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryDto inventoryDto)
@@ -76,7 +71,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
         }
     }
 
-    public async Task<bool> DeleteInventoryAsync(int inventoryId)
+    public async Task DeleteInventoryAsync(int inventoryId)
     {
         try
         {
@@ -84,12 +79,11 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
             if (inventory == null)
             {
                 // poner el logger
-                return false;
+                throw new KeyNotFoundException($"Inventory with id: {inventoryId} not found");
             }
 
             inventory.IsActive = false;
             await _context.SaveChangesAsync();
-            return true;
         }
         catch (Exception)
         {

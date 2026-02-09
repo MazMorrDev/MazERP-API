@@ -39,12 +39,25 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
 
     public async Task<List<ProductDto>> GetProductsByCompanyAsync(int companyId)
     {
-        throw new NotImplementedException();
+        var warehouses = _context.Warehouses.Where(w => w.CompanyId == companyId);
+        List<ProductDto> productsDto = [];
+        foreach (var w in warehouses)
+        {
+            productsDto.AddRange(await GetProductsByWarehouseAsync(w.Id));
+        }
+        return productsDto;
     }
 
     public async Task<List<ProductDto>> GetProductsByWarehouseAsync(int warehouseId)
     {
-        throw new NotImplementedException();
+        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId).ToListAsync();
+        List<ProductDto> productsDto = [];
+        foreach (var inventory in inventories)
+        {
+            var products = await _context.Products.Where(p => p.Id == inventory.Id).ToListAsync();
+            productsDto.AddRange(_mapper.MapListToDto(products));
+        }
+        return productsDto;
     }
 
     public async Task<ProductDto> UpdateProductAsync(int productId, CreateProductDto productDto)
@@ -59,20 +72,19 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
         return _mapper.MapToDto(product);
     }
 
-    public async Task<bool> DeleteProductAsync(int productId)
+    public async Task DeleteProductAsync(int productId)
     {
         try
         {
             var product = await _context.Products.FindAsync(productId);
             if (product == null)
             {
-                return false;
+                throw new KeyNotFoundException($"Product with id: {productId} not found");
             }
 
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
-            return true;
         }
         catch (NullReferenceException)
         {
