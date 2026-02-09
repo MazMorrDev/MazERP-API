@@ -29,11 +29,8 @@ public class WebAppBuilderConfig
         builder.Services.AddScoped<IDevolutionService, DevolutionService>();
         builder.Services.AddScoped<ISellService, SellService>();
         builder.Services.AddScoped<ISupplierService, SupplierService>();
-        builder.Services.AddScoped<IInventorySupplierService, InventorySupplierService>();
-        builder.Services.AddScoped<IUserCompanyService, UserCompanyService>();
         builder.Services.AddScoped<IExpenseService, ExpenseService>();
         builder.Services.AddScoped<ISellPointService, SellPointService>();
-        builder.Services.AddScoped<ISellPointInventoryService, SellPointInventoryService>();
         builder.Services.AddControllers();
 
         builder.Services.AddAuthorizationBuilder()
