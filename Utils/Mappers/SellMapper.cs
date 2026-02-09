@@ -7,9 +7,9 @@ public class SellMapper(ILogger<SellMapper> logger)
 {
     private readonly ILogger<SellMapper> _logger = logger;
 
-    public SellDto? MapToDto(Movement movement, Sell Sell)
+    public SellDto? MapToDto(Movement movement, Sell sell)
     {
-        if (movement.Id != Sell.MovementId)
+        if (movement.Id != sell.MovementId)
         {
             _logger.LogError("se está intentando mapear un Sell con un id que no es el mismo del Movement");
             return null;
@@ -19,42 +19,42 @@ public class SellMapper(ILogger<SellMapper> logger)
         {
             MovementId = movement.Id,
             UserId = movement.UserId,
-            SellPointId = movement.SellPointId,
+            SellPointId = sell.SellPointId,
             Description = movement.Description,
             Quantity = movement.Quantity,
             Currency = movement.Currency,
             MovementDate = movement.MovementDate,
-            DiscountPercentage = Sell.DiscountPercentage,
-            PaymentStatus = Sell.PaymentStatus,
-            SaleType = Sell.SaleType,
-            SellerNotes = Sell.SellerNotes
+            DiscountPercentage = sell.DiscountPercentage,
+            PaymentStatus = sell.PaymentStatus,
+            SaleType = sell.SaleType,
+            SellerNotes = sell.SellerNotes
         };
     }
 
-    public Sell MapSell(Movement movement, CreateSellDto SellDto)
+    public Sell MapSell(Movement movement, SellPoint sellPoint, CreateSellDto SellDto)
     {
         return new Sell
         {
             MovementId = movement.Id,
+            SellPointId = SellDto.SellPointId,
             DiscountPercentage = SellDto.DiscountPercentage,
             PaymentStatus = SellDto.PaymentStatus,
             SaleType = SellDto.SaleType,
             SellerNotes = SellDto.SellerNotes,
-            Movement = movement
+            Movement = movement,
+            SellPoint = sellPoint
         };
     }
 
-    public Movement MapMovement(User user, SellPoint sellPoint, CreateSellDto SellDto)
+    public Movement MapMovement(User user, CreateSellDto SellDto)
     {
         return new Movement
         {
             UserId = SellDto.UserId,
-            SellPointId = SellDto.SellPointId,
             Description = SellDto.Description,
             Quantity = SellDto.Quantity,
             Currency = SellDto.Currency,
             MovementDate = SellDto.MovementDate,
-            SellPoint = sellPoint,
             User = user
         };
     }

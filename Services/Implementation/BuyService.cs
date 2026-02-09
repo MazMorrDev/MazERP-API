@@ -18,16 +18,16 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         {
             var supplier = await _context.Suppliers.FindAsync(createBuyDto.SupplierId);
             var user = await _context.Users.FindAsync(createBuyDto.UserId);
-            var sellPoint = await _context.SellPoints.FindAsync(createBuyDto.SellPointId);
+            var inventory = await _context.Inventories.FindAsync(createBuyDto.InventoryId);
             if (supplier == null)
                 throw new KeyNotFoundException($"Supplier with id {createBuyDto.SupplierId} not found");
             if (user == null)
                 throw new KeyNotFoundException($"User with id {createBuyDto.UserId} not found");
-            if (sellPoint == null)
-                throw new KeyNotFoundException($"SellPoint with id {createBuyDto.SellPointId} not found");
+            if (inventory == null)
+                throw new KeyNotFoundException($"Inventory with id {createBuyDto.InventoryId} not found");
 
-            var movement = _mapper.MapMovement(user, sellPoint, createBuyDto);
-            var buy = _mapper.MapBuy(movement, supplier, createBuyDto);
+            var movement = _mapper.MapMovement(user, createBuyDto);
+            var buy = _mapper.MapBuy(movement, supplier, inventory, createBuyDto);
             await _context.Movements.AddAsync(movement);
             await _context.Buys.AddAsync(buy);
             await _context.SaveChangesAsync();
@@ -67,19 +67,16 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         return movement;
     }
 
-    public async Task<List<BuyDto>> GetBuysBySellPointAsync(int sellPointId)
+    public async Task<List<BuyDto>> GetBuysByInventoryAsync(int invId)
     {
-        var movements = await _context.Movements.Where(m => m.SellPointId.Equals(sellPointId)).ToListAsync();
-        List<BuyDto> buysDto = [];
-        foreach (var movement in movements)
+        var buys = await _context.Buys.Where(m => m.InventoryId.Equals(invId)).ToListAsync();
+        List<Movement> movements = [];
+        foreach (var b in buys)
         {
-            var buy = await _context.Buys.FindAsync(movement.Id);
-            ArgumentNullException.ThrowIfNull(buy);
-            var buyDto = _mapper.MapToDto(movement, buy);
-            ArgumentNullException.ThrowIfNull(buyDto);
-            buysDto.Add(buyDto);
+            var m = await _context.Movements.FindAsync(b.MovementId) ?? throw new KeyNotFoundException($"Movement with id: {b.MovementId} not found");
+            movements.Add(m);
         }
-        return buysDto;
+        return _mapper.MapListToDto(movements, buys);
     }
 
     public async Task SoftDeleteBuyAsync(int movementId)
@@ -107,7 +104,6 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
             movement.Description = buyDto.Description;
             movement.MovementDate = buyDto.MovementDate;
             movement.UserId = buyDto.UserId;
-            movement.SellPointId = buyDto.SellPointId;
             buy.SupplierId = buyDto.SupplierId;
             buy.DeliveryStatus = buyDto.DeliveryStatus;
             buy.UnitaryCost = buyDto.UnitaryCost;
