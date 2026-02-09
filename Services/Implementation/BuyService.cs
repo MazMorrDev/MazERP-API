@@ -41,10 +41,11 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         ArgumentNullException.ThrowIfNull(buy);
         return buy;
     }
-
-    public async Task<List<Buy>> GetBuysAsync()
+    public async Task<Movement> GetMovementByIdAsync(int movementId)
     {
-        throw new NotImplementedException();
+        var movement = await _context.Movements.FindAsync(movementId);
+        ArgumentNullException.ThrowIfNull(movement);
+        return movement;
     }
 
     public async Task<List<BuyDto>> GetBuysByWarehouseAsync(int warehouseId)
@@ -52,18 +53,31 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         throw new NotImplementedException();
     }
 
-    public async Task<List<BuyDto>> GetBuysByWorkflowAsync(int workflowId)
+    public async Task<List<BuyDto>> GetBuysByCompanyAsync(int companyId)
     {
         throw new NotImplementedException();
     }
 
-    public async Task SoftDeleteBuyAsync(int buyID)
+    public async Task SoftDeleteBuyAsync(int movementId)
     {
-        throw new NotImplementedException();
+        // TODO: Tengo mis dudas de si esto updatea en la base de datos
+        var movement = await GetMovementByIdAsync(movementId);
+        movement.IsActive = false;
+        await _context.SaveChangesAsync();
     }
 
     public async Task<BuyDto> UpdateBuyAsync(int buyId, CreateBuyDto buyDto)
     {
-        throw new NotImplementedException();
+        var movement = await GetMovementByIdAsync(buyId);
+        var buy = await GetBuyByIdAsync(buyId);
+        if (movement == null || buy == null) throw new ArgumentNullException();
+
+        movement.Currency = buyDto.Currency;
+        movement.Description = buyDto.Description;
+        movement.MovementDate = buyDto.MovementDate;
+        movement.UserId = buyDto.UserId;
+        movement.SellPointId = buyDto.SellPointId;
+
+        return _mapper.MapToDto(movement, buy);
     }
 }

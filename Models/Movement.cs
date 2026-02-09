@@ -20,9 +20,6 @@ public class Movement
     [Column("description"), MaxLength(225)]
     public string? Description { get; set; }
 
-    [Required, Column("movement_type")]
-    public MovementType MovementType { get; set; }
-
     [Required, Column("quantity")]
     public int Quantity { get; set; }
 

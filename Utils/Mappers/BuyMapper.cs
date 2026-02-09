@@ -21,7 +21,6 @@ public class BuyMapper(ILogger<BuyMapper> logger)
             UserId = movement.UserId,
             SellPointId = movement.SellPointId,
             Description = movement.Description,
-            MovementType = movement.MovementType,
             Quantity = movement.Quantity,
             Currency = movement.Currency,
             MovementDate = movement.MovementDate,

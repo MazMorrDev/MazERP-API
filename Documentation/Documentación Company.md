@@ -2,6 +2,7 @@
 Un **Company** en MazErp representa un **entorno de trabajo independiente** que contiene su propio conjunto de almacenes, productos, y usuarios colaborativos.
 
 ### **Analogía Simple:**
+
 ```
 🏢 Company = Empresa Virtual o Proyecto Independiente
     ├── 👥 Personas (Clients con diferentes roles)
@@ -15,6 +16,7 @@ Un **Company** en MazErp representa un **entorno de trabajo independiente** que 
 ## 🔄 **Flujo de Trabajo MultiEntorno**
 
 ### **1. Creación de Companies**
+
 - Cada cliente puede crear **múltiples Companies** (entornos)
 - Ejemplo: Un usuario puede tener:
   - `Company "MiRestaurantePrincipal"`
@@ -33,6 +35,7 @@ ClientCompany {
 ```
 
 #### **Roles Disponibles:**
+
 | Rol           | Permisos                                                          |
 | ------------- | ----------------------------------------------------------------- |
 | **Admin**     | Dueño total (crear, editar, eliminar, gestionar personas)         |
@@ -89,6 +92,7 @@ CLIENT (Usuario)
 ```
 
 ### **Caso 2: Empresa con Proyectos Independientes**
+
 ```
 👤 Usuario: Ana
 │
@@ -109,11 +113,13 @@ CLIENT (Usuario)
 ## 🔐 **Reglas de Seguridad y Aislamiento**
 
 ### **Aislamiento Total entre Companies:**
+
 - ❌ **Usuario A** en Company X **NO PUEDE** ver datos del Company Y
 - ✅ **Datos completamente separados** entre diferentes Companies
 - 🔒 **Cada Company es un sandbox** independiente
 
 ### **Acceso a Almacenes:**
+
 - 👥 **Varios usuarios** pueden acceder a **los mismos almacenes** dentro de un Company
 - 🏬 **Los almacenes son compartidos** entre todos los miembros del Company
 - 👀 **El nivel de acceso** lo determina el **rol** en ClientCompany
@@ -123,6 +129,7 @@ CLIENT (Usuario)
 ## 📈 **Flujo de Operaciones Diarias**
 
 ### **1. Movimientos de Inventario:**
+
 ```csharp
 Movement {
     ClientId,      // 👤 Quién hizo el movimiento
@@ -135,6 +142,7 @@ Movement {
 ```
 
 ### **2. Colaboración en Tiempo Real:**
+
 - **Múltiples personas** pueden trabajar en **el mismo almacén** simultáneamente
 - **Sistema de roles** previene conflictos y define responsabilidades
 - **Historial completo** de quién hizo cada movimiento
@@ -144,11 +152,13 @@ Movement {
 ## 🚀 **Ventajas del Sistema MultiCompany**
 
 ### **Para Usuarios Individuales:**
+
 - ✅ **Separación clara** entre proyectos personales y profesionales
 - ✅ **Pruebas** en Companies de desarrollo sin afectar producción
 - ✅ **Organización** por clientes, proyectos, o temporadas
 
 ### **Para Equipos:**
+
 - ✅ **Onboarding fácil** - agregar personas solo a los Companies necesarios
 - ✅ **Seguridad granular** - diferentes permisos por proyecto
 - ✅ **Auditoría completa** - saber quién hizo qué en cada entorno
