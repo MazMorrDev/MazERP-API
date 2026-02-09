@@ -7,12 +7,12 @@ public interface ISellService
 {
     // Only avaible for admin pannel or backend operations
     public Task<Sell> GetSellById(int sellId);
-    public Task<bool> DeleteSellAsync(int sellId);
+    public Task DeleteSellAsync(int sellId);
 
     // For common users
     public Task<List<SellDto>> GetSellsByCompanyAsync(int companyId);
     public Task<List<SellDto>> GetSellsByWarehouseAsync(int warehouseId);
     public Task<SellDto> CreateSellAsync(CreateSellDto sellDto);
     public Task<SellDto> UpdateSellAsync(int sellId, CreateSellDto sellDto);
-    public Task<bool> SoftDeleteSellAsync(int sellID);
+    public Task SoftDeleteSellAsync(int sellID);
 }

@@ -28,9 +28,11 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         return buyDto;
     }
 
-    public async Task<bool> DeleteBuyAsync(int buyId)
+    public async Task DeleteBuyAsync(int buyId)
     {
-        throw new NotImplementedException();
+        var buy = await GetBuyByIdAsync(buyId);
+        _context.Buys.Remove(buy);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<Buy> GetBuyByIdAsync(int buyId)
@@ -55,7 +57,7 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         throw new NotImplementedException();
     }
 
-    public async Task<bool> SoftDeleteBuyAsync(int buyID)
+    public async Task SoftDeleteBuyAsync(int buyID)
     {
         throw new NotImplementedException();
     }

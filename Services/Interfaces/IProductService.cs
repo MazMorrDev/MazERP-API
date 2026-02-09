@@ -7,7 +7,7 @@ public interface IProductService
 {
     // Only avaible for admin pannel or backend operations
     public Task<Product> GetProductByIdAsync(int productId);
-    public Task<bool> DeleteProductAsync(int productId);
+    public Task DeleteProductAsync(int productId);
 
     // For common users
     public Task<List<ProductDto>> GetProductsByCompanyAsync(int companyId);
