@@ -86,6 +86,7 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
     {
         var movement = await GetMovementByIdAsync(movementId);
         movement.IsActive = false;
+        movement.UpdatedAt = DateTimeOffset.UtcNow;
         await _context.SaveChangesAsync();
     }
 

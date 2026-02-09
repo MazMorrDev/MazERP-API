@@ -34,7 +34,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
             await _context.UserCompanies.AddAsync(userWfAdd);
             await _context.SaveChangesAsync();
             return _mapper.MapCompanyUserDto(userWfAdd);
-            
+
         }
         catch (Exception ex)
         {
@@ -70,17 +70,17 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         return _mapper.MapToDto(company);
     }
 
-    public async Task<bool> DeleteCompanyAsync(int companyId)
+    public async Task DeleteCompanyAsync(int companyId)
     {
         var company = await _context.Companies.FindAsync(companyId);
         if (company == null)
         {
             _logger.LogDebug("");
-            return false;
+            throw new KeyNotFoundException($"Company with id: {companyId} not found");
         }
         _context.Companies.Remove(company);
         await _context.SaveChangesAsync();
-        return true;
+
     }
 
     public async Task<List<Company>> GetCompaniesAsync()
@@ -96,16 +96,16 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         }
     }
 
-    public async Task<bool> SoftDeleteCompanyAsync(int companyId)
+    public async Task SoftDeleteCompanyAsync(int companyId)
     {
         var company = await _context.Companies.FindAsync(companyId);
         if (company == null)
         {
             _logger.LogDebug("No se encontró una compañía con ese id");
-            return false;
+            throw new KeyNotFoundException($"Company with id: {companyId} not found");
         }
         company.IsActive = false;
         await _context.SaveChangesAsync();
-        return true;
+
     }
 }

@@ -25,29 +25,23 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         return _mapper.MapToDto(devolution);
     }
 
-    public async Task<bool> DeleteDevolutionAsync(int devolutionId)
+    public async Task DeleteDevolutionAsync(int devolutionId)
     {
         try
         {
-            var devolution = await _context.Devolutions.FindAsync(devolutionId);
-            if (devolution == null)
-            {
-                // logging
-                return false;
-            }
-
+            var devolution = await _context.Devolutions.FindAsync(devolutionId) ?? throw new KeyNotFoundException($"Devolution with id: {devolutionId} not found");
             _context.Devolutions.Remove(devolution);
             var result = await _context.SaveChangesAsync() > 0;
 
             if (result)
                 _logger.LogInformation("Devolución {Id} eliminada", devolutionId);
 
-            return result;
+
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error al eliminar devolución {Id}", devolutionId);
-            return false;
+            throw;
         }
     }
 
@@ -66,10 +60,20 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         }
 
     }
-    
+
     public async Task<List<DevolutionDto>> GetDevolutionsByInventoryAsync(int inventoryId)
     {
-        throw new NotImplementedException();
+        var sellPointsInventories = await _context.SellPointInventories.Where(spi => spi.InventoryId == inventoryId).ToListAsync();
+        List<DevolutionDto> devolutionsDto = [];
+        foreach (var spi in sellPointsInventories)
+        {
+            var sellPoints = await _context.SellPoints.Where(sp => sp.Id.Equals(spi.SellPointId)).ToListAsync();
+            foreach (var sp in sellPoints)
+            {
+                devolutionsDto.AddRange(await GetDevolutionsBySellPointAsync(sp.Id));
+            }
+        }
+        return devolutionsDto;
     }
 
     public async Task<List<DevolutionDto>> GetDevolutionsBySellPointAsync(int sellPointId)
@@ -84,16 +88,13 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         return devolutionsDto;
     }
 
-    public async Task<bool> SoftDeleteDevolutionAsync(int devolutionId)
+    public async Task SoftDeleteDevolutionAsync(int devolutionId)
     {
-        var devolution = await _context.Devolutions.FindAsync(devolutionId);
-        if (devolution == null) return false;
-
+        var devolution = await _context.Devolutions.FindAsync(devolutionId) ?? throw new KeyNotFoundException($"Devolution with id: {devolutionId} not found");
         devolution.IsActive = false;
         devolution.UpdatedAt = DateTimeOffset.Now;
 
         await _context.SaveChangesAsync();
-        return true;
     }
 
     public async Task<DevolutionDto> UpdateDevolutionAsync(int devolutionId, CreateDevolutionDto devolutionDto)

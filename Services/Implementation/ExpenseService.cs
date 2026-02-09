@@ -31,17 +31,16 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
         return _mapper.MapToDto(expense);
     }
 
-    public async Task<bool> DeleteExpenseAsync(int expenseId)
+    public async Task DeleteExpenseAsync(int expenseId)
     {
         var expense = await _context.Expenses.FindAsync(expenseId);
         if (expense == null)
         {
             _logger.LogDebug("");
-            return false;
+            throw new KeyNotFoundException($"Expense with id: {expenseId} not found");
         }
         _context.Expenses.Remove(expense);
         await _context.SaveChangesAsync();
-        return true;
     }
 
     public async Task<Expense> GetExpenseByIdAsync(int expenseId)
@@ -57,17 +56,18 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
         return expenses;
     }
 
-    public async Task<bool> SoftDeleteExpenseAsync(int expenseId)
+    public async Task SoftDeleteExpenseAsync(int expenseId)
     {
         var expense = await _context.Expenses.FindAsync(expenseId);
         if (expense == null)
         {
             // Logging
-            return false;
+            throw new KeyNotFoundException($"Expense with id: {expenseId} not found");
         }
         expense.IsActive = false;
+        expense.UpdatedAt = DateTimeOffset.UtcNow;
         await _context.SaveChangesAsync();
-        return true;
+
     }
 
     public async Task<ExpenseDto> UpdateExpenseAsync(int id, CreateExpenseDto expenseDto)
