@@ -21,17 +21,12 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
         return _mapper.MapToDto(sellPoint);
     }
 
-    public async Task<bool> DeleteSellPointAsync(int sellPointId)
+    public async Task DeleteSellPointAsync(int sellPointId)
     {
         var sellPoint = await GetSellPointByIdAsync(sellPointId);
-        if (sellPoint == null)
-        {
-            // TODO: logging
-            return false;
-        }
+        ArgumentNullException.ThrowIfNull(sellPoint);
         _context.SellPoints.Remove(sellPoint);
         await _context.SaveChangesAsync();
-        return true;
     }
 
     public async Task<SellPoint> GetSellPointByIdAsync(int sellPointId)
@@ -69,18 +64,13 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
         return sellPointsDto;
     }
 
-    public async Task<bool> SoftDeleteSellPointAsync(int sellPointId)
+    public async Task SoftDeleteSellPointAsync(int sellPointId)
     {
         var sellPoint = await _context.SellPoints.FindAsync(sellPointId);
-        if (sellPoint == null)
-        {
-            //TODO: logging
-            return false;
-        }
+        ArgumentNullException.ThrowIfNull(sellPoint);
 
         sellPoint.IsActive = false;
         await _context.SaveChangesAsync();
-        return true;
     }
 
     public async Task<SellPointDto> UpdateSellPointAsync(int sellPointId, CreateSellPointDto sellPointDto)
