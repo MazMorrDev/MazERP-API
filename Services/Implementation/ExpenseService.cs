@@ -48,7 +48,6 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
         {
             var expense = await GetExpenseByIdAsync(expenseId);
             expense.IsActive = false;
-            expense.UpdatedAt = DateTimeOffset.UtcNow;
             await _context.SaveChangesAsync();
             return true;
         }

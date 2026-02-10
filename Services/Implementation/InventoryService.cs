@@ -14,22 +14,28 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
 
     public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
     {
-        var inventory = await _context.Inventories.FindAsync(inventoryId);
-        ArgumentNullException.ThrowIfNull(inventory);
-        return inventory;
+        return await _context.Inventories.FindAsync(inventoryId) ?? throw new KeyNotFoundException($"Inventory with id: {inventoryId} not found");
     }
 
-    public async Task SoftDeleteInventoryAsync(int inventoryId)
+    public async Task<bool> SoftDeleteInventoryAsync(int inventoryId)
     {
-        //TODO: Logging
-        var inventory = await _context.Inventories.FindAsync(inventoryId) ?? throw new KeyNotFoundException($"Inventory with id: {inventoryId} not found");
-        inventory.IsActive = false;
+        try
+        {
+            var inventory = await GetInventoryByIdAsync(inventoryId);
+            inventory.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+
     }
 
     public async Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryDto inventoryDto)
     {
-        var inventory = await _context.Inventories.FindAsync(inventoryId);
-        ArgumentNullException.ThrowIfNull(inventory);
+        var inventory = await GetInventoryByIdAsync(inventoryId);
 
         inventory.AlertStock = inventoryDto.AlertStock;
         inventory.WarehouseId = inventoryDto.WarehouseId;
@@ -41,6 +47,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
         inventory.AlertStock = inventoryDto.AlertStock;
         inventory.AlertStock = inventoryDto.AlertStock;
 
+        await _context.SaveChangesAsync();
         return _mapper.MapToDto(inventory);
     }
 
@@ -48,15 +55,8 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
     {
         try
         {
-            var warehouse = await _context.Warehouses.FindAsync(inventoryDto.WarehouseId);
-            var product = await _context.Products.FindAsync(inventoryDto.ProductId);
-
-
-            if (warehouse == null || product == null)
-            {
-                //TODO: logging
-                throw new ArgumentException("Almacén o Producto no encontrados");
-            }
+            var warehouse = await _context.Warehouses.FindAsync(inventoryDto.WarehouseId) ?? throw new KeyNotFoundException($"Warehouse with id: {inventoryDto.WarehouseId} not found");
+            var product = await _context.Products.FindAsync(inventoryDto.ProductId) ?? throw new KeyNotFoundException($"Product with id: {inventoryDto.ProductId} not found");
 
             var inventory = _mapper.MapDtoToModel(warehouse, product, inventoryDto);
 
@@ -75,13 +75,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
     {
         try
         {
-            var inventory = await _context.Inventories.FindAsync(inventoryId);
-            if (inventory == null)
-            {
-                // poner el logger
-                throw new KeyNotFoundException($"Inventory with id: {inventoryId} not found");
-            }
-
+            var inventory = await GetInventoryByIdAsync(inventoryId);
             inventory.IsActive = false;
             await _context.SaveChangesAsync();
         }
