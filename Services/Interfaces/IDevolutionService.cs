@@ -14,5 +14,5 @@ public interface IDevolutionService
     public Task<List<DevolutionDto>> GetDevolutionsBySellPointAsync(int sellPointId);
     public Task<DevolutionDto> CreateDevolutionAsync(CreateDevolutionDto devolutionDto);
     public Task<DevolutionDto> UpdateDevolutionAsync(int devolutionId, CreateDevolutionDto devolutionDto);
-    public Task SoftDeleteDevolutionAsync(int devolutionId);
+    public Task<bool> SoftDeleteDevolutionAsync(int devolutionId);
 }
