@@ -29,7 +29,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
     {
         try
         {
-            var devolution = await _context.Devolutions.FindAsync(devolutionId) ?? throw new KeyNotFoundException($"Devolution with id: {devolutionId} not found");
+            var devolution = await GetDevolutionByIdAsync(devolutionId);
             _context.Devolutions.Remove(devolution);
             var result = await _context.SaveChangesAsync() > 0;
 
@@ -49,9 +49,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
     {
         try
         {
-            var devolution = await _context.Devolutions.FindAsync(devolutionId);
-            ArgumentNullException.ThrowIfNull(devolution);
-            return devolution;
+            return await _context.Devolutions.FindAsync(devolutionId) ?? throw new KeyNotFoundException($"Devolution with id: {devolutionId} not found");
         }
         catch (Exception e)
         {
@@ -78,23 +76,29 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
     public async Task<List<DevolutionDto>> GetDevolutionsBySellPointAsync(int sellPointId)
     {
-        var movements = await _context.Movements.Where(m => m.SellPointId == sellPointId).ToListAsync();
+        var sells = await _context.Sells.Where(m => m.SellPointId == sellPointId).ToListAsync();
         List<DevolutionDto> devolutionsDto = [];
-        foreach (var movement in movements)
+        foreach (var s in sells)
         {
-            var devolutions = _mapper.MapListToDto(await _context.Devolutions.Where(d => d.SellId == movement.Id).ToListAsync());
+            var devolutions = _mapper.MapListToDto(await _context.Devolutions.Where(d => d.SellId == s.MovementId).ToListAsync());
             devolutionsDto.AddRange(devolutions);
         }
         return devolutionsDto;
     }
 
-    public async Task SoftDeleteDevolutionAsync(int devolutionId)
+    public async Task<bool> SoftDeleteDevolutionAsync(int devolutionId)
     {
-        var devolution = await _context.Devolutions.FindAsync(devolutionId) ?? throw new KeyNotFoundException($"Devolution with id: {devolutionId} not found");
-        devolution.IsActive = false;
-        devolution.UpdatedAt = DateTimeOffset.Now;
-
-        await _context.SaveChangesAsync();
+        try
+        {
+            var devolution = await GetDevolutionByIdAsync(devolutionId);
+            devolution.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public async Task<DevolutionDto> UpdateDevolutionAsync(int devolutionId, CreateDevolutionDto devolutionDto)
