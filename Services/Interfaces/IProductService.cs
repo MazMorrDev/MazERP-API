@@ -14,5 +14,4 @@ public interface IProductService
     public Task<List<ProductDto>> GetProductsByWarehouseAsync(int warehouseId);
     public Task<ProductDto> CreateProductAsync(CreateProductDto productDto);
     public Task<ProductDto> UpdateProductAsync(int productId, CreateProductDto productDto);
-    public Task<bool> SoftDeleteProductAsync(int productId);
 }
