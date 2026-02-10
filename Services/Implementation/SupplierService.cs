@@ -26,14 +26,12 @@ public class SupplierService(AppDbContext context, SupplierMapper mapper, ILogge
     {
         try
         {
-            var supplier = await _context.Suppliers.FindAsync(supplierId) ?? throw new KeyNotFoundException($"Supplier with id: {supplierId} not found");
+            var supplier = await GetSupplierByIdAsync(supplierId);
             _context.Suppliers.Remove(supplier);
             var result = await _context.SaveChangesAsync() > 0;
 
             if (result)
                 _logger.LogInformation("Devolución {Id} eliminada", supplierId);
-
-
         }
         catch (Exception ex)
         {
@@ -46,8 +44,7 @@ public class SupplierService(AppDbContext context, SupplierMapper mapper, ILogge
     {
         try
         {
-            var supplier = await _context.Suppliers.FindAsync(supplierId);
-            ArgumentNullException.ThrowIfNull(supplier);
+            var supplier = await _context.Suppliers.FindAsync(supplierId) ?? throw new KeyNotFoundException($"Supplier with id: {supplierId} not found");
             return supplier;
         }
         catch (Exception e)
@@ -74,13 +71,20 @@ public class SupplierService(AppDbContext context, SupplierMapper mapper, ILogge
         return suppliersDto;
     }
 
-    public async Task SoftDeleteSupplierAsync(int supplierId)
+    public async Task<bool> SoftDeleteSupplierAsync(int supplierId)
     {
-        var supplier = await _context.Suppliers.FindAsync(supplierId) ?? throw new KeyNotFoundException($"Supplier with id: {supplierId} not found");
-        supplier.IsActive = false;
-        supplier.UpdatedAt = DateTimeOffset.Now;
+        try
+        {
+            var supplier = await GetSupplierByIdAsync(supplierId);
+            supplier.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
 
-        await _context.SaveChangesAsync();
     }
 
     public async Task<SupplierDto> UpdateSupplierAsync(int supplierId, CreateSupplierDto supplierDto)
