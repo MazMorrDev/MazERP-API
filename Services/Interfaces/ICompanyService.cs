@@ -8,6 +8,7 @@ public interface ICompanyService
 {
     // Para el panel de administración
     public Task<List<Company>> GetCompaniesAsync();
+    public Task<Company> GetCompanyByIdAsync(int id);
     public Task DeleteCompanyAsync(int companyId);
 
     // Para el usuario común
