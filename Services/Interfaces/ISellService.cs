@@ -13,5 +13,5 @@ public interface ISellService
     public Task<List<SellDto>> GetSellsBySellPointAsync(int sellPointId);
     public Task<SellDto> CreateSellAsync(CreateSellDto sellDto);
     public Task<SellDto> UpdateSellAsync(int sellId, CreateSellDto sellDto);
-    public Task SoftDeleteSellAsync(int sellID);
+    public Task<bool> SoftDeleteSellAsync(int sellID);
 }

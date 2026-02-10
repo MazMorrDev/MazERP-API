@@ -13,5 +13,5 @@ public interface IExpenseService
     public Task<List<ExpenseDto>> GetExpensesByCompanyAsync(int companyId);
     public Task<ExpenseDto> CreateExpenseAsync(CreateExpenseDto expenseDto);
     public Task<ExpenseDto> UpdateExpenseAsync(int id, CreateExpenseDto expenseDto);
-    public Task SoftDeleteExpenseAsync(int expenseId);
+    public Task<bool> SoftDeleteExpenseAsync(int expenseId);
 }

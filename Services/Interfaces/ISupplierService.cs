@@ -13,5 +13,5 @@ public interface ISupplierService
     public Task<List<SupplierDto>> GetSuppliersByWarehouseAsync(int warehouseId);
     public Task<SupplierDto> CreateSupplierAsync(CreateSupplierDto supplierDto);
     public Task<SupplierDto> UpdateSupplierAsync(int SupplierId, CreateSupplierDto supplierDto);
-    public Task SoftDeleteSupplierAsync(int supplierId);
+    public Task<bool> SoftDeleteSupplierAsync(int supplierId);
 }

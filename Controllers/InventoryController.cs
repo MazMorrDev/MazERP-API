@@ -1,4 +1,4 @@
-﻿using MazErpBack.Dtos.Inventory;
+﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,18 +23,18 @@ public class InventoryController(IInventoryService inventoryService) : Controlle
         }
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteInventory(int id)
-    {
-        try
-        {
-            return Ok(await _inventoryService.DeleteInventoryAsync(id));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
+    // [HttpDelete("{id:int}")]
+    // public async Task<IActionResult> DeleteInventory(int id)
+    // {
+    //     try
+    //     {
+    //         return Ok(await _inventoryService.DeleteInventoryAsync(id));
+    //     }
+    //     catch (Exception)
+    //     {
+    //         throw;
+    //     }
+    // }
 
     [HttpPost]
     public async Task<IActionResult> CreateInventory([FromBody] CreateInventoryDto inventoryDto)

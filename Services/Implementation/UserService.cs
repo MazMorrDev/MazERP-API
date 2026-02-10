@@ -39,7 +39,7 @@ public class UserService(AppDbContext context, ITokenService tokenService, ILogg
         }
         catch (Exception)
         {
-            // TODO
+            // TODO:
             throw;
         }
     }

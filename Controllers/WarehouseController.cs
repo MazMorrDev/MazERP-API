@@ -1,4 +1,4 @@
-﻿using MazErpBack.Dtos.Warehouse;
+﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +15,7 @@ public class WarehouseController(IWarehouseService warehouseService) : Controlle
     {
         try
         {
-            return Ok(await _warehouseService.CreateWarehouse(warehouseDto));
+            return Ok(await _warehouseService.CreateWarehouseAsync(warehouseDto));
         }
         catch (Exception)
         {
@@ -28,7 +28,7 @@ public class WarehouseController(IWarehouseService warehouseService) : Controlle
     {
         try
         {
-            return Ok(await _warehouseService.DeleteWarehouse(id));
+            return Ok(await _warehouseService.SoftDeleteWarehouseAsync(id));
         }
         catch (Exception)
         {
@@ -36,12 +36,12 @@ public class WarehouseController(IWarehouseService warehouseService) : Controlle
         }
     }
 
-    [HttpGet("by-workflow/{workflowId:int}")]
-    public async Task<IActionResult> GetWarehousesByWorkflow(int workflowId)
+    [HttpGet("by-company/{companyId:int}")]
+    public async Task<IActionResult> GetWarehousesByCompany(int companyId)
     {
         try
         {
-            return Ok(await _warehouseService.GetWarehousesByWorkflowAsync(workflowId));
+            return Ok(await _warehouseService.GetWarehousesByCompanyAsync(companyId));
         }
         catch (Exception)
         {

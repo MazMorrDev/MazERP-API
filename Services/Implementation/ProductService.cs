@@ -32,7 +32,7 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
 
     public async Task<Product> GetProductByIdAsync(int productId)
     {
-        var product = await _context.Products.FindAsync(productId);
+        var product = await _context.Products.FindAsync(productId) ?? throw new KeyNotFoundException($"Product with id: {productId} not found"); ;
         ArgumentNullException.ThrowIfNull(product);
         return product;
     }
@@ -76,15 +76,9 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
     {
         try
         {
-            var product = await _context.Products.FindAsync(productId);
-            if (product == null)
-            {
-                throw new KeyNotFoundException($"Product with id: {productId} not found");
-            }
-
+            var product = await GetProductByIdAsync(productId);
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
-
         }
         catch (NullReferenceException)
         {

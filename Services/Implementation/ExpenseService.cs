@@ -16,15 +16,8 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
 
     public async Task<ExpenseDto> CreateExpenseAsync(CreateExpenseDto expenseDto)
     {
-        var user = await _context.Users.FindAsync(expenseDto.UserId);
-        var company = await _context.Companies.FindAsync(expenseDto.CompanyId);
-        if (user == null || company == null)
-        {
-            _logger.LogDebug("No existe el usuario o la compañia");
-            ArgumentNullException.ThrowIfNull(user);
-            ArgumentNullException.ThrowIfNull(company);
-        }
-
+        var user = await _context.Users.FindAsync(expenseDto.UserId) ?? throw new KeyNotFoundException($"Expense with id: {expenseDto.UserId} not found");
+        var company = await _context.Companies.FindAsync(expenseDto.CompanyId) ?? throw new KeyNotFoundException($"Expense with id: {expenseDto.CompanyId} not found");
         var expense = _mapper.MapModelToDto(user, company, expenseDto);
         await _context.Expenses.AddAsync(expense);
         await _context.SaveChangesAsync();
@@ -33,21 +26,14 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
 
     public async Task DeleteExpenseAsync(int expenseId)
     {
-        var expense = await _context.Expenses.FindAsync(expenseId);
-        if (expense == null)
-        {
-            _logger.LogDebug("");
-            throw new KeyNotFoundException($"Expense with id: {expenseId} not found");
-        }
+        var expense = await GetExpenseByIdAsync(expenseId);
         _context.Expenses.Remove(expense);
         await _context.SaveChangesAsync();
     }
 
     public async Task<Expense> GetExpenseByIdAsync(int expenseId)
     {
-        var expense = await _context.Expenses.FindAsync(expenseId);
-        ArgumentNullException.ThrowIfNull(expense);
-        return expense;
+        return await _context.Expenses.FindAsync(expenseId) ?? throw new KeyNotFoundException($"Expense with id: {expenseId} not found");
     }
 
     public async Task<List<ExpenseDto>> GetExpensesByCompanyAsync(int companyId)
@@ -56,17 +42,19 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
         return expenses;
     }
 
-    public async Task SoftDeleteExpenseAsync(int expenseId)
+    public async Task<bool> SoftDeleteExpenseAsync(int expenseId)
     {
-        var expense = await _context.Expenses.FindAsync(expenseId);
-        if (expense == null)
+        try
         {
-            // Logging
-            throw new KeyNotFoundException($"Expense with id: {expenseId} not found");
+            var expense = await GetExpenseByIdAsync(expenseId);
+            expense.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
         }
-        expense.IsActive = false;
-        expense.UpdatedAt = DateTimeOffset.UtcNow;
-        await _context.SaveChangesAsync();
+        catch
+        {
+            return false;
+        }
 
     }
 

@@ -1,4 +1,4 @@
-﻿using MazErpBack.Dtos.Products;
+﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,16 +24,16 @@ public class ProductsController(IProductService productsService) : ControllerBas
         }
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteProduct(int id)
-    {
-        try
-        {
-            return Ok(await _productService.DeleteProductAsync(id));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
+    // [HttpDelete("{id:int}")]
+    // public async Task<IActionResult> DeleteProduct(int id)
+    // {
+    //     try
+    //     {
+    //         return Ok(await _productService.DeleteProductAsync(id));
+    //     }
+    //     catch (Exception)
+    //     {
+    //         throw;
+    //     }
+    // }
 }

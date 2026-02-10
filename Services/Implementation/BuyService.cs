@@ -79,12 +79,20 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         return _mapper.MapListToDto(movements, buys);
     }
 
-    public async Task SoftDeleteBuyAsync(int movementId)
+    public async Task<bool> SoftDeleteBuyAsync(int movementId)
     {
-        var movement = await GetMovementByIdAsync(movementId);
-        movement.IsActive = false;
-        movement.UpdatedAt = DateTimeOffset.UtcNow;
-        await _context.SaveChangesAsync();
+        try
+        {
+            var movement = await GetMovementByIdAsync(movementId);
+            movement.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+
     }
 
     public async Task<BuyDto> UpdateBuyAsync(int buyId, CreateBuyDto buyDto)

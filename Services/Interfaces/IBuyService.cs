@@ -14,5 +14,5 @@ public interface IBuyService
     public Task<List<BuyDto>> GetBuysByInventoryAsync(int invId);
     public Task<BuyDto> CreateBuyAsync(CreateBuyDto buyDto);
     public Task<BuyDto> UpdateBuyAsync(int buyId, CreateBuyDto buyDto);
-    public Task SoftDeleteBuyAsync(int buyID);
+    public Task<bool> SoftDeleteBuyAsync(int buyID);
 }

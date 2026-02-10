@@ -96,16 +96,23 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         }
     }
 
-    public async Task SoftDeleteCompanyAsync(int companyId)
+    public async Task<Company> GetCompanyByIdAsync(int id)
     {
-        var company = await _context.Companies.FindAsync(companyId);
-        if (company == null)
-        {
-            _logger.LogDebug("No se encontró una compañía con ese id");
-            throw new KeyNotFoundException($"Company with id: {companyId} not found");
-        }
-        company.IsActive = false;
-        await _context.SaveChangesAsync();
+        return await _context.Companies.FindAsync(id) ?? throw new KeyNotFoundException($"Company with id: {id} not found");
+    }
 
+    public async Task<bool> SoftDeleteCompanyAsync(int companyId)
+    {
+        try
+        {
+            var company = await GetCompanyByIdAsync(companyId);
+            company.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

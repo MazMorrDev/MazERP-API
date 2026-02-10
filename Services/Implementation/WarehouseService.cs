@@ -54,11 +54,21 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
         return warehouse;
     }
 
-    public async Task SoftDeleteWarehouseAsync(int warehouseId)
+    public async Task<bool> SoftDeleteWarehouseAsync(int warehouseId)
     {
-        var warehouse = await GetWarehouseByIdAsync(warehouseId);
-        warehouse.IsActive = false;
-        await _context.SaveChangesAsync();
+        try
+        {
+            var warehouse = await GetWarehouseByIdAsync(warehouseId);
+            warehouse.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+            throw;
+        }
+
     }
 
     public async Task<WarehouseDto> UpdateWarehouseAsync(int warehouseId, CreateWarehouseDto warehouseDto)
