@@ -13,8 +13,8 @@ public class Expense
     [Required, Column("user_id")]
     public int UserId { get; set; }
 
-    [Required, Column("inventory_id")]
-    public int InventoryId { get; set; }
+    [Required, Column("company_id")]
+    public int CompanyId { get; set; }
 
     [Column("description")]
     public string? Description { get; set; }
@@ -45,6 +45,6 @@ public class Expense
     [ForeignKey("UserId")]
     public virtual User User { get; set; } = null!;
 
-    [ForeignKey("InventoryId")]
-    public virtual Inventory Inventory { get; set; } = null!;
+    [ForeignKey("CompanyId")]
+    public virtual Company Company { get; set; } = null!;
 }

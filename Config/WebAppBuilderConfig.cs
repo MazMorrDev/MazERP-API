@@ -1,10 +1,11 @@
 ﻿using System.Security.Claims;
+using Serilog;
 using MazErpBack.Context;
-using MazErpBack.Services;
-using MazErpBack.Services.Interfaces;
+using MazErpBack.Services.Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MazErpBack.Services.Interfaces;
 
 namespace MazErpBack.Config;
 
@@ -20,11 +21,16 @@ public class WebAppBuilderConfig
         builder.Services.AddDbContext<AppDbContext>(optionsAction: options => options.UseNpgsql(connectionString));
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
-        builder.Services.AddScoped<IWorkflowService, WfService>();
+        builder.Services.AddScoped<ICompanyService, CompanyService>();
         builder.Services.AddScoped<IWarehouseService, WarehouseService>();
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IInventoryService, InventoryService>();
-        // TODO: map and register Mapster DI
+        builder.Services.AddScoped<IBuyService, BuyService>();
+        builder.Services.AddScoped<IDevolutionService, DevolutionService>();
+        builder.Services.AddScoped<ISellService, SellService>();
+        builder.Services.AddScoped<ISupplierService, SupplierService>();
+        builder.Services.AddScoped<IExpenseService, ExpenseService>();
+        builder.Services.AddScoped<ISellPointService, SellPointService>();
         builder.Services.AddControllers();
 
         builder.Services.AddAuthorizationBuilder()
@@ -33,6 +39,13 @@ public class WebAppBuilderConfig
             .AddPolicy("Inventory", policy => policy.RequireClaim(ClaimTypes.Role, "Inventory"))
             .AddPolicy("Sales", policy => policy.RequireClaim(ClaimTypes.Role, "Sales"))
             .AddPolicy("Finance", policy => policy.RequireClaim(ClaimTypes.Role, "Finance"));
+
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+            
+        builder.Host.UseSerilog();
     }
 
     public static void ConfigureCorsPolicy(WebApplicationBuilder builder)

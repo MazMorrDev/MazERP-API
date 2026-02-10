@@ -1,4 +1,4 @@
-using MazErpBack.Dtos.Users;
+using MazErpBack.DTOs.Users;
 
 namespace MazErpBack.Services.Interfaces;
 
