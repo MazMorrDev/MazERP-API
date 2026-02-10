@@ -56,7 +56,7 @@ public class WebAppBuilderConfig
             .WriteTo.Console()
             .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
-            
+
         builder.Host.UseSerilog();
     }
 

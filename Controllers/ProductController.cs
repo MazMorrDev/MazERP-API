@@ -23,17 +23,4 @@ public class ProductsController(IProductService productsService) : ControllerBas
             throw;
         }
     }
-
-    // [HttpDelete("{id:int}")]
-    // public async Task<IActionResult> DeleteProduct(int id)
-    // {
-    //     try
-    //     {
-    //         return Ok(await _productService.DeleteProductAsync(id));
-    //     }
-    //     catch (Exception)
-    //     {
-    //         throw;
-    //     }
-    // }
 }

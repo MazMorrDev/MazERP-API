@@ -6,16 +6,16 @@ namespace MazErpBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class InventoryController(IInventoryService inventoryService) : ControllerBase
+public class InventoryController(IInventoryService service) : ControllerBase
 {
-    private readonly IInventoryService _inventoryService = inventoryService;
+    private readonly IInventoryService _service = service;
 
     [HttpGet("by-warehouse{warehouseId:int}")]
     public async Task<IActionResult> GetInventoriesByWarehouse(int warehouseId)
     {
         try
         {
-            return Ok(await _inventoryService.GetInventoriesByWarehouseAsync(warehouseId));
+            return Ok(await _service.GetInventoriesByWarehouseAsync(warehouseId));
         }
         catch (Exception)
         {
@@ -23,25 +23,25 @@ public class InventoryController(IInventoryService inventoryService) : Controlle
         }
     }
 
-    // [HttpDelete("{id:int}")]
-    // public async Task<IActionResult> DeleteInventory(int id)
-    // {
-    //     try
-    //     {
-    //         return Ok(await _inventoryService.DeleteInventoryAsync(id));
-    //     }
-    //     catch (Exception)
-    //     {
-    //         throw;
-    //     }
-    // }
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteInventory(int id)
+    {
+        try
+        {
+            return Ok(await _service.SoftDeleteInventoryAsync(id));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 
     [HttpPost]
     public async Task<IActionResult> CreateInventory([FromBody] CreateInventoryDto inventoryDto)
     {
         try
         {
-            return Ok(await _inventoryService.CreateInventoryAsync(inventoryDto));
+            return Ok(await _service.CreateInventoryAsync(inventoryDto));
         }
         catch (Exception)
         {
