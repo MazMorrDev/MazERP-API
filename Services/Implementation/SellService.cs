@@ -16,13 +16,8 @@ public class SellService(AppDbContext context, SellMapper mapper) : ISellService
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            var user = await _context.Users.FindAsync(createSellDto.UserId);
-            var sellPoint = await _context.SellPoints.FindAsync(createSellDto.SellPointId);
-            if (user == null)
-                throw new KeyNotFoundException($"User with id {createSellDto.UserId} not found");
-            if (sellPoint == null)
-                throw new KeyNotFoundException($"SellPoint with id {createSellDto.SellPointId} not found");
-
+            var user = await _context.Users.FindAsync(createSellDto.UserId) ?? throw new KeyNotFoundException($"User with ID {createSellDto.UserId} not found");
+            var sellPoint = await _context.SellPoints.FindAsync(createSellDto.SellPointId) ?? throw new KeyNotFoundException($"SellPoint with ID {createSellDto.SellPointId} not found");
             var movement = _mapper.MapMovement(user, createSellDto);
             var Sell = _mapper.MapSell(movement, sellPoint, createSellDto);
             await _context.Movements.AddAsync(movement);
@@ -70,8 +65,7 @@ public class SellService(AppDbContext context, SellMapper mapper) : ISellService
         List<SellDto> SellsDto = [];
         foreach (var sell in sells)
         {
-            var movement = await _context.Movements.FindAsync(sell.MovementId);
-            ArgumentNullException.ThrowIfNull(movement);
+            var movement = await _context.Movements.FindAsync(sell.MovementId) ?? throw new KeyNotFoundException($"Movement with Id {sell.MovementId} not found");
             var SellDto = _mapper.MapToDto(movement, sell);
             ArgumentNullException.ThrowIfNull(SellDto);
             SellsDto.Add(SellDto);
@@ -79,11 +73,20 @@ public class SellService(AppDbContext context, SellMapper mapper) : ISellService
         return SellsDto;
     }
 
-    public async Task SoftDeleteSellAsync(int movementId)
+    public async Task<bool> SoftDeleteSellAsync(int movementId)
     {
-        var movement = await GetMovementByIdAsync(movementId);
-        movement.IsActive = false;
-        await _context.SaveChangesAsync();
+        try
+        {
+            var movement = await GetMovementByIdAsync(movementId);
+            movement.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+
     }
 
     public async Task<SellDto> UpdateSellAsync(int sellId, CreateSellDto sellDto)
@@ -92,12 +95,8 @@ public class SellService(AppDbContext context, SellMapper mapper) : ISellService
         try
         {
 
-            var movement = await GetMovementByIdAsync(sellId);
-            var sell = await GetSellByIdAsync(sellId);
-            if (movement == null)
-                throw new KeyNotFoundException($"Movement with ID {sellId} not found");
-            if (sell == null)
-                throw new KeyNotFoundException($"Sell with Id {sellId} not found");
+            var movement = await GetMovementByIdAsync(sellId) ?? throw new KeyNotFoundException($"Movement with Id {sellId} not found");
+            var sell = await GetSellByIdAsync(sellId) ?? throw new KeyNotFoundException($"Sell with Id {sellId} not found");
 
             movement.Currency = sellDto.Currency;
             movement.Description = sellDto.Description;

@@ -24,16 +24,13 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
     public async Task DeleteSellPointAsync(int sellPointId)
     {
         var sellPoint = await GetSellPointByIdAsync(sellPointId);
-        ArgumentNullException.ThrowIfNull(sellPoint);
         _context.SellPoints.Remove(sellPoint);
         await _context.SaveChangesAsync();
     }
 
     public async Task<SellPoint> GetSellPointByIdAsync(int sellPointId)
     {
-        var sellPoint = await _context.SellPoints.FindAsync(sellPointId);
-        ArgumentNullException.ThrowIfNull(sellPoint);
-        return sellPoint;
+        return await _context.SellPoints.FindAsync(sellPointId) ?? throw new KeyNotFoundException($"SellPoint with id: {sellPointId} not found"); ;
     }
 
     public async Task<List<SellPointDto>> GetSellPointsByCompanyAsync(int companyId)
@@ -64,13 +61,20 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
         return sellPointsDto;
     }
 
-    public async Task SoftDeleteSellPointAsync(int sellPointId)
+    public async Task<bool> SoftDeleteSellPointAsync(int sellPointId)
     {
-        var sellPoint = await _context.SellPoints.FindAsync(sellPointId);
-        ArgumentNullException.ThrowIfNull(sellPoint);
+        try
+        {
+            var sellPoint = await GetSellPointByIdAsync(sellPointId);
+            sellPoint.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
 
-        sellPoint.IsActive = false;
-        await _context.SaveChangesAsync();
     }
 
     public async Task<SellPointDto> UpdateSellPointAsync(int sellPointId, CreateSellPointDto sellPointDto)
@@ -80,6 +84,7 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
         sellPoint.Description = sellPointDto.Description;
         sellPoint.Location = sellPointDto.Location;
 
+        await _context.SaveChangesAsync();
         return _mapper.MapToDto(sellPoint);
     }
 }
