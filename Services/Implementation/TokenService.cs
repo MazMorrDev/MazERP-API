@@ -4,7 +4,6 @@ using System.Text;
 using MazErpBack.DTOs.Users;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MazErpBack.Services.Implementation;

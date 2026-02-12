@@ -33,7 +33,7 @@ public class UserService(AppDbContext context, ITokenService tokenService, ILogg
                 _logger.LogWarning("Failed login attempt for email: {Email}", loginDto.Email);
                 return null;
             }
-            var token = _tokenService.CreateTokenAsync(user);
+            var token = _tokenService.CreateToken(user);
             _logger.LogInformation("User logged in: {Email}", loginDto.Email);
             return token;
         }
