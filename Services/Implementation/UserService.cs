@@ -56,11 +56,10 @@ public class UserService(AppDbContext context, ITokenService tokenService, ILogg
             };
             var hasher = new PasswordHasher<User>();
             user.PasswordHash = hasher.HashPassword(user, userDto.Password);
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
-            // TODO: register wf a user - modificar service para hacerlo en un solo paso
 
-            return _mapper.MapToDto(user);;
+            return _mapper.MapToDto(user); ;
         }
         catch (Exception)
         {

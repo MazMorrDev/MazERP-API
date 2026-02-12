@@ -13,21 +13,19 @@ public class WfController(ICompanyService service) : ControllerBase
 {
     private readonly ICompanyService _service = service;
 
-    [HttpGet("Companys")]
-    [Authorize(Roles = "Client")]
-    public async Task<IActionResult> GetCompanys()
+    [HttpGet("by-user/{userId}")]
+    public async Task<IActionResult> GetCompaniesByUser(int userId)
     {
-        var companies = await _service.GetCompaniesByAsync();
+        var companies = await _service.GetCompaniesByUser(userId);
         return Ok(new { data = companies });
     }
 
-    [HttpPut("assign/{userId}/{CompanyId}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> AssignCompanyToUser(int userId, int CompanyId, [FromQuery] UserCompanyRole role = UserCompanyRole.Admin)
+    [HttpPost("assign")]
+    public async Task<IActionResult> AddUserToCompany([FromBody] AddUserToCompanyDto dto)
     {
         try
         {
-            return Ok(await _service.AssignCompanyToUserAsync(userId, CompanyId, role));
+            return Ok(await _service.AddUserToCompanyAsync(dto));
         }
         catch (Exception ex)
         {
@@ -45,7 +43,6 @@ public class WfController(ICompanyService service) : ControllerBase
         }
         catch (Exception)
         {
-
             throw;
         }
     }
