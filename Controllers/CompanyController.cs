@@ -37,7 +37,6 @@ public class WfController(ICompanyService service) : ControllerBase
     }
 
     [HttpPost("create")]
-    [Authorize(Roles = "Admin")] // necesito el role para crear un wf ademas del admin
     public async Task<IActionResult> CreateCompany([FromBody] CreateCompanyDto Company)
     {
         try

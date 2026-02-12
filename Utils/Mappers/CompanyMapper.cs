@@ -1,4 +1,5 @@
 ﻿using MazErpBack.DTOs.Company;
+using MazErpBack.Enums;
 using MazErpBack.Models;
 
 namespace MazErpBack.Utils.Mappers;
@@ -18,9 +19,9 @@ public class CompanyMapper
         };
     }
 
-    public CompanyUserDto MapCompanyUserDto(UserCompany userCompany)
+    public UserCompanyDto MapUserCompanyDto(UserCompany userCompany)
     {
-        return new CompanyUserDto
+        return new UserCompanyDto
         {
             UserId = userCompany.UserId,
             CompanyId = userCompany.CompanyId,
@@ -28,7 +29,19 @@ public class CompanyMapper
             AssignedAt = userCompany.AssignedAt
         };
     }
-    
+    public UserCompany MapUserCompany(User user, Company company)
+    {
+        return new UserCompany
+        {
+            UserId = user.Id,
+            CompanyId = company.Id,
+            Role = UserCompanyRole.Owner,
+            AssignedAt = DateTimeOffset.UtcNow,
+            User = user,
+            Company = company
+        };
+    }
+
     public Company MapDtoToModel(CreateCompanyDto companyDto)
     {
         return new Company

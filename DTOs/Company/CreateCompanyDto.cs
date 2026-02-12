@@ -6,6 +6,9 @@ namespace MazErpBack.DTOs.Company;
 public record class CreateCompanyDto
 {
     [Required]
+    public required int UserId { get; init; }
+
+    [Required]
     [MaxLength(30)]
     public required string Name { get; init; }
 

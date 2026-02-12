@@ -12,7 +12,6 @@ public class ProductsController(IProductService productsService) : ControllerBas
 {
     private readonly IProductService _productService = productsService;
 
-
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
     {

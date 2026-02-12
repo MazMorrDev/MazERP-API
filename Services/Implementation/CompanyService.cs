@@ -14,7 +14,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
     private readonly ILogger<CompanyService> _logger = logger;
     private readonly CompanyMapper _mapper = mapper;
 
-    public async Task<CompanyUserDto> AssignCompanyToUserAsync(int userId, int companyId, UserCompanyRole role = UserCompanyRole.Owner)
+    public async Task<UserCompanyDto> AssignCompanyToUserAsync(int userId, int companyId, UserCompanyRole role = UserCompanyRole.Owner)
     {
         try
         {
@@ -33,7 +33,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
             // check if Company is already associated to user
             await _context.UserCompanies.AddAsync(userWfAdd);
             await _context.SaveChangesAsync();
-            return _mapper.MapCompanyUserDto(userWfAdd);
+            return _mapper.MapUserCompanyDto(userWfAdd);
 
         }
         catch (Exception ex)
@@ -43,21 +43,33 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         }
     }
 
-    public async Task<Company> CreateCompany(CreateCompanyDto companyDto)
+    public async Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dtoint userId, int companyId, UserCompanyRole role)
     {
         try
         {
-            var company = _mapper.MapDtoToModel(companyDto);
-
-            _context.Companies.Add(company);
-
+            var existingUser = await _context.UserCompanies.FirstOrDefaultAsync(c => c.UserId == userId && c.CompanyId == companyId);
+            if (existingUser != null)
+            {
+                throw new BadHttpRequestException($"Company {companyId} is already assigned to user {userId}.");
+            }
+            var userWfAdd = new UserCompany
+            {
+                UserId = userId,
+                CompanyId = companyId,
+                Role = role,
+                AssignedAt = DateTimeOffset.UtcNow,
+                User =
+                Company =
+            };
+            // check if Company is already associated to user
+            await _context.UserCompanies.AddAsync(userWfAdd);
             await _context.SaveChangesAsync();
+            return _mapper.MapUserCompanyDto(userWfAdd);
 
-            return company;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-
+            _logger.LogError(ex, $"Error assigning Company with id:{companyId} to client with id:{userId}");
             throw;
         }
     }
@@ -65,7 +77,11 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
     public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto)
     {
         var company = _mapper.MapDtoToModel(companyDto);
+        var user = await _context.Users.FindAsync(companyDto.UserId) ?? throw new KeyNotFoundException($"User with id: {companyDto.UserId} not found");
+
+        var userCompany = _mapper.MapUserCompany(user, company);
         await _context.Companies.AddAsync(company);
+        await _context.UserCompanies.AddAsync(userCompany);
         await _context.SaveChangesAsync();
         return _mapper.MapToDto(company);
     }
