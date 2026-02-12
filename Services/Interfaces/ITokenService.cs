@@ -5,5 +5,5 @@ namespace MazErpBack.Services.Interfaces;
 
 public interface ITokenService
 {
-    public TokenDto CreateTokenAsync(User user);
+    public TokenDto CreateToken(User user);
 }

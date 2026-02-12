@@ -46,11 +46,8 @@ public class WebAppBuilderConfig
         builder.Services.AddControllers();
 
         builder.Services.AddAuthorizationBuilder()
-            .AddPolicy("Client", policy => policy.RequireClaim(ClaimTypes.Role, "Client"))
-            .AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"))
-            .AddPolicy("Inventory", policy => policy.RequireClaim(ClaimTypes.Role, "Inventory"))
-            .AddPolicy("Sales", policy => policy.RequireClaim(ClaimTypes.Role, "Sales"))
-            .AddPolicy("Finance", policy => policy.RequireClaim(ClaimTypes.Role, "Finance"));
+            .AddPolicy("User", policy => policy.RequireClaim(ClaimTypes.Role, "user"));
+
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()

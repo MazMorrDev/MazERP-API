@@ -91,4 +91,9 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         _context.Companies.Remove(company);
         await _context.SaveChangesAsync();
     }
+
+    public Task<List<CompanyDto>> GetCompaniesByUser(int userId)
+    {
+        var userCompanies = await _context.UserCompanies.Where(uc => uc.)
+    }
 }

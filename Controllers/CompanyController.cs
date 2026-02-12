@@ -17,7 +17,7 @@ public class WfController(ICompanyService service) : ControllerBase
     [Authorize(Roles = "Client")]
     public async Task<IActionResult> GetCompanys()
     {
-        var companies = await _service.GetCompaniesAsync();
+        var companies = await _service.GetCompaniesByAsync();
         return Ok(new { data = companies });
     }
 
