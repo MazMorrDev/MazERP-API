@@ -14,5 +14,5 @@ public interface ICompanyService
     // Para el usuario común
     public Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto);
     public Task<bool> SoftDeleteCompanyAsync(int CompanyId);
-    public Task<CompanyUserDto> AssignCompanyToUserAsync(int userId, int CompanyId, UserCompanyRole role = UserCompanyRole.Owner);
+    public Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dto);
 }
