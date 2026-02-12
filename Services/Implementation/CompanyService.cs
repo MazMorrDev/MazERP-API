@@ -1,6 +1,5 @@
 ﻿using MazErpBack.Context;
 using MazErpBack.DTOs.Company;
-using MazErpBack.Enums;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using MazErpBack.Utils.Mappers;
@@ -18,6 +17,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
     {
         try
         {
+            // check if Company is already associated to user
             var existingUser = await _context.UserCompanies.FirstOrDefaultAsync(c => c.UserId == dto.UserId && c.CompanyId == dto.CompanyId);
             if (existingUser != null)
             {
@@ -25,7 +25,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
             }
 
             var user = await _context.Users.FindAsync(dto.UserId) ?? throw new KeyNotFoundException($"User with id: {dto.UserId} not found");
-            var company = await _context.Companies.FindAsync(dto.CompanyId) ?? throw new KeyNotFoundException($"Company with id: {dto.CompanyId} not found");
+            var company = await GetCompanyByIdAsync(dto.CompanyId);
             var userCompany = new UserCompany
             {
                 UserId = dto.UserId,
@@ -35,7 +35,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
                 User = user,
                 Company = company
             };
-            // check if Company is already associated to user
+
             await _context.UserCompanies.AddAsync(userCompany);
             await _context.SaveChangesAsync();
             return _mapper.MapUserCompanyDto(userCompany);
@@ -60,32 +60,6 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         return _mapper.MapToDto(company);
     }
 
-    public async Task DeleteCompanyAsync(int companyId)
-    {
-        var company = await _context.Companies.FindAsync(companyId);
-        if (company == null)
-        {
-            _logger.LogDebug("");
-            throw new KeyNotFoundException($"Company with id: {companyId} not found");
-        }
-        _context.Companies.Remove(company);
-        await _context.SaveChangesAsync();
-
-    }
-
-    public async Task<List<Company>> GetCompaniesAsync()
-    {
-        try
-        {
-            var companies = await _context.Companies.ToListAsync();
-            return companies;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
     public async Task<Company> GetCompanyByIdAsync(int id)
     {
         return await _context.Companies.FindAsync(id) ?? throw new KeyNotFoundException($"Company with id: {id} not found");
@@ -96,6 +70,11 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         try
         {
             var company = await GetCompanyByIdAsync(companyId);
+            var UserCompanies = await _context.UserCompanies.Where(uc => uc.CompanyId == companyId).ToListAsync();
+            foreach (var item in UserCompanies)
+            {
+                item.IsActive = false;
+            }
             company.IsActive = false;
             await _context.SaveChangesAsync();
             return true;
@@ -104,5 +83,12 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         {
             return false;
         }
+    }
+
+    public async Task DeleteCompanyAsync(int companyId)
+    {
+        var company = await GetCompanyByIdAsync(companyId);
+        _context.Companies.Remove(company);
+        await _context.SaveChangesAsync();
     }
 }

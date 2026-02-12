@@ -1,5 +1,4 @@
 ﻿using MazErpBack.DTOs.Company;
-using MazErpBack.Enums;
 using MazErpBack.Models;
 
 namespace MazErpBack.Services.Interfaces;
@@ -7,7 +6,6 @@ namespace MazErpBack.Services.Interfaces;
 public interface ICompanyService
 {
     // Para el panel de administración
-    public Task<List<Company>> GetCompaniesAsync();
     public Task<Company> GetCompanyByIdAsync(int id);
     public Task DeleteCompanyAsync(int companyId);
 
