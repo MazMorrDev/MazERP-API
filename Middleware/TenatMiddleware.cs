@@ -1,4 +1,4 @@
-﻿namespace MazErpBack;
+﻿namespace MazErpBack.Middleware;
 
 public class TenatMiddleware
 {
