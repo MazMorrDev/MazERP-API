@@ -14,62 +14,36 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
     private readonly ILogger<CompanyService> _logger = logger;
     private readonly CompanyMapper _mapper = mapper;
 
-    public async Task<UserCompanyDto> AssignCompanyToUserAsync(int userId, int companyId, UserCompanyRole role = UserCompanyRole.Owner)
+    public async Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dto)
     {
         try
         {
-            var existingUser = await _context.UserCompanies.FirstOrDefaultAsync(c => c.UserId == userId && c.CompanyId == companyId);
+            var existingUser = await _context.UserCompanies.FirstOrDefaultAsync(c => c.UserId == dto.UserId && c.CompanyId == dto.CompanyId);
             if (existingUser != null)
             {
-                throw new BadHttpRequestException($"Company {companyId} is already assigned to user {userId}.");
+                throw new BadHttpRequestException($"Company {dto.CompanyId} is already assigned to user {dto.UserId}.");
             }
-            var userWfAdd = new UserCompany
-            {
-                UserId = userId,
-                CompanyId = companyId,
-                Role = role,
-                AssignedAt = DateTimeOffset.UtcNow
-            };
-            // check if Company is already associated to user
-            await _context.UserCompanies.AddAsync(userWfAdd);
-            await _context.SaveChangesAsync();
-            return _mapper.MapUserCompanyDto(userWfAdd);
 
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, $"Error assigning Company with id:{companyId} to client with id:{userId}");
-            throw;
-        }
-    }
-
-    public async Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dtoint userId, int companyId, UserCompanyRole role)
-    {
-        try
-        {
-            var existingUser = await _context.UserCompanies.FirstOrDefaultAsync(c => c.UserId == userId && c.CompanyId == companyId);
-            if (existingUser != null)
+            var user = await _context.Users.FindAsync(dto.UserId) ?? throw new KeyNotFoundException($"User with id: {dto.UserId} not found");
+            var company = await _context.Companies.FindAsync(dto.CompanyId) ?? throw new KeyNotFoundException($"Company with id: {dto.CompanyId} not found");
+            var userCompany = new UserCompany
             {
-                throw new BadHttpRequestException($"Company {companyId} is already assigned to user {userId}.");
-            }
-            var userWfAdd = new UserCompany
-            {
-                UserId = userId,
-                CompanyId = companyId,
-                Role = role,
+                UserId = dto.UserId,
+                CompanyId = dto.CompanyId,
+                Role = dto.Role,
                 AssignedAt = DateTimeOffset.UtcNow,
-                User =
-                Company =
+                User = user,
+                Company = company
             };
             // check if Company is already associated to user
-            await _context.UserCompanies.AddAsync(userWfAdd);
+            await _context.UserCompanies.AddAsync(userCompany);
             await _context.SaveChangesAsync();
-            return _mapper.MapUserCompanyDto(userWfAdd);
+            return _mapper.MapUserCompanyDto(userCompany);
 
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error assigning Company with id:{companyId} to client with id:{userId}");
+            _logger.LogError(ex, $"Error assigning Company with id:{dto.CompanyId} to client with id:{dto.UserId}");
             throw;
         }
     }
