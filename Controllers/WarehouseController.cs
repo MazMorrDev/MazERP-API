@@ -1,10 +1,12 @@
 ﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MazErpBack.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class WarehouseController(IWarehouseService warehouseService) : ControllerBase
 {
