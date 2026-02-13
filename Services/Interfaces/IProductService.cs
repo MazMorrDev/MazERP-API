@@ -10,6 +10,6 @@ public interface IProductService
     public Task DeleteProductAsync(int productId);
     public Task<List<Product>> GetProductsByCompanyAsync(int companyId);
     public Task<List<Product>> GetProductsByWarehouseAsync(int warehouseId);
-    public Task<Product> CreateProductAsync(CreateProductDto productDto);
-    public Task<Product> UpdateProductAsync(int productId, CreateProductDto productDto);
+    public Task<Product> CreateProductAsync(CreateInventoryAndProductDto productDto);
+    public Task<Product> UpdateProductAsync(int productId, UpdateInventoryProductDto productDto);
 }

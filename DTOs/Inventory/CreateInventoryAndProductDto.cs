@@ -3,7 +3,7 @@ using MazErpBack.Enums;
 
 namespace MazErpBack.DTOs.Inventory;
 
-public record class CreateInventoryNewProductDto
+public record class CreateInventoryAndProductDto
 {
     [Required(ErrorMessage = "The product name is required")]
     [MaxLength(40)]

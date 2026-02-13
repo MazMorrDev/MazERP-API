@@ -18,40 +18,47 @@ public class InventoryMapper
             AverageCost = inventory.AverageCost,
             AlertStock = inventory.AlertStock,
             WarningStock = inventory.WarningStock,
+            ProductName = product.Name,
+            ProductCategory = product.Category,
+            ProductDescription = product.Description,
+            PhotoUrl = product.PhotoUrl
         };
     }
 
-    public List<InventoryDto> MapListToDto(List<Inventory> inventories)
+    public List<InventoryDto> MapListToDto(List<Inventory> inventories, List<Product> products)
     {
         List<InventoryDto> inventoriesDto = [];
-        foreach (var inventory in inventories)
+        foreach (var item in inventories)
         {
-            inventoriesDto.Add(MapToDto(inventory));
+            var product = products.FirstOrDefault(p => p.Id == item.ProductId) ?? throw new KeyNotFoundException("Product compatible no encontrado");
+            inventoriesDto.Add(MapToDto(item, product));
         }
         return inventoriesDto;
     }
 
-    public CreateInventoryExistentProductDto MapNewToExistent(Product product, CreateInventoryNewProductDto dto)
-    {
-        return new CreateInventoryExistentProductDto
-        {
-            WarehouseId = dto.WarehouseId,
-            ProductId = product.Id,
-            Stock = dto.Stock,
-            BaseDiscount =dto.BaseDiscount,
-            BasePrice = dto.BasePrice,
-            AverageCost =dto.AverageCost,
-            AlertStock = dto.AlertStock,
-            WarningStock = dto.WarningStock
-        };
-    }
-
-    public Inventory MapDtoToModel(Warehouse warehouse, Product product, CreateInventoryExistentProductDto inventoryDto)
+    public Inventory MapDtoToModel(Warehouse warehouse, Product product, CreateInventoryAndProductDto inventoryDto)
     {
         return new Inventory
         {
             WarehouseId = inventoryDto.WarehouseId,
-            ProductId = inventoryDto.ProductId,
+            ProductId = product.Id,
+            Stock = inventoryDto.Stock,
+            BasePrice = inventoryDto.BasePrice,
+            BaseDiscount = inventoryDto.BaseDiscount,
+            AverageCost = inventoryDto.AverageCost,
+            AlertStock = inventoryDto.AlertStock,
+            WarningStock = inventoryDto.WarningStock,
+            Warehouse = warehouse,
+            Product = product
+        };
+    }
+
+    public Inventory MapDtoByProductToModel(Warehouse warehouse, Product product, CreateInventoryByExistentProductDto inventoryDto)
+    {
+        return new Inventory
+        {
+            WarehouseId = inventoryDto.WarehouseId,
+            ProductId = product.Id,
             Stock = inventoryDto.Stock,
             BasePrice = inventoryDto.BasePrice,
             BaseDiscount = inventoryDto.BaseDiscount,

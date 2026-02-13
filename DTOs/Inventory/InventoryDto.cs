@@ -6,8 +6,8 @@ namespace MazErpBack.DTOs.Inventory;
 public record class InventoryDto
 {
     public required int ProductId { get; init; }
-    public required string Name { get; init; }
-    public string? Description { get; init; }
+    public required string ProductName { get; init; }
+    public string? ProductDescription { get; init; }
     [Url]
     public string? PhotoUrl { get; init; }
     public required ProductCategory ProductCategory { get; init; }

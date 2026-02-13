@@ -12,7 +12,7 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
     private readonly AppDbContext _context = context;
     private readonly ProductMapper _mapper = mapper;
 
-    public async Task<Product> CreateProductAsync(CreateProductDto productDto)
+    public async Task<Product> CreateProductAsync(CreateInventoryAndProductDto productDto)
     {
         try
         {
@@ -59,11 +59,11 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
         return products;
     }
 
-    public async Task<Product> UpdateProductAsync(int productId, CreateProductDto productDto)
+    public async Task<Product> UpdateProductAsync(int productId, UpdateInventoryProductDto productDto)
     {
         var product = await GetProductByIdAsync(productId);
-        product.Name = productDto.Name;
-        product.Description = productDto.Description;
+        product.Name = productDto.ProductName;
+        product.Description = productDto.ProductDescription;
         product.PhotoUrl = productDto.PhotoUrl;
         product.Category = productDto.ProductCategory;
 
