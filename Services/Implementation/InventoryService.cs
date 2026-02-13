@@ -18,7 +18,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
         return await _context.Inventories.FindAsync(inventoryId) ?? throw new KeyNotFoundException($"Inventory with id: {inventoryId} not found");
     }
 
-    public async Task<bool> SoftDeleteInventoryAndProductAsync(int inventoryId)
+    public async Task<bool> SoftDeleteInventoryAsync(int inventoryId)
     {
         try
         {
@@ -49,6 +49,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
         inventory.AlertStock = inventoryDto.AlertStock;
         inventory.AlertStock = inventoryDto.AlertStock;
 
+        await _productService.UpdateProductAsync(product.Id, inventoryDto);
         await _context.SaveChangesAsync();
         return _mapper.MapToDto(inventory, product);
     }

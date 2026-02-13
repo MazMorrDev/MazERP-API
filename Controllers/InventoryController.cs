@@ -38,12 +38,38 @@ public class InventoryController(IInventoryService service) : ControllerBase
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateInventory([FromBody] CreateInventoryDto inventoryDto)
+    [HttpPut("{inventoryId}")]
+    public async Task<IActionResult> UpdateInventoryAndProduct(int inventoryId, [FromBody] UpdateInventoryProductDto dto)
     {
         try
         {
-            return Ok(await _service.CreateInventoryAsync(inventoryDto));
+            return Ok(await _service.UpdateInventoryAndProductAsync(inventoryId, dto));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateInventoryAndProduct([FromBody] CreateInventoryAndProductDto inventoryDto)
+    {
+        try
+        {
+            return Ok(await _service.CreateInventoryAndProductAsync(inventoryDto));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpPost("by-product")]
+    public async Task<IActionResult> CreateInventoryByExistentProduct([FromBody] CreateInventoryByExistentProductDto inventoryDto)
+    {
+        try
+        {
+            return Ok(await _service.CreateInventoryByExistentProductAsync(inventoryDto));
         }
         catch (Exception)
         {

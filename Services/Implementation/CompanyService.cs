@@ -94,6 +94,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
 
     public Task<List<CompanyDto>> GetCompaniesByUser(int userId)
     {
-        var userCompanies = await _context.UserCompanies.Where(uc => uc.)
+        var userCompanies = await _context.UserCompanies.Where(uc => uc.UserId == userId).ToListAsync();
+        
     }
 }

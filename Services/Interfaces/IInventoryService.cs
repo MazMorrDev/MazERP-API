@@ -13,7 +13,8 @@ public interface IInventoryService
     public Task<List<InventoryDto>> GetInventoriesByWarehouseAsync(int inventoryId);
     public Task<List<InventoryDto>> GetInventoriesByCompanyAsync(int companyId);
     public Task<InventoryDto> CreateInventoryAndProductAsync(CreateInventoryAndProductDto inventoryDto);
+    public Task<InventoryDto> CreateInventoryByExistentProductAsync(CreateInventoryByExistentProductDto inventoryDto);
     public Task<InventoryDto> UpdateInventoryAndProductAsync(int inventoryId, UpdateInventoryProductDto inventoryDto);
-    public Task<bool> SoftDeleteInventoryAndProductAsync(int inventoryId);
+    public Task<bool> SoftDeleteInventoryAsync(int inventoryId);
 
 }
