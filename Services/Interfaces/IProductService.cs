@@ -5,13 +5,11 @@ namespace MazErpBack.Services.Interfaces;
 
 public interface IProductService
 {
-    // Only avaible for admin pannel or backend operations
+    // All Product Operations are managed by inventory Service
     public Task<Product> GetProductByIdAsync(int productId);
     public Task DeleteProductAsync(int productId);
-
-    // For common users
-    public Task<List<ProductDto>> GetProductsByCompanyAsync(int companyId);
-    public Task<List<ProductDto>> GetProductsByWarehouseAsync(int warehouseId);
-    public Task<ProductDto> CreateProductAsync(CreateProductDto productDto);
-    public Task<ProductDto> UpdateProductAsync(int productId, CreateProductDto productDto);
+    public Task<List<Product>> GetProductsByCompanyAsync(int companyId);
+    public Task<List<Product>> GetProductsByWarehouseAsync(int warehouseId);
+    public Task<Product> CreateProductAsync(CreateProductDto productDto);
+    public Task<Product> UpdateProductAsync(int productId, CreateProductDto productDto);
 }

@@ -12,8 +12,8 @@ public interface IInventoryService
     // For common users
     public Task<List<InventoryDto>> GetInventoriesByWarehouseAsync(int inventoryId);
     public Task<List<InventoryDto>> GetInventoriesByCompanyAsync(int companyId);
-    public Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto inventoryDto);
-    public Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryDto inventoryDto);
+    public Task<InventoryDto> CreateInventoryAsync(CreateInventoryExistentProductDto inventoryDto);
+    public Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryExistentProductDto inventoryDto);
     public Task<bool> SoftDeleteInventoryAsync(int inventoryId);
 
 }

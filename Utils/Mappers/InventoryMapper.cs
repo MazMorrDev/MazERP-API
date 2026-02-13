@@ -31,7 +31,7 @@ public class InventoryMapper
         return inventoriesDto;
     }
 
-    public Inventory MapDtoToModel(Warehouse warehouse, Product product, CreateInventoryDto inventoryDto)
+    public Inventory MapDtoToModel(Warehouse warehouse, Product product, CreateInventoryExistentProductDto inventoryDto)
     {
         return new Inventory
         {

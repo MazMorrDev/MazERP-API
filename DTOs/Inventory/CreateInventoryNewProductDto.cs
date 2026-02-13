@@ -2,12 +2,10 @@
 
 namespace MazErpBack.DTOs.Inventory;
 
-public record class CreateInventoryDto
+public record class CreateInventoryNewProductDto
 {
     [Required]
     public int WarehouseId { get; init; }
-    [Required]
-    public int ProductId { get; init; }
     [Required]
     public int Stock { get; init; }
     public decimal BaseDiscount { get; init; }

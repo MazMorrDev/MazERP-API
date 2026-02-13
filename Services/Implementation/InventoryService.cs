@@ -7,10 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class InventoryService(AppDbContext context, InventoryMapper mapper) : IInventoryService
+public class InventoryService(AppDbContext context, InventoryMapper mapper, IProductService productService) : IInventoryService
 {
     private readonly AppDbContext _context = context;
     private readonly InventoryMapper _mapper = mapper;
+    private readonly IProductService _productService = productService;
 
     public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
     {
@@ -33,7 +34,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
 
     }
 
-    public async Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryDto inventoryDto)
+    public async Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryExistentProductDto inventoryDto)
     {
         var inventory = await GetInventoryByIdAsync(inventoryId);
 
@@ -51,12 +52,12 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
         return _mapper.MapToDto(inventory);
     }
 
-    public async Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto inventoryDto)
+    public async Task<InventoryDto> CreateInventoryForExistentProductAsync(CreateInventoryExistentProductDto inventoryDto)
     {
         try
         {
             var warehouse = await _context.Warehouses.FindAsync(inventoryDto.WarehouseId) ?? throw new KeyNotFoundException($"Warehouse with id: {inventoryDto.WarehouseId} not found");
-            var product = await _context.Products.FindAsync(inventoryDto.ProductId) ?? throw new KeyNotFoundException($"Product with id: {inventoryDto.ProductId} not found");
+            var product = await _productService.GetProductByIdAsync(inventoryDto.ProductId);
 
             var inventory = _mapper.MapDtoToModel(warehouse, product, inventoryDto);
 
@@ -64,6 +65,18 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
             await _context.SaveChangesAsync();
 
             return _mapper.MapToDto(inventory);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<InventoryDto> CreateInventoryForNewProductAsync(CreateInventoryNewProductDto inventoryDto, CreateProductDto productDto)
+    {
+        try
+        {
+            var product = await _productService.CreateProductAsync(productDto);
         }
         catch (Exception)
         {
