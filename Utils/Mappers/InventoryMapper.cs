@@ -5,7 +5,7 @@ namespace MazErpBack.Utils.Mappers;
 
 public class InventoryMapper
 {
-    public InventoryDto MapToDto(Inventory inventory)
+    public InventoryDto MapToDto(Inventory inventory, Product product)
     {
         return new InventoryDto
         {
@@ -29,6 +29,21 @@ public class InventoryMapper
             inventoriesDto.Add(MapToDto(inventory));
         }
         return inventoriesDto;
+    }
+
+    public CreateInventoryExistentProductDto MapNewToExistent(Product product, CreateInventoryNewProductDto dto)
+    {
+        return new CreateInventoryExistentProductDto
+        {
+            WarehouseId = dto.WarehouseId,
+            ProductId = product.Id,
+            Stock = dto.Stock,
+            BaseDiscount =dto.BaseDiscount,
+            BasePrice = dto.BasePrice,
+            AverageCost =dto.AverageCost,
+            AlertStock = dto.AlertStock,
+            WarningStock = dto.WarningStock
+        };
     }
 
     public Inventory MapDtoToModel(Warehouse warehouse, Product product, CreateInventoryExistentProductDto inventoryDto)

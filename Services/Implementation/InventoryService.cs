@@ -37,6 +37,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
     public async Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryExistentProductDto inventoryDto)
     {
         var inventory = await GetInventoryByIdAsync(inventoryId);
+        var product = await _productService.GetProductByIdAsync(inventoryDto.ProductId);
 
         inventory.AlertStock = inventoryDto.AlertStock;
         inventory.WarehouseId = inventoryDto.WarehouseId;
@@ -49,7 +50,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
         inventory.AlertStock = inventoryDto.AlertStock;
 
         await _context.SaveChangesAsync();
-        return _mapper.MapToDto(inventory);
+        return _mapper.MapToDto(inventory, product);
     }
 
     public async Task<InventoryDto> CreateInventoryForExistentProductAsync(CreateInventoryExistentProductDto inventoryDto)
@@ -77,6 +78,12 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
         try
         {
             var product = await _productService.CreateProductAsync(productDto);
+            var warehouse = await _context.Warehouses.FindAsync(inventoryDto.WarehouseId) ?? throw new KeyNotFoundException($"Warehouse with id: {inventoryDto.WarehouseId} not found");
+            var createInventoryDto = _mapper.MapNewToExistent(product, inventoryDto);
+            var inventory = _mapper.MapDtoToModel(warehouse, product, createInventoryDto);
+
+            await _context.Inventories.AddAsync(inventory);
+
         }
         catch (Exception)
         {
