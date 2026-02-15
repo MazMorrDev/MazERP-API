@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils.Mappers;
 
 namespace MazErpBack.Config;
 
@@ -31,6 +32,17 @@ public class WebAppBuilderConfig
         builder.Services.AddScoped<ISupplierService, SupplierService>();
         builder.Services.AddScoped<IExpenseService, ExpenseService>();
         builder.Services.AddScoped<ISellPointService, SellPointService>();
+        builder.Services.AddScoped<UserMapper>();
+        builder.Services.AddScoped<CompanyMapper>();
+        builder.Services.AddScoped<WarehouseMapper>();
+        builder.Services.AddScoped<ProductMapper>();
+        builder.Services.AddScoped<InventoryMapper>();
+        builder.Services.AddScoped<BuyMapper>();
+        builder.Services.AddScoped<DevolutionMapper>();
+        builder.Services.AddScoped<SellMapper>();
+        builder.Services.AddScoped<SupplierMapper>();
+        builder.Services.AddScoped<ExpenseMapper>();
+        builder.Services.AddScoped<SellPointMapper>();
         builder.Services.AddControllers();
 
         builder.Services.AddAuthorizationBuilder()
