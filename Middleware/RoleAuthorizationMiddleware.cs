@@ -12,10 +12,12 @@ public class RoleAuthorizationMiddleware(RequestDelegate next, ILogger<RoleAutho
     // Lista de rutas que no requieren autorización
     private readonly string[] _publicPaths =
     [
-        "/api/auth/login",
-        "/api/auth/register",
-        "/api/health",
-        "/swagger"
+        "/api/user/register",
+        "/api/user/login",
+        "/swagger",
+        "/openapi",
+        "/health",
+        "/"
     ];
 
     public async Task InvokeAsync(HttpContext context, IRoleAuthorizationService authService)
