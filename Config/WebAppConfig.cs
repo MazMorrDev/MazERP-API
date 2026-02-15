@@ -7,6 +7,8 @@ public class WebAppConfig
 {
     public static void UseGeneralApiConfigs(WebApplication app)
     {
+        UseDevApiConfigs(app);
+
         // 1. CORS
         app.UseCors("AllowSpecificOrigin");
 
