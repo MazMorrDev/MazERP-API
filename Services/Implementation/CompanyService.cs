@@ -92,9 +92,16 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         await _context.SaveChangesAsync();
     }
 
-    public Task<List<CompanyDto>> GetCompaniesByUser(int userId)
+    public async Task<List<CompanyDto>> GetCompaniesByUser(int userId)
     {
         var userCompanies = await _context.UserCompanies.Where(uc => uc.UserId == userId).ToListAsync();
-        
+        List<CompanyDto> companiesDto = [];
+        foreach (var item in userCompanies)
+        {
+            var company = await GetCompanyByIdAsync(item.CompanyId);
+            companiesDto.Add(_mapper.MapToDto(company));
+        }
+        ;
+        return companiesDto;
     }
 }

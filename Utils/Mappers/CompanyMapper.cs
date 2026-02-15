@@ -29,6 +29,17 @@ public class CompanyMapper
             AssignedAt = userCompany.AssignedAt
         };
     }
+
+    public List<UserCompanyDto> MapUserCompanyListToDto(List<UserCompany> userCompanies)
+    {
+        List<UserCompanyDto> userCompaniesDto = [];
+        foreach (var item in userCompanies)
+        {
+            userCompaniesDto.Add(MapUserCompanyDto(item));
+        }
+        return userCompaniesDto;
+    }
+
     public UserCompany MapUserCompany(User user, Company company)
     {
         return new UserCompany
