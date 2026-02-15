@@ -3,11 +3,11 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy project file and restore dependencies
-COPY ["expenseTrackerApi.csproj", "./"]
-RUN dotnet restore "expenseTrackerApi.csproj"
+COPY ["MazErpBack.csproj", "./"]
+RUN dotnet restore "MazErpBack.csproj"
 
 COPY . .
-RUN dotnet publish "expenseTrackerApi.csproj" -c Release -o /app/publish --no-restore
+RUN dotnet publish "MazErpBack.csproj" -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 
