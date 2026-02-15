@@ -32,6 +32,7 @@ public class WebAppBuilderConfig
         builder.Services.AddScoped<ISupplierService, SupplierService>();
         builder.Services.AddScoped<IExpenseService, ExpenseService>();
         builder.Services.AddScoped<ISellPointService, SellPointService>();
+        builder.Services.AddScoped<IRoleAuthorizationService, RoleAuthorizationService>();
         builder.Services.AddScoped<UserMapper>();
         builder.Services.AddScoped<CompanyMapper>();
         builder.Services.AddScoped<WarehouseMapper>();

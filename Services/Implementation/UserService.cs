@@ -19,13 +19,11 @@ public class UserService(AppDbContext context, ITokenService tokenService, ILogg
     {
         try
         {
-            var user = await _context.Users
-                .Include(c => c.UserCompanies)
+            var user = await _context.Users.Include(c => c.UserCompanies)
                 .FirstOrDefaultAsync(c => c.Email == loginDto.Email);
-            if (user == null)
-            {
-                return null;
-            }
+                
+            if (user == null) return null;
+            
             var hasher = new PasswordHasher<User>();
             var result = hasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
             if (result == PasswordVerificationResult.Failed)
