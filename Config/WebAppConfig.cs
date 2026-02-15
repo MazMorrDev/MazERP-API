@@ -12,7 +12,8 @@ public class WebAppConfig
         app.MapControllers();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseMiddleware<TenatMiddleware>();
+        app.UseMiddleware<PerformanceMiddleware>();
+        app.UseMiddleware<RoleAuthorizationMiddleware>();
         app.Run();
     }
 
