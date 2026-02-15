@@ -17,3 +17,5 @@ var app = builder.Build();
 // App logic moved to dedicated class
 WebAppConfig.UseDevApiConfigs(app);
 WebAppConfig.UseGeneralApiConfigs(app);
+
+app.Run();
