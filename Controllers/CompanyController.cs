@@ -47,4 +47,16 @@ public class WfController(ICompanyService service) : ControllerBase
         }
     }
 
+    [HttpDelete("{companyId}")]
+    public async Task<IActionResult> DeleteCompany(int companyId)
+    {
+        try
+        {
+            return Ok(await _service.SoftDeleteCompanyAsync(companyId));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 }
