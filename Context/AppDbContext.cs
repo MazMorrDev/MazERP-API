@@ -78,7 +78,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        // CONFIGURACIÓN PARA SELLPOINTINVENTORY
+        // CONFIGURACIÓN PARA SELLPOINTINVENTORY (COMPLETADA)
         modelBuilder.Entity<SellPointInventory>(entity =>
         {
             entity.HasKey(e => new { e.SellPointId, e.InventoryId });
@@ -89,12 +89,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(spi => spi.Inventory)
-                .WithMany()
+                .WithMany(i => i.SellPointInventories)
                 .HasForeignKey(spi => spi.InventoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict); // Cambiado a Restrict para no borrar inventario accidentalmente
 
-            entity.Property(e => e.Discount).HasPrecision(5, 2);
             entity.Property(e => e.SellPrice).HasPrecision(12, 2);
+            entity.Property(e => e.Discount).HasPrecision(5, 2);
+            entity.Property(e => e.Stock).IsRequired();
+
+            // Índice para búsquedas por fecha de última venta
+            entity.HasIndex(e => e.LastSaleDate);
         });
 
         // CONFIGURACIÓN PARA INVENTORY
@@ -111,6 +115,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasIndex(e => new { e.WarehouseId, e.ProductId }).IsUnique();
+
+            // Índices para búsquedas frecuentes
+            entity.HasIndex(e => e.Stock);
+            entity.HasIndex(e => e.AlertStock);
+            entity.HasIndex(e => e.WarningStock);
 
             entity.ToTable(t => t.HasCheckConstraint("CK_Inventory_Stock", "\"stock\" >= 0"));
 
@@ -133,6 +142,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.ToTable(t => t.HasCheckConstraint("CK_Movement_Quantity", "\"quantity\" > 0"));
+
+            // Índice para búsquedas por fecha
+            entity.HasIndex(e => e.MovementDate);
         });
 
         // CONFIGURACIÓN PARA BUY
@@ -154,6 +166,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithMany()
                 .HasForeignKey(b => b.InventoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Índice para búsquedas por estado de entrega
+            entity.HasIndex(e => e.DeliveryStatus);
         });
 
         // CONFIGURACIÓN PARA SELL
@@ -172,6 +187,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.Property(e => e.DiscountPercentage).HasPrecision(5, 2);
+
+            // Índices para búsquedas frecuentes
+            entity.HasIndex(e => e.PaymentStatus);
+            entity.HasIndex(e => e.SaleType);
         });
 
         // CONFIGURACIÓN PARA DEVOLUTION
@@ -184,6 +203,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             entity.Property(e => e.DevolutionDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            // Índices para búsquedas frecuentes
+            entity.HasIndex(e => e.DevolutionStatus);
+            entity.HasIndex(e => e.DevolutionDate);
+
+            // Check constraint para refund_amount positivo
+            entity.ToTable(t => t.HasCheckConstraint("CK_Devolution_RefundAmount", "\"refund_amount\" >= 0"));
         });
 
         // CONFIGURACIÓN PARA EXPENSE
@@ -203,6 +229,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.DatePaid).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            // Índices para búsquedas frecuentes
+            entity.HasIndex(e => e.Category);
+            entity.HasIndex(e => e.PaymentMethod);
+            entity.HasIndex(e => e.DatePaid);
+
+            // Check constraint para amount positivo
+            entity.ToTable(t => t.HasCheckConstraint("CK_Expense_Amount", "\"amount\" > 0"));
         });
 
         // CONFIGURACIÓN PARA INVENTORY_SUPPLIER
@@ -222,18 +256,35 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             entity.Property(e => e.LastPurchaseDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.CostPrice).HasPrecision(12, 2);
+
+            // Índices para búsquedas frecuentes
+            entity.HasIndex(e => e.IsPreferred);
+            entity.HasIndex(e => e.Rating);
+            entity.HasIndex(e => e.LastPurchaseDate);
         });
 
         // CONFIGURACIÓN PARA SUPPLIER
         modelBuilder.Entity<Supplier>(entity =>
         {
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            // Índices para búsquedas frecuentes
+            entity.HasIndex(e => e.Email).IsUnique();
+            entity.HasIndex(e => e.Name);
+            entity.HasIndex(e => e.Rating);
+            entity.HasIndex(e => e.IsActive);
         });
 
         // CONFIGURACIÓN PARA PRODUCT
         modelBuilder.Entity<Product>(entity =>
         {
+            // Índices para búsquedas frecuentes
+            entity.HasIndex(e => e.Name);
+            entity.HasIndex(e => e.Category);
+
             // Configuración adicional si es necesaria
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(60);
+            entity.Property(e => e.PhotoUrl).HasMaxLength(500);
         });
 
         // CONFIGURACIÓN DE ENUMS PARA POSTGRESQL
@@ -297,5 +348,44 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .Property(e => e.Currency)
             .HasConversion<string>()
             .HasMaxLength(20);
+    }
+
+    // SOBRESCRITURA DE SAVECHANGES PARA AUDITORÍA AUTOMÁTICA DE UPDATEDAT
+    public override int SaveChanges()
+    {
+        UpdateTimestamps();
+        return base.SaveChanges();
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        UpdateTimestamps();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        UpdateTimestamps();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        UpdateTimestamps();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    private void UpdateTimestamps()
+    {
+        var entries = ChangeTracker
+            .Entries()
+            .Where(e => e.State == EntityState.Modified);
+
+        foreach (var entry in entries)
+        {
+            // Buscar y actualizar la propiedad "UpdatedAt" si existe
+            var updatedAtProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "UpdatedAt");
+            updatedAtProperty?.CurrentValue = DateTimeOffset.UtcNow;
+        }
     }
 }
