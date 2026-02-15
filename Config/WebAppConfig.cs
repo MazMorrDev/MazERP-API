@@ -1,4 +1,5 @@
-﻿using Scalar.AspNetCore;
+﻿using MazErpBack.Middleware;
+using Scalar.AspNetCore;
 
 namespace MazErpBack.Config;
 
@@ -11,6 +12,7 @@ public class WebAppConfig
         app.MapControllers();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseMiddleware<TenatMiddleware>();
         app.Run();
     }
 
