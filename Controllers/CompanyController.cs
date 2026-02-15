@@ -1,5 +1,5 @@
-﻿using MazErpBack.Enums;
-using MazErpBack.Services;
+﻿using MazErpBack.DTOs.Company;
+using MazErpBack.Enums;
 using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,46 +9,54 @@ namespace MazErpBack.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class WfController(ICompanyService wfService) : ControllerBase
+public class WfController(ICompanyService service) : ControllerBase
 {
-    private readonly ICompanyService _wfService = wfService;
+    private readonly ICompanyService _service = service;
 
-    // [HttpGet("Companys")]
-    // [Authorize(Roles = "Client")]
-    // public async Task<IActionResult> GetCompanys()
-    // {
-    //     var Companys = await _wfService.GetCompanysAsync();
-    //     return Ok(new { data = Companys });
-    // }
+    [HttpGet("by-user/{userId}")]
+    public async Task<IActionResult> GetCompaniesByUser(int userId)
+    {
+        var companies = await _service.GetCompaniesByUser(userId);
+        return Ok(new { data = companies });
+    }
 
-    // [HttpPut("assign/{userId}/{CompanyId}")]
-    // [Authorize(Roles = "Admin")]
-    // public async Task<IActionResult> AssignCompanyToUser(int userId, int CompanyId, [FromQuery] UserCompanyRole role = UserCompanyRole.Admin)
-    // {
-    //     try
-    //     {
-    //         return Ok(await _wfService.AssignCompanyToUser(userId, CompanyId, role));
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine(ex);
-    //         return StatusCode(500, "An error occurred while assigning the Company to the user. Check logs for details or try again later.");
-    //     }
-    // }
+    [HttpPost("assign")]
+    public async Task<IActionResult> AddUserToCompany([FromBody] AddUserToCompanyDto dto)
+    {
+        try
+        {
+            return Ok(await _service.AddUserToCompanyAsync(dto));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(500, "An error occurred while assigning the Company to the user. Check logs for details or try again later.");
+        }
+    }
 
-    // [HttpPost("create")]
-    // [Authorize(Roles = "Admin")] // necesito el role para crear un wf ademas del admin
-    // public async Task<IActionResult> CreateCompany([FromBody] CreateCompanyDto Company)
-    // {
-    //     try
-    //     {
-    //         return Ok(await _wfService.CreateCompany(Company));
-    //     }
-    //     catch (Exception)
-    //     {
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateCompany([FromBody] CreateCompanyDto Company)
+    {
+        try
+        {
+            return Ok(await _service.CreateCompanyAsync(Company));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 
-    //         throw;
-    //     }
-    // }
-
+    [HttpDelete("{companyId}")]
+    public async Task<IActionResult> DeleteCompany(int companyId)
+    {
+        try
+        {
+            return Ok(await _service.SoftDeleteCompanyAsync(companyId));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 }

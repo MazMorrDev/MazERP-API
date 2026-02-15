@@ -55,4 +55,5 @@ public class Inventory
     public virtual Product Product { get; set; } = null!;
 
     public virtual ICollection<Movement> Movements { get; set; } = new HashSet<Movement>();
+    public virtual ICollection<SellPointInventory> SellPointInventories { get; set; } = new HashSet<SellPointInventory>();
 }

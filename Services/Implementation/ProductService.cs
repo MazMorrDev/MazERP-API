@@ -12,7 +12,7 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
     private readonly AppDbContext _context = context;
     private readonly ProductMapper _mapper = mapper;
 
-    public async Task<ProductDto> CreateProductAsync(CreateProductDto productDto)
+    public async Task<Product> CreateProductAsync(CreateInventoryAndProductDto productDto)
     {
         try
         {
@@ -21,7 +21,7 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
 
-            return _mapper.MapToDto(product);
+            return product;
         }
         catch (Exception)
         {
@@ -32,44 +32,43 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
 
     public async Task<Product> GetProductByIdAsync(int productId)
     {
-        var product = await _context.Products.FindAsync(productId) ?? throw new KeyNotFoundException($"Product with id: {productId} not found"); ;
+        var product = await _context.Products.FindAsync(productId) ?? throw new KeyNotFoundException($"Product with id: {productId} not found");
         ArgumentNullException.ThrowIfNull(product);
         return product;
     }
 
-    public async Task<List<ProductDto>> GetProductsByCompanyAsync(int companyId)
+    public async Task<List<Product>> GetProductsByCompanyAsync(int companyId)
     {
         var warehouses = _context.Warehouses.Where(w => w.CompanyId == companyId);
-        List<ProductDto> productsDto = [];
+        List<Product> products = [];
         foreach (var w in warehouses)
         {
-            productsDto.AddRange(await GetProductsByWarehouseAsync(w.Id));
+            products.AddRange(await GetProductsByWarehouseAsync(w.Id));
         }
-        return productsDto;
+        return products;
     }
 
-    public async Task<List<ProductDto>> GetProductsByWarehouseAsync(int warehouseId)
+    public async Task<List<Product>> GetProductsByWarehouseAsync(int warehouseId)
     {
         var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId).ToListAsync();
-        List<ProductDto> productsDto = [];
+        List<Product> products = [];
         foreach (var inventory in inventories)
         {
-            var products = await _context.Products.Where(p => p.Id == inventory.Id).ToListAsync();
-            productsDto.AddRange(_mapper.MapListToDto(products));
+            products.AddRange(await _context.Products.Where(p => p.Id == inventory.Id).ToListAsync());
         }
-        return productsDto;
+        return products;
     }
 
-    public async Task<ProductDto> UpdateProductAsync(int productId, CreateProductDto productDto)
+    public async Task<Product> UpdateProductAsync(int productId, UpdateInventoryProductDto productDto)
     {
         var product = await GetProductByIdAsync(productId);
-        product.Name = productDto.Name;
-        product.Description = productDto.Description;
+        product.Name = productDto.ProductName;
+        product.Description = productDto.ProductDescription;
         product.PhotoUrl = productDto.PhotoUrl;
         product.Category = productDto.ProductCategory;
 
         await _context.SaveChangesAsync();
-        return _mapper.MapToDto(product);
+        return product;
     }
 
     public async Task DeleteProductAsync(int productId)

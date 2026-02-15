@@ -1,21 +1,23 @@
 ﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MazErpBack.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
-public class InventoryController(IInventoryService inventoryService) : ControllerBase
+public class InventoryController(IInventoryService service) : ControllerBase
 {
-    private readonly IInventoryService _inventoryService = inventoryService;
+    private readonly IInventoryService _service = service;
 
     [HttpGet("by-warehouse{warehouseId:int}")]
     public async Task<IActionResult> GetInventoriesByWarehouse(int warehouseId)
     {
         try
         {
-            return Ok(await _inventoryService.GetInventoriesByWarehouseAsync(warehouseId));
+            return Ok(await _service.GetInventoriesByWarehouseAsync(warehouseId));
         }
         catch (Exception)
         {
@@ -23,25 +25,51 @@ public class InventoryController(IInventoryService inventoryService) : Controlle
         }
     }
 
-    // [HttpDelete("{id:int}")]
-    // public async Task<IActionResult> DeleteInventory(int id)
-    // {
-    //     try
-    //     {
-    //         return Ok(await _inventoryService.DeleteInventoryAsync(id));
-    //     }
-    //     catch (Exception)
-    //     {
-    //         throw;
-    //     }
-    // }
-
-    [HttpPost]
-    public async Task<IActionResult> CreateInventory([FromBody] CreateInventoryDto inventoryDto)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteInventory(int id)
     {
         try
         {
-            return Ok(await _inventoryService.CreateInventoryAsync(inventoryDto));
+            return Ok(await _service.SoftDeleteInventoryAsync(id));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpPut("{inventoryId}")]
+    public async Task<IActionResult> UpdateInventoryAndProduct(int inventoryId, [FromBody] UpdateInventoryProductDto dto)
+    {
+        try
+        {
+            return Ok(await _service.UpdateInventoryAndProductAsync(inventoryId, dto));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateInventoryAndProduct([FromBody] CreateInventoryAndProductDto inventoryDto)
+    {
+        try
+        {
+            return Ok(await _service.CreateInventoryAndProductAsync(inventoryDto));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpPost("by-product")]
+    public async Task<IActionResult> CreateInventoryByExistentProduct([FromBody] CreateInventoryByExistentProductDto inventoryDto)
+    {
+        try
+        {
+            return Ok(await _service.CreateInventoryByExistentProductAsync(inventoryDto));
         }
         catch (Exception)
         {

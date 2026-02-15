@@ -3,17 +3,19 @@ using MazErpBack.Enums;
 
 namespace MazErpBack.DTOs.Inventory;
 
-public record class InventoryDto
+public record class CreateInventoryAndProductDto
 {
-    public required int ProductId { get; init; }
+    [Required(ErrorMessage = "The product name is required")]
+    [MaxLength(40)]
     public required string ProductName { get; init; }
     public string? ProductDescription { get; init; }
     [Url]
     public string? PhotoUrl { get; init; }
     public required ProductCategory ProductCategory { get; init; }
-    public required int InventoryId { get; init; }
-    public required int WarehouseId { get; init; }
-    public required int Stock { get; init; }
+    [Required]
+    public int WarehouseId { get; init; }
+    [Required]
+    public int Stock { get; init; }
     public decimal BaseDiscount { get; init; }
     public decimal? BasePrice { get; init; }
     public decimal AverageCost { get; init; }

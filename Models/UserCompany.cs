@@ -27,8 +27,8 @@ public class UserCompany
 
     // Navigation properties
     [ForeignKey("UserId")]
-    public virtual User User { get; set; } = null!;
+    public required virtual User User { get; set; }
 
     [ForeignKey("CompanyId")]
-    public virtual Company Company { get; set; } = null!;
+    public required virtual Company Company { get; set; }
 }

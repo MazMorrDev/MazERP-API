@@ -1,10 +1,12 @@
 ﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MazErpBack.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class WarehouseController(IWarehouseService warehouseService) : ControllerBase
 {
@@ -17,9 +19,25 @@ public class WarehouseController(IWarehouseService warehouseService) : Controlle
         {
             return Ok(await _warehouseService.CreateWarehouseAsync(warehouseDto));
         }
-        catch (Exception)
+        catch (KeyNotFoundException ex)
         {
-            throw;
+            return NotFound($"Recurso no encontrado: {ex.Message}");
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest($"Datos inválidos: {ex.Message}");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict($"Conflicto: {ex.Message}");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized($"No autorizado: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }
     }
 
@@ -28,11 +46,30 @@ public class WarehouseController(IWarehouseService warehouseService) : Controlle
     {
         try
         {
-            return Ok(await _warehouseService.SoftDeleteWarehouseAsync(id));
+            var deleted = await _warehouseService.SoftDeleteWarehouseAsync(id);
+
+            if (deleted)
+                return NoContent(); // 204 - Eliminación exitosa
+            else
+                return NotFound($"Almacén con ID {id} no encontrado");
         }
-        catch (Exception)
+        catch (InvalidOperationException ex)
         {
-            throw;
+            // Ej: El almacén tiene productos asociados
+            return Conflict(new
+            {
+                Error = "No se puede eliminar",
+                Details = ex.Message
+            });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid(); // 403 - Sin permisos
+        }
+        catch (Exception ex)
+        {
+            // Log the exception here
+            return StatusCode(500, $"Error interno del servidor {ex.Message}");
         }
     }
 
@@ -41,11 +78,45 @@ public class WarehouseController(IWarehouseService warehouseService) : Controlle
     {
         try
         {
-            return Ok(await _warehouseService.GetWarehousesByCompanyAsync(companyId));
+            var warehouses = await _warehouseService.GetWarehousesByCompanyAsync(companyId);
+
+            if (warehouses == null || warehouses.Count == 0)
+                return NotFound($"No se encontraron almacenes para la empresa {companyId}");
+
+            return Ok(warehouses);
         }
-        catch (Exception)
+        catch (KeyNotFoundException ex)
         {
-            throw;
+            return NotFound($"Empresa con ID {companyId} no encontrada: {ex.Message}");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid($"Permiso denegado: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+        }
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetWarehouseById(int id)
+    {
+        try
+        {
+            var warehouse = await _warehouseService.GetWarehouseByIdAsync(id);
+
+            if (warehouse == null) return NotFound($"Almacén con ID {id} no encontrado");
+
+            return Ok(warehouse);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid($"Permiso denegado: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }
     }
 }

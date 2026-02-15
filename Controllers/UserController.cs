@@ -1,5 +1,4 @@
 using MazErpBack.DTOs.Users;
-using MazErpBack.Services;
 using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +12,12 @@ public class UserController(IUserService userService) : ControllerBase
     private readonly IUserService _userService = userService;
 
     [HttpPost("register")]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RegisterUser([FromBody] CreateUserDto createUserDto)
     {
         try
         {
             var createUser = await _userService.RegisterUserAsync(createUserDto);
-            return Ok(new { data = createUser } );
+            return Ok(new { data = createUser });
         }
         catch (Exception)
         {
@@ -44,4 +42,6 @@ public class UserController(IUserService userService) : ControllerBase
             throw;
         }
     }
+
+    // [HttpPost("license-update")] // Hay que aclarar este sistema además del sistema de pago
 }

@@ -1,6 +1,5 @@
 ﻿using MazErpBack.Context;
 using MazErpBack.DTOs.Company;
-using MazErpBack.Enums;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using MazErpBack.Utils.Mappers;
@@ -14,50 +13,37 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
     private readonly ILogger<CompanyService> _logger = logger;
     private readonly CompanyMapper _mapper = mapper;
 
-    public async Task<CompanyUserDto> AssignCompanyToUserAsync(int userId, int companyId, UserCompanyRole role = UserCompanyRole.Owner)
+    public async Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dto)
     {
         try
         {
-            var existingUser = await _context.UserCompanies.FirstOrDefaultAsync(c => c.UserId == userId && c.CompanyId == companyId);
+            // check if Company is already associated to user
+            var existingUser = await _context.UserCompanies.FirstOrDefaultAsync(c => c.UserId == dto.UserId && c.CompanyId == dto.CompanyId);
             if (existingUser != null)
             {
-                throw new BadHttpRequestException($"Company {companyId} is already assigned to user {userId}.");
+                throw new BadHttpRequestException($"Company {dto.CompanyId} is already assigned to user {dto.UserId}.");
             }
-            var userWfAdd = new UserCompany
+
+            var user = await _context.Users.FindAsync(dto.UserId) ?? throw new KeyNotFoundException($"User with id: {dto.UserId} not found");
+            var company = await GetCompanyByIdAsync(dto.CompanyId);
+            var userCompany = new UserCompany
             {
-                UserId = userId,
-                CompanyId = companyId,
-                Role = role,
-                AssignedAt = DateTimeOffset.UtcNow
+                UserId = dto.UserId,
+                CompanyId = dto.CompanyId,
+                Role = dto.Role,
+                AssignedAt = DateTimeOffset.UtcNow,
+                User = user,
+                Company = company
             };
-            // check if Company is already associated to user
-            await _context.UserCompanies.AddAsync(userWfAdd);
+
+            await _context.UserCompanies.AddAsync(userCompany);
             await _context.SaveChangesAsync();
-            return _mapper.MapCompanyUserDto(userWfAdd);
+            return _mapper.MapUserCompanyDto(userCompany);
 
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error assigning Company with id:{companyId} to client with id:{userId}");
-            throw;
-        }
-    }
-
-    public async Task<Company> CreateCompany(CreateCompanyDto companyDto)
-    {
-        try
-        {
-            var company = _mapper.MapDtoToModel(companyDto);
-
-            _context.Companies.Add(company);
-
-            await _context.SaveChangesAsync();
-
-            return company;
-        }
-        catch (Exception)
-        {
-
+            _logger.LogError(ex, $"Error assigning Company with id:{dto.CompanyId} to client with id:{dto.UserId}");
             throw;
         }
     }
@@ -65,40 +51,20 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
     public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto)
     {
         var company = _mapper.MapDtoToModel(companyDto);
+        var user = await _context.Users.FindAsync(companyDto.UserId) ?? throw new KeyNotFoundException($"User with id: {companyDto.UserId} not found");
+
+        var userCompany = _mapper.MapUserCompany(user, company);
         await _context.Companies.AddAsync(company);
+        await _context.UserCompanies.AddAsync(userCompany);
         await _context.SaveChangesAsync();
         return _mapper.MapToDto(company);
     }
 
-    public async Task DeleteCompanyAsync(int companyId)
-    {
-        var company = await _context.Companies.FindAsync(companyId);
-        if (company == null)
-        {
-            _logger.LogDebug("");
-            throw new KeyNotFoundException($"Company with id: {companyId} not found");
-        }
-        _context.Companies.Remove(company);
-        await _context.SaveChangesAsync();
-
-    }
-
-    public async Task<List<Company>> GetCompaniesAsync()
-    {
-        try
-        {
-            var companies = await _context.Companies.ToListAsync();
-            return companies;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
     public async Task<Company> GetCompanyByIdAsync(int id)
     {
-        return await _context.Companies.FindAsync(id) ?? throw new KeyNotFoundException($"Company with id: {id} not found");
+        var company = await _context.Companies.FindAsync(id) ?? throw new KeyNotFoundException($"Company with id: {id} not found");
+        if (!company.IsActive) throw new KeyNotFoundException($"Company with id: {id} not found");
+        return company;
     }
 
     public async Task<bool> SoftDeleteCompanyAsync(int companyId)
@@ -106,6 +72,11 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         try
         {
             var company = await GetCompanyByIdAsync(companyId);
+            var UserCompanies = await _context.UserCompanies.Where(uc => uc.CompanyId == companyId).ToListAsync();
+            foreach (var item in UserCompanies)
+            {
+                item.IsActive = false;
+            }
             company.IsActive = false;
             await _context.SaveChangesAsync();
             return true;
@@ -114,5 +85,25 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         {
             return false;
         }
+    }
+
+    public async Task DeleteCompanyAsync(int companyId)
+    {
+        var company = await GetCompanyByIdAsync(companyId);
+        _context.Companies.Remove(company);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<CompanyDto>> GetCompaniesByUser(int userId)
+    {
+        var userCompanies = await _context.UserCompanies.Where(uc => uc.UserId == userId).ToListAsync();
+        List<CompanyDto> companiesDto = [];
+        foreach (var item in userCompanies)
+        {
+            var company = await GetCompanyByIdAsync(item.CompanyId);
+            companiesDto.Add(_mapper.MapToDto(company));
+        }
+        ;
+        return companiesDto;
     }
 }

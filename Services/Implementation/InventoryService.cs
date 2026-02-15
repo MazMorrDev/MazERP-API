@@ -7,10 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class InventoryService(AppDbContext context, InventoryMapper mapper) : IInventoryService
+public class InventoryService(AppDbContext context, InventoryMapper mapper, IProductService productService) : IInventoryService
 {
     private readonly AppDbContext _context = context;
     private readonly InventoryMapper _mapper = mapper;
+    private readonly IProductService _productService = productService;
 
     public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
     {
@@ -33,9 +34,10 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
 
     }
 
-    public async Task<InventoryDto> UpdateInventoryAsync(int inventoryId, CreateInventoryDto inventoryDto)
+    public async Task<InventoryDto> UpdateInventoryAndProductAsync(int inventoryId, UpdateInventoryProductDto inventoryDto)
     {
         var inventory = await GetInventoryByIdAsync(inventoryId);
+        var product = await _productService.GetProductByIdAsync(inventoryDto.ProductId);
 
         inventory.AlertStock = inventoryDto.AlertStock;
         inventory.WarehouseId = inventoryDto.WarehouseId;
@@ -47,23 +49,40 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
         inventory.AlertStock = inventoryDto.AlertStock;
         inventory.AlertStock = inventoryDto.AlertStock;
 
+        await _productService.UpdateProductAsync(product.Id, inventoryDto);
         await _context.SaveChangesAsync();
-        return _mapper.MapToDto(inventory);
+        return _mapper.MapToDto(inventory, product);
     }
 
-    public async Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto inventoryDto)
+    public async Task<InventoryDto> CreateInventoryByExistentProductAsync(CreateInventoryByExistentProductDto inventoryDto)
     {
         try
         {
+            var product = await _productService.GetProductByIdAsync(inventoryDto.ProductId);
             var warehouse = await _context.Warehouses.FindAsync(inventoryDto.WarehouseId) ?? throw new KeyNotFoundException($"Warehouse with id: {inventoryDto.WarehouseId} not found");
-            var product = await _context.Products.FindAsync(inventoryDto.ProductId) ?? throw new KeyNotFoundException($"Product with id: {inventoryDto.ProductId} not found");
+            var inventory = _mapper.MapDtoByProductToModel(warehouse, product, inventoryDto);
 
+            await _context.Inventories.AddAsync(inventory);
+            await _context.SaveChangesAsync();
+            return _mapper.MapToDto(inventory, product);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<InventoryDto> CreateInventoryAndProductAsync(CreateInventoryAndProductDto inventoryDto)
+    {
+        try
+        {
+            var product = await _productService.CreateProductAsync(inventoryDto);
+            var warehouse = await _context.Warehouses.FindAsync(inventoryDto.WarehouseId) ?? throw new KeyNotFoundException($"Warehouse with id: {inventoryDto.WarehouseId} not found");
             var inventory = _mapper.MapDtoToModel(warehouse, product, inventoryDto);
 
             await _context.Inventories.AddAsync(inventory);
             await _context.SaveChangesAsync();
-
-            return _mapper.MapToDto(inventory);
+            return _mapper.MapToDto(inventory, product);
         }
         catch (Exception)
         {
@@ -76,7 +95,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
         try
         {
             var inventory = await GetInventoryByIdAsync(inventoryId);
-            inventory.IsActive = false;
+            _context.Inventories.Remove(inventory);
             await _context.SaveChangesAsync();
         }
         catch (Exception)
@@ -90,7 +109,14 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper) : II
         try
         {
             var inventories = await _context.Inventories.Where(i => i.WarehouseId.Equals(warehouseId)).ToListAsync();
-            return _mapper.MapListToDto(inventories);
+            List<Product> products = [];
+            foreach (var item in inventories)
+            {
+                var product = await _productService.GetProductByIdAsync(item.ProductId);
+                products.Add(product);
+            }
+
+            return _mapper.MapListToDto(inventories, products);
         }
         catch (Exception)
         {
