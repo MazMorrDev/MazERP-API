@@ -15,7 +15,7 @@ public class WebAppBuilderConfig
 
     public static void ConfigureBuilder(WebApplicationBuilder builder, string connectionString, int port)
     {
-        builder.WebHost.UseUrls($"http://localhost:{port}");
+        builder.WebHost.UseUrls($"http://localhost:{port};https://localhost:{port + 1}");
         // Add services to the container.
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddOpenApi("v1"); // Customize the document name

@@ -10,12 +10,14 @@ COPY . .
 RUN dotnet publish "MazErpBack.csproj" -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
-
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# EXPOSE can use the ENV set above (this is a build-time annotation).
-EXPOSE $PORT
+# Use a fixed container port; map host/platform port at run time.
+EXPOSE 8080
 
-# Use a shell entrypoint so ASPNETCORE_URLS is set from the runtime PORT (if provided)
-ENTRYPOINT ["sh", "-c", "export ASPNETCORE_URLS=\"http://+:${PORT:-5001}\"; exec dotnet MazErpBack.dll"]
+# Better compatibility behind reverse proxies and platforms.
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+
+ENTRYPOINT ["dotnet", "MazErpBack.dll"]
