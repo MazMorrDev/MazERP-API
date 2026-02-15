@@ -11,12 +11,6 @@ RUN dotnet publish "MazErpBack.csproj" -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 
-ENV PORT=5001
-ENV JWT_SECRET=""
-ENV MONGODB_CONNECTION_STRING=""
-
-ENV PORT=5001
-
 WORKDIR /app
 COPY --from=build /app/publish .
 
