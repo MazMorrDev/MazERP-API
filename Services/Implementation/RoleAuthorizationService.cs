@@ -40,7 +40,7 @@ public class RoleAuthorizationService(AppDbContext context, ILogger<RoleAuthoriz
                 zone.StartsWith("/api/Company/") || zone.StartsWith("/api/Inventory"),
 
                 // Aquí algunos ejemplos que dejó la IA que después cambiaré por los roles reales, por ahora solo admin y owner para probar
-                
+
                 // // Gerente puede acceder a zonas de gestión
                 // UserCompanyRole.Manager => zone.StartsWith("/api/management") ||
                 //                           zone.StartsWith("/api/reports"),
