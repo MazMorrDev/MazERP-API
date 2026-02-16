@@ -35,4 +35,34 @@ public class SellPointMapper
         }
         return sellPointsDto;
     }
+
+    public SellPointInventoryDto MapSellPointInventoryDto(SellPointInventory sellpointInventory)
+    {
+        return new SellPointInventoryDto
+        {
+            SellPointId = sellpointInventory.SellPointId,
+            InventoryId = sellpointInventory.InventoryId,
+            SellPrice = sellpointInventory.SellPrice,
+            Discount = sellpointInventory.Discount,
+            Stock = sellpointInventory.Stock,
+            WarningStock = sellpointInventory.WarningStock,
+            AlertStock = sellpointInventory.AlertStock
+        };
+    }
+
+        public SellPointInventory MapSellPointInventory(AssignInventoryToSellPointDto dto, Inventory inventory, SellPoint sellPoint)
+    {
+        return new SellPointInventory
+        {
+            SellPointId = dto.SellPointId,
+            InventoryId = dto.InventoryId,
+            SellPrice = dto.SellPrice,
+            Discount = dto.Discount,
+            Stock = dto.Stock,
+            WarningStock = dto.WarningStock,
+            AlertStock = dto.AlertStock,
+            SellPoint = sellPoint,
+            Inventory = inventory
+        };
+    }
 }
