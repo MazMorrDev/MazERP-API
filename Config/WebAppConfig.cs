@@ -25,7 +25,6 @@ public class WebAppConfig
         app.UseAuthentication();
 
         // 6. Middleware de performance 
-        app.UseMiddleware<PerformanceMiddleware>();
         app.UseDeveloperExceptionPage();
 
         // 7. Middleware de autorización personalizado 
