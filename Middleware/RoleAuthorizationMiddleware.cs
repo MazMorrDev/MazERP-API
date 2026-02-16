@@ -14,10 +14,6 @@ public class RoleAuthorizationMiddleware(RequestDelegate next, ILogger<RoleAutho
     [
         "/api/user/register",
         "/api/user/login",
-        "/swagger",
-        "/openapi",
-        "/health",
-        "/"
     ];
 
     public async Task InvokeAsync(HttpContext context, IRoleAuthorizationService authService)
@@ -47,7 +43,7 @@ public class RoleAuthorizationMiddleware(RequestDelegate next, ILogger<RoleAutho
             return;
         }
 
-        // 4. Obtener companyId del header o del token
+        // 4. Obtener companyId del header o del query
         if (!TryGetCompanyId(context, out var companyId))
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -96,17 +92,11 @@ public class RoleAuthorizationMiddleware(RequestDelegate next, ILogger<RoleAutho
         companyId = 0;
 
         // Intentar obtener del header
-        if (context.Request.Headers.TryGetValue("X-Company-Id", out var companyIdValue) ||
-            context.Request.Headers.TryGetValue("Company-Id", out companyIdValue))
+        if (context.Request.Headers.TryGetValue("Company-Id", out var companyIdValue))
         {
             if (int.TryParse(companyIdValue.FirstOrDefault(), out companyId))
                 return true;
         }
-
-        // Intentar obtener del token JWT (si lo tienes como claim)
-        var companyClaim = context.User.FindFirst("CompanyId")?.Value;
-        if (!string.IsNullOrEmpty(companyClaim) && int.TryParse(companyClaim, out companyId))
-            return true;
 
         // Intentar obtener de query string
         if (context.Request.Query.TryGetValue("companyId", out var queryValue) ||
@@ -124,14 +114,15 @@ public class RoleAuthorizationMiddleware(RequestDelegate next, ILogger<RoleAutho
         // Determinar por el path
         var path = context.Request.Path.Value?.ToLower() ?? string.Empty;
 
-        if (path.StartsWith("/api/sales")) return "/api/sales";
+        if (path.StartsWith("/api/sell")) return "/api/sell";
+        if (path.StartsWith("/api/buy")) return "/api/buy";
         if (path.StartsWith("/api/inventory")) return "/api/inventory";
-        if (path.StartsWith("/api/reports")) return "/api/reports";
+        if (path.StartsWith("/api/report")) return "/api/report";
         if (path.StartsWith("/api/admin")) return "/api/admin";
-        if (path.StartsWith("/api/warehouses")) return "/api/warehouses";
-        if (path.StartsWith("/api/sellpoints")) return "/api/sellpoints";
-        if (path.StartsWith("/api/companies")) return "/api/companies";
-        if (path.StartsWith("/api/users")) return "/api/users";
+        if (path.StartsWith("/api/warehouse")) return "/api/warehouse";
+        if (path.StartsWith("/api/sellpoint")) return "/api/sellpoint";
+        if (path.StartsWith("/api/company")) return "/api/company";
+        if (path.StartsWith("/api/user")) return "/api/user";
 
         return string.Empty;
     }

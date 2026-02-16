@@ -24,9 +24,6 @@ public class WebAppConfig
         // 5. Autenticación
         app.UseAuthentication();
 
-        // 6. Middleware de performance 
-        app.UseDeveloperExceptionPage();
-
         // 7. Middleware de autorización personalizado 
         app.UseMiddleware<RoleAuthorizationMiddleware>();
 
@@ -47,6 +44,7 @@ public class WebAppConfig
             {
                 options.WithOpenApiRoutePattern("/openapi/v1.json");
             });
+            // Para el tema del performance
             app.UseDeveloperExceptionPage();
         }
         else

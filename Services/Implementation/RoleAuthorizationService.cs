@@ -10,6 +10,9 @@ public class RoleAuthorizationService(AppDbContext context, ILogger<RoleAuthoriz
     private readonly AppDbContext _context = context;
     private readonly ILogger<RoleAuthorizationService> _logger = logger;
 
+    private const string INVENTORY_PATH = "/api/inventory";
+    private const string COMPANY_PATH = "/api/company/";
+
     public async Task<bool> UserHasAccessAsync(int userId, int companyId, string zone, CancellationToken cancellationToken = default)
     {
         try
@@ -36,9 +39,8 @@ public class RoleAuthorizationService(AppDbContext context, ILogger<RoleAuthoriz
                 UserCompanyRole.Owner => true,
 
                 // Admin tiene acceso a todo menos al /api/Company/Delete
-                UserCompanyRole.Admin => 
-                zone.StartsWith("/api/Company/") || zone.StartsWith("/api/Inventory"),
-
+                UserCompanyRole.Admin =>
+                zone.StartsWith(COMPANY_PATH) || zone.StartsWith(INVENTORY_PATH),
                 // Aquí algunos ejemplos que dejó la IA que después cambiaré por los roles reales, por ahora solo admin y owner para probar
 
                 // // Gerente puede acceder a zonas de gestión
