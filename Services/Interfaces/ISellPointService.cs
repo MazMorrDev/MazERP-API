@@ -11,6 +11,7 @@ public interface ISellPointService
 
     // For common users
     public Task<List<SellPointDto>> GetSellPointsByCompanyAsync(int companyId);
+    public Task<SellPointDto> AssignInventoryToSellPoint(AssignInventoryToSellPointDto dto);
     public Task<List<SellPointDto>> GetSellPointsByWarehouseAsync(int warehouseId);
     public Task<SellPointDto> CreateSellPointAsync(CreateSellPointDto sellPointDto);
     public Task<SellPointDto> UpdateSellPointAsync(int sellPointId, CreateSellPointDto sellPointDto);
