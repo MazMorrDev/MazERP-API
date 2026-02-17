@@ -12,7 +12,7 @@ public class InventoryController(IInventoryService service) : ControllerBase
 {
     private readonly IInventoryService _service = service;
 
-    [HttpGet("by-warehouse{warehouseId:int}")]
+    [HttpGet("by-warehouse{warehouseId}")]
     public async Task<IActionResult> GetInventoriesByWarehouse(int warehouseId)
     {
         try
