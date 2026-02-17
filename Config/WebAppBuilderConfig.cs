@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MazErpBack.Services.Interfaces;
 using MazErpBack.Utils.Mappers;
+using System.Threading.RateLimiting;
 
 namespace MazErpBack.Config;
 
@@ -19,20 +20,29 @@ public class WebAppBuilderConfig
         // Add services to the container.
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddOpenApi("v1"); // Customize the document name
+
+        ConfigureRateLimit(builder);
+
         builder.Services.AddDbContext<AppDbContext>(optionsAction: options => options.UseNpgsql(connectionString));
-        builder.Services.AddScoped<IUserService, UserService>();
-        builder.Services.AddScoped<ITokenService, TokenService>();
-        builder.Services.AddScoped<ICompanyService, CompanyService>();
-        builder.Services.AddScoped<IWarehouseService, WarehouseService>();
-        builder.Services.AddScoped<IProductService, ProductService>();
-        builder.Services.AddScoped<IInventoryService, InventoryService>();
-        builder.Services.AddScoped<IBuyService, BuyService>();
-        builder.Services.AddScoped<IDevolutionService, DevolutionService>();
-        builder.Services.AddScoped<ISellService, SellService>();
-        builder.Services.AddScoped<ISupplierService, SupplierService>();
-        builder.Services.AddScoped<IExpenseService, ExpenseService>();
-        builder.Services.AddScoped<ISellPointService, SellPointService>();
-        builder.Services.AddScoped<IRoleAuthorizationService, RoleAuthorizationService>();
+
+        AddServicesToScope(builder);
+        AddMappersToScope(builder);
+
+        builder.Services.AddControllers();
+
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("User", policy => policy.RequireClaim(ClaimTypes.Role, "user"));
+
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+        builder.Host.UseSerilog();
+    }
+
+    public static void AddMappersToScope(WebApplicationBuilder builder)
+    {
         builder.Services.AddScoped<UserMapper>();
         builder.Services.AddScoped<CompanyMapper>();
         builder.Services.AddScoped<WarehouseMapper>();
@@ -44,18 +54,6 @@ public class WebAppBuilderConfig
         builder.Services.AddScoped<SupplierMapper>();
         builder.Services.AddScoped<ExpenseMapper>();
         builder.Services.AddScoped<SellPointMapper>();
-        builder.Services.AddControllers();
-
-        builder.Services.AddAuthorizationBuilder()
-            .AddPolicy("User", policy => policy.RequireClaim(ClaimTypes.Role, "user"));
-
-
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
-
-        builder.Host.UseSerilog();
     }
 
     public static void ConfigureCorsPolicy(WebApplicationBuilder builder)
@@ -70,6 +68,61 @@ public class WebAppBuilderConfig
                     .AllowAnyHeader();
             });
         });
+    }
+
+    public static void AddServicesToScope(WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<ICompanyService, CompanyService>();
+        builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IInventoryService, InventoryService>();
+        builder.Services.AddScoped<IBuyService, BuyService>();
+        builder.Services.AddScoped<IDevolutionService, DevolutionService>();
+        builder.Services.AddScoped<ISellService, SellService>();
+        builder.Services.AddScoped<ISupplierService, SupplierService>();
+        builder.Services.AddScoped<IExpenseService, ExpenseService>();
+        builder.Services.AddScoped<ISellPointService, SellPointService>();
+        builder.Services.AddScoped<IRoleAuthorizationService, RoleAuthorizationService>();
+    }
+
+    public static void ConfigureRateLimit(WebApplicationBuilder builder)
+    {
+        builder.Services.AddRateLimiter(options =>
+    {
+        // Configuración global
+        options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(
+        httpContext => RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 10,        // Máximo de solicitudes
+                Window = TimeSpan.FromSeconds(10),  // Ventana de tiempo
+                QueueLimit = 2,           // Solicitudes en cola
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            }
+        )
+    );
+
+        // Respuesta cuando se excede el límite
+        options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+
+        var response = new
+        {
+            error = "Demasiadas solicitudes. Por favor, intenta de nuevo más tarde.",
+            retryAfter = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter)
+                ? retryAfter.ToString()
+                : "10 segundos"
+        };
+
+        await context.HttpContext.Response.WriteAsJsonAsync(response, token);
+    };
+    });
     }
 
     public static void ConfigureAuthentication(WebApplicationBuilder builder, string jwtSecret)
