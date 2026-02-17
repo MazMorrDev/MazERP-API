@@ -1,5 +1,6 @@
 ﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,15 +9,17 @@ namespace MazErpBack.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/[controller]")]
-public class InventoryController(IInventoryService service) : ControllerBase
+public class InventoryController(IInventoryService service, HeaderHelper header) : ControllerBase
 {
     private readonly IInventoryService _service = service;
+    private readonly HeaderHelper _header = header;
 
     [HttpGet("by-warehouse{warehouseId}")]
     public async Task<IActionResult> GetInventoriesByWarehouse(int warehouseId)
     {
         try
         {
+            var companyId = _header.GetCompanyIdFromHeader();
             return Ok(await _service.GetInventoriesByWarehouseAsync(warehouseId));
         }
         catch (Exception)
