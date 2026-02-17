@@ -12,6 +12,64 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
     private readonly AppDbContext _context = context;
     private readonly SellPointMapper _mapper = mapper;
 
+    public async Task<SellPointInventoryDto> AssignInventoryToSellPointAsync(AssignInventoryToSellPointDto dto)
+    {
+        // Verificar que el inventario existe
+        var inventory = await _context.Inventories.FindAsync(dto.InventoryId)
+            ?? throw new KeyNotFoundException($"Inventario con Id: {dto.InventoryId} no encontrado");
+
+        // Verificar que el punto de venta existe
+        var sellPoint = await GetSellPointByIdAsync(dto.SellPointId);
+
+        // Verificar que NO exista ya la asignación
+        var existingAssignment = await _context.SellPointInventories
+            .FirstOrDefaultAsync(spi => spi.InventoryId == dto.InventoryId && spi.SellPointId == dto.SellPointId);
+
+        if (existingAssignment != null)
+        {
+            return await UpdateSellPointInventoryAsync(dto);
+        }
+
+        // Crear nueva asignación
+        var sellPointInventory = _mapper.MapSellPointInventory(dto, inventory, sellPoint);
+        await _context.SellPointInventories.AddAsync(sellPointInventory);
+        await _context.SaveChangesAsync();
+
+        return _mapper.MapSellPointInventoryDto(sellPointInventory);
+    }
+
+    public async Task<SellPointInventoryDto> UpdateSellPointInventoryAsync(AssignInventoryToSellPointDto dto)
+    {
+        // Verificar que el inventario existe
+        var inventory = await _context.Inventories.FindAsync(dto.InventoryId)
+            ?? throw new KeyNotFoundException($"Inventario con Id: {dto.InventoryId} no encontrado");
+
+        // Verificar que el punto de venta existe
+        var sellPoint = await GetSellPointByIdAsync(dto.SellPointId);
+
+        // Buscar la asignación existente
+        var existingAssignment = await _context.SellPointInventories
+            .FirstOrDefaultAsync(spi => spi.InventoryId == dto.InventoryId && spi.SellPointId == dto.SellPointId);
+
+        if (existingAssignment == null)
+        {
+            return await AssignInventoryToSellPointAsync(dto);
+        }
+
+        // Actualizar la asignación existente
+        existingAssignment.SellPrice = dto.SellPrice;
+        existingAssignment.Discount = dto.Discount;
+        existingAssignment.Stock = dto.Stock;
+        existingAssignment.WarningStock = dto.WarningStock;
+        existingAssignment.AlertStock = dto.AlertStock;
+
+        _context.SellPointInventories.Update(existingAssignment);
+        await _context.SaveChangesAsync();
+
+        return _mapper.MapSellPointInventoryDto(existingAssignment);
+    }
+
+
     public async Task<SellPointDto> CreateSellPointAsync(CreateSellPointDto sellPointDto)
     {
         var sellPoint = _mapper.MapDtoToModel(sellPointDto);

@@ -12,8 +12,8 @@ public class InventoryController(IInventoryService service) : ControllerBase
 {
     private readonly IInventoryService _service = service;
 
-    [HttpGet("by-warehouse{warehouseId:int}")]
-    public async Task<IActionResult> GetInventoriesByWarehouse(int warehouseId)
+    [HttpGet("by-warehouse{warehouseId}")]
+    public async Task<IActionResult> GetInventoriesByWarehouse(int warehouseId, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -26,7 +26,7 @@ public class InventoryController(IInventoryService service) : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteInventory(int id)
+    public async Task<IActionResult> DeleteInventory(int id, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -39,7 +39,7 @@ public class InventoryController(IInventoryService service) : ControllerBase
     }
 
     [HttpPut("{inventoryId}")]
-    public async Task<IActionResult> UpdateInventoryAndProduct(int inventoryId, [FromBody] UpdateInventoryProductDto dto)
+    public async Task<IActionResult> UpdateInventoryAndProduct(int inventoryId, [FromBody] UpdateInventoryProductDto dto, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -52,7 +52,7 @@ public class InventoryController(IInventoryService service) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateInventoryAndProduct([FromBody] CreateInventoryAndProductDto inventoryDto)
+    public async Task<IActionResult> CreateInventoryAndProduct([FromBody] CreateInventoryAndProductDto inventoryDto, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -65,7 +65,7 @@ public class InventoryController(IInventoryService service) : ControllerBase
     }
 
     [HttpPost("by-product")]
-    public async Task<IActionResult> CreateInventoryByExistentProduct([FromBody] CreateInventoryByExistentProductDto inventoryDto)
+    public async Task<IActionResult> CreateInventoryByExistentProduct([FromBody] CreateInventoryByExistentProductDto inventoryDto, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
