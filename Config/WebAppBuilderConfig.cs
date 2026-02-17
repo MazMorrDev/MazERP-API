@@ -88,7 +88,7 @@ public class WebAppBuilderConfig
                 ValidateIssuer = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = "http://localhost", // add actual emitter by env
+                ValidIssuer = "MazErpBack", // add actual emitter by env
                 IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSecret)),
             };
         });
