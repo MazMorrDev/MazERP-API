@@ -20,7 +20,7 @@ public class WfController(ICompanyService service) : ControllerBase
     }
 
     [HttpPost("assign")]
-    public async Task<IActionResult> AddUserToCompany([FromBody] AddUserToCompanyDto dto)
+    public async Task<IActionResult> AddUserToCompany([FromBody] AddUserToCompanyDto dto, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -46,8 +46,8 @@ public class WfController(ICompanyService service) : ControllerBase
         }
     }
 
-    [HttpDelete("{companyId}")]
-    public async Task<IActionResult> DeleteCompany(int companyId)
+    [HttpDelete]
+    public async Task<IActionResult> DeleteCompany([FromHeader(Name = "companyId")] int companyId)
     {
         try
         {

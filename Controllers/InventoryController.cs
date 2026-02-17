@@ -1,6 +1,5 @@
 ﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Services.Interfaces;
-using MazErpBack.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,17 +8,15 @@ namespace MazErpBack.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/[controller]")]
-public class InventoryController(IInventoryService service, HeaderHelper header) : ControllerBase
+public class InventoryController(IInventoryService service) : ControllerBase
 {
     private readonly IInventoryService _service = service;
-    private readonly HeaderHelper _header = header;
 
     [HttpGet("by-warehouse{warehouseId}")]
-    public async Task<IActionResult> GetInventoriesByWarehouse(int warehouseId)
+    public async Task<IActionResult> GetInventoriesByWarehouse(int warehouseId, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
-            var companyId = _header.GetCompanyIdFromHeader();
             return Ok(await _service.GetInventoriesByWarehouseAsync(warehouseId));
         }
         catch (Exception)
@@ -29,7 +26,7 @@ public class InventoryController(IInventoryService service, HeaderHelper header)
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteInventory(int id)
+    public async Task<IActionResult> DeleteInventory(int id, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -42,7 +39,7 @@ public class InventoryController(IInventoryService service, HeaderHelper header)
     }
 
     [HttpPut("{inventoryId}")]
-    public async Task<IActionResult> UpdateInventoryAndProduct(int inventoryId, [FromBody] UpdateInventoryProductDto dto)
+    public async Task<IActionResult> UpdateInventoryAndProduct(int inventoryId, [FromBody] UpdateInventoryProductDto dto, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -55,7 +52,7 @@ public class InventoryController(IInventoryService service, HeaderHelper header)
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateInventoryAndProduct([FromBody] CreateInventoryAndProductDto inventoryDto)
+    public async Task<IActionResult> CreateInventoryAndProduct([FromBody] CreateInventoryAndProductDto inventoryDto, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -68,7 +65,7 @@ public class InventoryController(IInventoryService service, HeaderHelper header)
     }
 
     [HttpPost("by-product")]
-    public async Task<IActionResult> CreateInventoryByExistentProduct([FromBody] CreateInventoryByExistentProductDto inventoryDto)
+    public async Task<IActionResult> CreateInventoryByExistentProduct([FromBody] CreateInventoryByExistentProductDto inventoryDto, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {

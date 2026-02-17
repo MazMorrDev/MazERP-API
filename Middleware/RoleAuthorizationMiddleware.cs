@@ -14,6 +14,8 @@ public class RoleAuthorizationMiddleware(RequestDelegate next, ILogger<RoleAutho
     [
         "/api/user/register",
         "/api/user/login",
+        "/api/user/company/create",
+        "/api/user/company/by-user",
     ];
 
     public async Task InvokeAsync(HttpContext context, IRoleAuthorizationService authService)
@@ -43,7 +45,7 @@ public class RoleAuthorizationMiddleware(RequestDelegate next, ILogger<RoleAutho
             return;
         }
 
-        // 4. Obtener companyId del header o del query
+        // 4. Obtener companyId del header
         if (!TryGetCompanyId(context, out var companyId))
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -92,20 +94,11 @@ public class RoleAuthorizationMiddleware(RequestDelegate next, ILogger<RoleAutho
         companyId = 0;
 
         // Intentar obtener del header
-        if (context.Request.Headers.TryGetValue("Company-Id", out var companyIdValue))
+        if (context.Request.Headers.TryGetValue("companyId", out var companyIdValue))
         {
             if (int.TryParse(companyIdValue.FirstOrDefault(), out companyId))
                 return true;
         }
-
-        // Intentar obtener de query string
-        if (context.Request.Query.TryGetValue("companyId", out var queryValue) ||
-            context.Request.Query.TryGetValue("company_id", out queryValue))
-        {
-            if (int.TryParse(queryValue.FirstOrDefault(), out companyId))
-                return true;
-        }
-
         return false;
     }
 
