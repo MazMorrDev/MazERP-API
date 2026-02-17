@@ -90,39 +90,39 @@ public class WebAppBuilderConfig
     public static void ConfigureRateLimit(WebApplicationBuilder builder)
     {
         builder.Services.AddRateLimiter(options =>
-    {
-        // Configuración global
-        options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(
-        httpContext => RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-            factory: partition => new FixedWindowRateLimiterOptions
-            {
-                AutoReplenishment = true,
-                PermitLimit = 10,        // Máximo de solicitudes
-                Window = TimeSpan.FromSeconds(10),  // Ventana de tiempo
-                QueueLimit = 2,           // Solicitudes en cola
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
-            }
-        )
-    );
-
-        // Respuesta cuando se excede el límite
-        options.OnRejected = async (context, token) =>
-    {
-        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-        context.HttpContext.Response.ContentType = "application/json";
-
-        var response = new
         {
-            error = "Demasiadas solicitudes. Por favor, intenta de nuevo más tarde.",
-            retryAfter = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter)
-                ? retryAfter.ToString()
-                : "10 segundos"
-        };
+            // Configuración global
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(
+                httpContext => RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: partition => new FixedWindowRateLimiterOptions
+                    {
+                        AutoReplenishment = true,
+                        PermitLimit = 10,        // Máximo de solicitudes
+                        Window = TimeSpan.FromSeconds(10),  // Ventana de tiempo
+                        QueueLimit = 2,           // Solicitudes en cola
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+                    }
+                )
+            );
 
-        await context.HttpContext.Response.WriteAsJsonAsync(response, token);
-    };
-    });
+            // Respuesta cuando se excede el límite
+            options.OnRejected = async (context, token) =>
+            {
+                context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                context.HttpContext.Response.ContentType = "application/json";
+
+                var response = new
+                {
+                    error = "Demasiadas solicitudes. Por favor, intenta de nuevo más tarde.",
+                    retryAfter = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter)
+                        ? retryAfter.ToString()
+                        : "10 segundos"
+                };
+
+                await context.HttpContext.Response.WriteAsJsonAsync(response, token);
+            };
+        });
     }
 
     public static void ConfigureAuthentication(WebApplicationBuilder builder, string jwtSecret)
