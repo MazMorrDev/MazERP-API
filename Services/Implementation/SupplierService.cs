@@ -44,7 +44,8 @@ public class SupplierService(AppDbContext context, SupplierMapper mapper, ILogge
     {
         try
         {
-            var supplier = await _context.Suppliers.FindAsync(supplierId) ?? throw new KeyNotFoundException($"Supplier with id: {supplierId} not found");
+            var supplier = await _context.Suppliers.FindAsync(supplierId);
+            if (supplier == null || !supplier.IsActive) throw new KeyNotFoundException($"Supplier with id: {supplierId} not found");
             return supplier;
         }
         catch (Exception e)
