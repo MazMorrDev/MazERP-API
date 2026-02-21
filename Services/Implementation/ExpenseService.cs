@@ -8,16 +8,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger, AppDbContext context) : IExpenseService
+public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger, AppDbContext context, IUserService userService, ICompanyService companyService) : IExpenseService
 {
     private readonly ExpenseMapper _mapper = mapper;
     private readonly ILogger<ExpenseService> _logger = logger;
+    private readonly IUserService _userService = userService;
+    private readonly ICompanyService _companyService = companyService;
     private readonly AppDbContext _context = context;
 
     public async Task<ExpenseDto> CreateExpenseAsync(CreateExpenseDto expenseDto)
     {
-        var user = await _context.Users.FindAsync(expenseDto.UserId) ?? throw new KeyNotFoundException($"Expense with id: {expenseDto.UserId} not found");
-        var company = await _context.Companies.FindAsync(expenseDto.CompanyId) ?? throw new KeyNotFoundException($"Expense with id: {expenseDto.CompanyId} not found");
+        var user = await _userService.GetUserByIdAsync(expenseDto.UserId);
+        var company = await _companyService.GetCompanyByIdAsync(expenseDto.CompanyId);
         var expense = _mapper.MapModelToDto(user, company, expenseDto);
         await _context.Expenses.AddAsync(expense);
         await _context.SaveChangesAsync();
