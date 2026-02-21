@@ -7,11 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class CompanyService(AppDbContext context, ILogger<CompanyService> logger, CompanyMapper mapper) : ICompanyService
+public class CompanyService(AppDbContext context, ILogger<CompanyService> logger, CompanyMapper mapper, IUserService userService) : ICompanyService
 {
     private readonly AppDbContext _context = context;
     private readonly ILogger<CompanyService> _logger = logger;
     private readonly CompanyMapper _mapper = mapper;
+    private readonly IUserService _userService = userService;
 
     public async Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dto)
     {
@@ -24,7 +25,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
                 throw new BadHttpRequestException($"Company {dto.CompanyId} is already assigned to user {dto.UserId}.");
             }
 
-            var user = await _context.Users.FindAsync(dto.UserId) ?? throw new KeyNotFoundException($"User with id: {dto.UserId} not found");
+            var user = await _userService.GetUserByIdAsync(dto.UserId);
             var company = await GetCompanyByIdAsync(dto.CompanyId);
             var userCompany = new UserCompany
             {
@@ -51,7 +52,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
     public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto)
     {
         var company = _mapper.MapDtoToModel(companyDto);
-        var user = await _context.Users.FindAsync(companyDto.UserId) ?? throw new KeyNotFoundException($"User with id: {companyDto.UserId} not found");
+        var user = await _userService.GetUserByIdAsync(companyDto.UserId);
 
         var userCompany = _mapper.MapUserCompany(user, company);
         await _context.Companies.AddAsync(company);
