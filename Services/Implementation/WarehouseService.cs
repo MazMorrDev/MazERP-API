@@ -34,7 +34,7 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper, ICom
     {
         try
         {
-            var warehouse = await _context.Warehouses.FindAsync(id);
+            var warehouse = await GetWarehouseByIdAsync(id);
             ArgumentNullException.ThrowIfNull(warehouse);
 
             warehouse.IsActive = false;
