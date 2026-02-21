@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class SellPointService(AppDbContext context, SellPointMapper mapper) : ISellPointService
+public class SellPointService(AppDbContext context, SellPointMapper mapper, IInventoryService inventoryService) : ISellPointService
 {
     private readonly AppDbContext _context = context;
+    private readonly IInventoryService _inventoryService = inventoryService;
     private readonly SellPointMapper _mapper = mapper;
 
     public async Task<SellPointInventoryDto> AssignInventoryToSellPointAsync(AssignInventoryToSellPointDto dto)
     {
         // Verificar que el inventario existe
-        var inventory = await _context.Inventories.FindAsync(dto.InventoryId)
-            ?? throw new KeyNotFoundException($"Inventario con Id: {dto.InventoryId} no encontrado");
+        var inventory = await _inventoryService.GetInventoryByIdAsync(dto.InventoryId);
 
         // Verificar que el punto de venta existe
         var sellPoint = await GetSellPointByIdAsync(dto.SellPointId);
@@ -41,8 +41,7 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
     public async Task<SellPointInventoryDto> UpdateSellPointInventoryAsync(AssignInventoryToSellPointDto dto)
     {
         // Verificar que el inventario existe
-        var inventory = await _context.Inventories.FindAsync(dto.InventoryId)
-            ?? throw new KeyNotFoundException($"Inventario con Id: {dto.InventoryId} no encontrado");
+        var inventory = await _inventoryService.GetInventoryByIdAsync(dto.InventoryId);
 
         // Verificar que el punto de venta existe
         var sellPoint = await GetSellPointByIdAsync(dto.SellPointId);
@@ -88,7 +87,9 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
 
     public async Task<SellPoint> GetSellPointByIdAsync(int sellPointId)
     {
-        return await _context.SellPoints.FindAsync(sellPointId) ?? throw new KeyNotFoundException($"SellPoint with id: {sellPointId} not found"); ;
+        var sellPoint = await _context.SellPoints.FindAsync(sellPointId);
+        if (sellPoint == null || !sellPoint.IsActive) throw new KeyNotFoundException($"SellPoint with id: {sellPointId} not found");
+        return sellPoint;
     }
 
     public async Task<List<SellPointDto>> GetSellPointsByCompanyAsync(int companyId)
@@ -112,7 +113,7 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper) : IS
             var sellPointInventories = await _context.SellPointInventories.Where(spi => spi.InventoryId == inventory.Id).ToListAsync();
             foreach (var sellPointsInventory in sellPointInventories)
             {
-                var sellPoint = await _context.SellPoints.FindAsync(sellPointsInventory.SellPointId);
+                var sellPoint = await GetSellPointByIdAsync(sellPointsInventory.SellPointId);
                 if (sellPoint != null) sellPointsDto.Add(_mapper.MapToDto(sellPoint));
             }
         }
