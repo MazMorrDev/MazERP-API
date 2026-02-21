@@ -58,7 +58,6 @@ public class SellService(AppDbContext context, SellMapper mapper, ISellPointServ
     {
         var movement = await _context.Movements.FindAsync(movementId);
         if (movement == null || !movement.IsActive) throw new KeyNotFoundException($"Movement with id: {movementId} not found");
-        ArgumentNullException.ThrowIfNull(movement);
         return movement;
     }
 

@@ -94,7 +94,6 @@ public class SupplierService(AppDbContext context, SupplierMapper mapper, ILogge
         try
         {
             var supplier = await GetSupplierByIdAsync(supplierId);
-            ArgumentNullException.ThrowIfNull(supplier);
 
             supplier.Name = supplierDto.Name;
             supplier.ContactPerson = supplierDto.ContactPerson;
