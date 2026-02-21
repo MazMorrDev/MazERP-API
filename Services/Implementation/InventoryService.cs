@@ -7,15 +7,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class InventoryService(AppDbContext context, InventoryMapper mapper, IProductService productService) : IInventoryService
+public class InventoryService(AppDbContext context, InventoryMapper mapper, IProductService productService, IWarehouseService warehouseService) : IInventoryService
 {
     private readonly AppDbContext _context = context;
     private readonly InventoryMapper _mapper = mapper;
     private readonly IProductService _productService = productService;
+    private readonly IWarehouseService _warehouseService = warehouseService;
 
     public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
     {
-        return await _context.Inventories.FindAsync(inventoryId) ?? throw new KeyNotFoundException($"Inventory with id: {inventoryId} not found");
+        var inventory = await _context.Inventories.FindAsync(inventoryId);
+        if (inventory == null || !inventory.IsActive) throw new KeyNotFoundException($"Inventory with id: {inventoryId} not found");
+        return inventory;
     }
 
     public async Task<bool> SoftDeleteInventoryAsync(int inventoryId)
@@ -59,7 +62,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
         try
         {
             var product = await _productService.GetProductByIdAsync(inventoryDto.ProductId);
-            var warehouse = await _context.Warehouses.FindAsync(inventoryDto.WarehouseId) ?? throw new KeyNotFoundException($"Warehouse with id: {inventoryDto.WarehouseId} not found");
+            var warehouse = await _warehouseService.GetWarehouseByIdAsync(inventoryDto.WarehouseId);
             var inventory = _mapper.MapDtoByProductToModel(warehouse, product, inventoryDto);
 
             await _context.Inventories.AddAsync(inventory);
@@ -77,7 +80,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
         try
         {
             var product = await _productService.CreateProductAsync(inventoryDto);
-            var warehouse = await _context.Warehouses.FindAsync(inventoryDto.WarehouseId) ?? throw new KeyNotFoundException($"Warehouse with id: {inventoryDto.WarehouseId} not found");
+            var warehouse = await _warehouseService.GetWarehouseByIdAsync(inventoryDto.WarehouseId);
             var inventory = _mapper.MapDtoToModel(warehouse, product, inventoryDto);
 
             await _context.Inventories.AddAsync(inventory);
