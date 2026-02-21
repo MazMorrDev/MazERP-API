@@ -93,7 +93,7 @@ public class SupplierService(AppDbContext context, SupplierMapper mapper, ILogge
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            var supplier = await _context.Suppliers.FindAsync(supplierId);
+            var supplier = await GetSupplierByIdAsync(supplierId);
             ArgumentNullException.ThrowIfNull(supplier);
 
             supplier.Name = supplierDto.Name;
