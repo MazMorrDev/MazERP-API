@@ -49,8 +49,7 @@ public class SellService(AppDbContext context, SellMapper mapper) : ISellService
     public async Task<Sell> GetSellByIdAsync(int sellId)
     {
         await GetMovementByIdAsync(sellId);
-        var sell = await _context.Sells.FindAsync(sellId);
-        ArgumentNullException.ThrowIfNull(sell);
+        var sell = await _context.Sells.FindAsync(sellId) ?? throw new KeyNotFoundException($"Sell with id: {sellId} not found");
         return sell;
     }
     public async Task<Movement> GetMovementByIdAsync(int movementId)
@@ -67,7 +66,7 @@ public class SellService(AppDbContext context, SellMapper mapper) : ISellService
         List<SellDto> SellsDto = [];
         foreach (var sell in sells)
         {
-            var movement = await _context.Movements.FindAsync(sell.MovementId) ?? throw new KeyNotFoundException($"Movement with Id {sell.MovementId} not found");
+            var movement = await GetMovementByIdAsync(sell.MovementId);
             var SellDto = _mapper.MapToDto(movement, sell);
             ArgumentNullException.ThrowIfNull(SellDto);
             SellsDto.Add(SellDto);

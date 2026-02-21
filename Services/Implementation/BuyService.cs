@@ -7,24 +7,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
+public class BuyService(AppDbContext context, BuyMapper mapper, IUserService userService, ISupplierService supplierService, IInventoryService inventoryService) : IBuyService
 {
     private readonly AppDbContext _context = context;
     private readonly BuyMapper _mapper = mapper;
+    private readonly IUserService _userService = userService;
+    private readonly ISupplierService _supplierService = supplierService;
+    private readonly IInventoryService _inventoryService = inventoryService;
     public async Task<BuyDto> CreateBuyAsync(CreateBuyDto createBuyDto)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            var supplier = await _context.Suppliers.FindAsync(createBuyDto.SupplierId);
-            var user = await _context.Users.FindAsync(createBuyDto.UserId);
-            var inventory = await _context.Inventories.FindAsync(createBuyDto.InventoryId);
-            if (supplier == null)
-                throw new KeyNotFoundException($"Supplier with id {createBuyDto.SupplierId} not found");
-            if (user == null)
-                throw new KeyNotFoundException($"User with id {createBuyDto.UserId} not found");
-            if (inventory == null)
-                throw new KeyNotFoundException($"Inventory with id {createBuyDto.InventoryId} not found");
+            var supplier = await _supplierService.GetSupplierByIdAsync(createBuyDto.SupplierId);
+            var user = await _userService.GetUserByIdAsync(createBuyDto.UserId);
+            var inventory = await _inventoryService.GetInventoryByIdAsync(createBuyDto.InventoryId);
 
             var movement = _mapper.MapMovement(user, createBuyDto);
             var buy = _mapper.MapBuy(movement, supplier, inventory, createBuyDto);
@@ -56,14 +53,14 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
 
     public async Task<Buy> GetBuyByIdAsync(int buyId)
     {
-        var buy = await _context.Buys.FindAsync(buyId);
-        ArgumentNullException.ThrowIfNull(buy);
+        await GetMovementByIdAsync(buyId);
+        var buy = await _context.Buys.FindAsync(buyId) ?? throw new KeyNotFoundException($"Buy with id: {buyId} not found");
         return buy;
     }
     public async Task<Movement> GetMovementByIdAsync(int movementId)
     {
         var movement = await _context.Movements.FindAsync(movementId);
-        ArgumentNullException.ThrowIfNull(movement);
+        if (movement == null || !movement.IsActive) throw new KeyNotFoundException($"Movement with id: {movementId} not found");
         return movement;
     }
 
@@ -73,7 +70,7 @@ public class BuyService(AppDbContext context, BuyMapper mapper) : IBuyService
         List<Movement> movements = [];
         foreach (var b in buys)
         {
-            var m = await _context.Movements.FindAsync(b.MovementId) ?? throw new KeyNotFoundException($"Movement with id: {b.MovementId} not found");
+            var m = await GetMovementByIdAsync(b.MovementId);
             movements.Add(m);
         }
         return _mapper.MapListToDto(movements, buys);
