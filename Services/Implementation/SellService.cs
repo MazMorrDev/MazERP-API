@@ -7,17 +7,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class SellService(AppDbContext context, SellMapper mapper) : ISellService
+public class SellService(AppDbContext context, SellMapper mapper, ISellPointService sellPointService, IUserService userService) : ISellService
 {
     private readonly AppDbContext _context = context;
     private readonly SellMapper _mapper = mapper;
+    private readonly ISellPointService _sellPointService = sellPointService;
+    private readonly IUserService _userService = userService;
     public async Task<SellDto> CreateSellAsync(CreateSellDto createSellDto)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            var user = await _context.Users.FindAsync(createSellDto.UserId) ?? throw new KeyNotFoundException($"User with ID {createSellDto.UserId} not found");
-            var sellPoint = await _context.SellPoints.FindAsync(createSellDto.SellPointId) ?? throw new KeyNotFoundException($"SellPoint with ID {createSellDto.SellPointId} not found");
+            var user = await _userService.GetUserByIdAsync(createSellDto.UserId);
+            var sellPoint = await _sellPointService.GetSellPointByIdAsync(createSellDto.SellPointId);
             var movement = _mapper.MapMovement(user, createSellDto);
             var Sell = _mapper.MapSell(movement, sellPoint, createSellDto);
             await _context.Movements.AddAsync(movement);
