@@ -33,7 +33,6 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
     public async Task<Product> GetProductByIdAsync(int productId)
     {
         var product = await _context.Products.FindAsync(productId) ?? throw new KeyNotFoundException($"Product with id: {productId} not found");
-        ArgumentNullException.ThrowIfNull(product);
         return product;
     }
 

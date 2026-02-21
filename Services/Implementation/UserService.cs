@@ -20,10 +20,10 @@ public class UserService(AppDbContext context, ITokenService tokenService, ILogg
         try
         {
             var user = await _context.Users.Include(c => c.UserCompanies)
-                .FirstOrDefaultAsync(c => c.Email == loginDto.Email);
-                
+                .FirstOrDefaultAsync(c => c.Email == loginDto.Email && c.IsActive);
+
             if (user == null) return null;
-            
+
             var hasher = new PasswordHasher<User>();
             var result = hasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
             if (result == PasswordVerificationResult.Failed)

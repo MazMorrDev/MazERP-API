@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IWarehouseService
+public class WarehouseService(AppDbContext context, WarehouseMapper mapper, ICompanyService companyService) : IWarehouseService
 {
     private readonly AppDbContext _context = context;
     private readonly WarehouseMapper _mapper = mapper;
+    private readonly ICompanyService _companyService = companyService;
     public async Task<WarehouseDto> CreateWarehouseAsync(CreateWarehouseDto warehouseDto)
     {
         try
         {
-            var company = await _context.Companies.FindAsync(warehouseDto.CompanyId);
-            ArgumentNullException.ThrowIfNull(company);
+            var company = await _companyService.GetCompanyByIdAsync(warehouseDto.CompanyId);
 
             var warehouse = _mapper.MapDtoToModel(company, warehouseDto);
 
@@ -50,7 +50,7 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
     public async Task<Warehouse> GetWarehouseByIdAsync(int warehouseId)
     {
         var warehouse = await _context.Warehouses.FindAsync(warehouseId);
-        ArgumentNullException.ThrowIfNull(warehouse);
+        if (warehouse == null || !warehouse.IsActive) throw new KeyNotFoundException($"Warehouse with id: {warehouseId} not found");
         return warehouse;
     }
 
@@ -85,7 +85,7 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper) : IW
     {
         try
         {
-            var warehouses = await _context.Warehouses.Where(w => w.CompanyId.Equals(companyId)).ToListAsync();
+            var warehouses = await _context.Warehouses.Where(w => w.CompanyId == companyId && w.IsActive).ToListAsync();
             return _mapper.MapListToDto(warehouses);
         }
         catch (Exception)

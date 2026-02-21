@@ -62,8 +62,8 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
 
     public async Task<Company> GetCompanyByIdAsync(int id)
     {
-        var company = await _context.Companies.FindAsync(id) ?? throw new KeyNotFoundException($"Company with id: {id} not found");
-        if (!company.IsActive) throw new KeyNotFoundException($"Company with id: {id} not found");
+        var company = await _context.Companies.FindAsync(id);
+        if (company == null || !company.IsActive) throw new KeyNotFoundException($"Company with id: {id} not found");
         return company;
     }
 
