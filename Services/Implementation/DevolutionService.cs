@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class DevolutionService(AppDbContext context, DevolutionMapper mapper, ILogger<DevolutionService> logger) : IDevolutionService
+public class DevolutionService(AppDbContext context, DevolutionMapper mapper, ILogger<DevolutionService> logger, ISellService sellService) : IDevolutionService
 {
     private readonly AppDbContext _context = context;
     private readonly DevolutionMapper _mapper = mapper;
     private readonly ILogger<DevolutionService> _logger = logger;
+    private readonly ISellService _sellService = sellService;
 
     public async Task<DevolutionDto> CreateDevolutionAsync(CreateDevolutionDto devolutionDto)
     {
-        var sell = await _context.Sells.FindAsync(devolutionDto.SellId);
-        ArgumentNullException.ThrowIfNull(sell);
+        var sell = await _sellService.GetSellByIdAsync(devolutionDto.SellId);
 
         var devolution = _mapper.MapDtoToModel(sell, devolutionDto);
         await _context.Devolutions.AddAsync(devolution);
@@ -49,7 +49,9 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
     {
         try
         {
-            return await _context.Devolutions.FindAsync(devolutionId) ?? throw new KeyNotFoundException($"Devolution with id: {devolutionId} not found");
+            var devolution = await _context.Devolutions.FindAsync(devolutionId);
+            if (devolution == null || !devolution.IsActive) throw new KeyNotFoundException($"Devolution with id: {devolutionId} not found");
+            return devolution;
         }
         catch (Exception e)
         {
@@ -103,8 +105,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
     public async Task<DevolutionDto> UpdateDevolutionAsync(int devolutionId, CreateDevolutionDto devolutionDto)
     {
-        var devolution = await _context.Devolutions.FindAsync(devolutionId);
-        ArgumentNullException.ThrowIfNull(devolution);
+        var devolution = await GetDevolutionByIdAsync(devolutionId);
 
         devolution.SellId = devolutionDto.SellId;
         devolution.Reason = devolutionDto.Reason;

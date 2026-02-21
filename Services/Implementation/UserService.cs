@@ -15,6 +15,13 @@ public class UserService(AppDbContext context, ITokenService tokenService, ILogg
     private readonly ILogger<UserService> _logger = logger;
     private readonly UserMapper _mapper = mapper;
 
+    public async Task<User> GetUserByIdAsync(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null || !user.IsActive) throw new KeyNotFoundException($"User with id: {id} not found");
+        return user;
+    }
+
     public async Task<TokenDto?> LoginUserAsync(LoginDto loginDto)
     {
         try
