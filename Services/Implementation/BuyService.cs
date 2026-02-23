@@ -66,7 +66,7 @@ public class BuyService(AppDbContext context, BuyMapper mapper, IUserService use
 
     public async Task<List<BuyDto>> GetBuysByInventoryAsync(int invId)
     {
-        var buys = await _context.Buys.Where(m => m.InventoryId.Equals(invId)).ToListAsync();
+        var buys = await _context.Buys.Where(m => m.InventoryId.Equals(invId) && m.Movement.IsActive).ToListAsync();
         List<Movement> movements = [];
         foreach (var b in buys)
         {

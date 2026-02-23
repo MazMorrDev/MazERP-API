@@ -40,7 +40,7 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
 
     public async Task<List<ExpenseDto>> GetExpensesByCompanyAsync(int companyId)
     {
-        List<ExpenseDto> expenses = _mapper.MapListToDto(await _context.Expenses.Where(e => e.CompanyId == companyId).ToListAsync());
+        List<ExpenseDto> expenses = _mapper.MapListToDto(await _context.Expenses.Where(e => e.CompanyId == companyId && e.IsActive).ToListAsync());
         return expenses;
     }
 

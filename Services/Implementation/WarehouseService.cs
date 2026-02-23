@@ -7,11 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class WarehouseService(AppDbContext context, WarehouseMapper mapper, ICompanyService companyService) : IWarehouseService
+public class WarehouseService(AppDbContext context, WarehouseMapper mapper, ICompanyService companyService, ILogger<WarehouseService> logger) : IWarehouseService
 {
     private readonly AppDbContext _context = context;
     private readonly WarehouseMapper _mapper = mapper;
     private readonly ICompanyService _companyService = companyService;
+    private readonly ILogger<WarehouseService> _logger = logger;
+    
     public async Task<WarehouseDto> CreateWarehouseAsync(CreateWarehouseDto warehouseDto)
     {
         try

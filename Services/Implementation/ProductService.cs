@@ -38,7 +38,7 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
 
     public async Task<List<Product>> GetProductsByCompanyAsync(int companyId)
     {
-        var warehouses = _context.Warehouses.Where(w => w.CompanyId == companyId);
+        var warehouses = _context.Warehouses.Where(w => w.CompanyId == companyId && w.IsActive);
         List<Product> products = [];
         foreach (var w in warehouses)
         {
@@ -49,7 +49,7 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
 
     public async Task<List<Product>> GetProductsByWarehouseAsync(int warehouseId)
     {
-        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId).ToListAsync();
+        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId && i.IsActive).ToListAsync();
         List<Product> products = [];
         foreach (var inventory in inventories)
         {

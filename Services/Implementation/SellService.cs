@@ -63,7 +63,7 @@ public class SellService(AppDbContext context, SellMapper mapper, ISellPointServ
 
     public async Task<List<SellDto>> GetSellsBySellPointAsync(int sellPointId)
     {
-        var sells = await _context.Sells.Where(m => m.SellPointId.Equals(sellPointId)).ToListAsync();
+        var sells = await _context.Sells.Where(m => m.SellPointId.Equals(sellPointId) && m.Movement.IsActive).ToListAsync();
         List<SellDto> SellsDto = [];
         foreach (var sell in sells)
         {

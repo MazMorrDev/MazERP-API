@@ -73,7 +73,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         try
         {
             var company = await GetCompanyByIdAsync(companyId);
-            var UserCompanies = await _context.UserCompanies.Where(uc => uc.CompanyId == companyId).ToListAsync();
+            var UserCompanies = await _context.UserCompanies.Where(uc => uc.CompanyId == companyId && uc.IsActive).ToListAsync();
             foreach (var item in UserCompanies)
             {
                 item.IsActive = false;
@@ -97,7 +97,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
 
     public async Task<List<CompanyDto>> GetCompaniesByUser(int userId)
     {
-        var userCompanies = await _context.UserCompanies.Where(uc => uc.UserId == userId).ToListAsync();
+        var userCompanies = await _context.UserCompanies.Where(uc => uc.UserId == userId && uc.IsActive).ToListAsync();
         List<CompanyDto> companiesDto = [];
         foreach (var item in userCompanies)
         {

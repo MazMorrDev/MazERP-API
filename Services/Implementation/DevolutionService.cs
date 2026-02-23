@@ -67,7 +67,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         List<DevolutionDto> devolutionsDto = [];
         foreach (var spi in sellPointsInventories)
         {
-            var sellPoints = await _context.SellPoints.Where(sp => sp.Id.Equals(spi.SellPointId)).ToListAsync();
+            var sellPoints = await _context.SellPoints.Where(sp => sp.Id.Equals(spi.SellPointId) && sp.IsActive).ToListAsync();
             foreach (var sp in sellPoints)
             {
                 devolutionsDto.AddRange(await GetDevolutionsBySellPointAsync(sp.Id));
@@ -78,11 +78,11 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
     public async Task<List<DevolutionDto>> GetDevolutionsBySellPointAsync(int sellPointId)
     {
-        var sells = await _context.Sells.Where(m => m.SellPointId == sellPointId).ToListAsync();
+        var sells = await _context.Sells.Where(m => m.SellPointId == sellPointId && m.Movement.IsActive).ToListAsync();
         List<DevolutionDto> devolutionsDto = [];
         foreach (var s in sells)
         {
-            var devolutions = _mapper.MapListToDto(await _context.Devolutions.Where(d => d.SellId == s.MovementId).ToListAsync());
+            var devolutions = _mapper.MapListToDto(await _context.Devolutions.Where(d => d.SellId == s.MovementId && d.IsActive).ToListAsync());
             devolutionsDto.AddRange(devolutions);
         }
         return devolutionsDto;

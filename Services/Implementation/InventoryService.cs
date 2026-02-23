@@ -111,7 +111,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
     {
         try
         {
-            var inventories = await _context.Inventories.Where(i => i.WarehouseId.Equals(warehouseId)).ToListAsync();
+            var inventories = await _context.Inventories.Where(i => i.WarehouseId.Equals(warehouseId) && i.IsActive).ToListAsync();
             List<Product> products = [];
             foreach (var item in inventories)
             {
@@ -129,7 +129,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
 
     public async Task<List<InventoryDto>> GetInventoriesByCompanyAsync(int companyId)
     {
-        var warehouses = await _context.Warehouses.Where(c => c.CompanyId.Equals(companyId)).ToListAsync();
+        var warehouses = await _context.Warehouses.Where(c => c.CompanyId.Equals(companyId) && c.IsActive).ToListAsync();
         List<InventoryDto> inventoriesDto = [];
         foreach (var warehouse in warehouses)
         {
