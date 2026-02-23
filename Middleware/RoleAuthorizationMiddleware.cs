@@ -14,8 +14,8 @@ public class RoleAuthorizationMiddleware(RequestDelegate next, ILogger<RoleAutho
     [
         "/api/user/register",
         "/api/user/login",
-        "/api/user/company/create",
-        "/api/user/company/by-user",
+        "/api/company/create",
+        "/api/company/by-user",
     ];
 
     public async Task InvokeAsync(HttpContext context, IRoleAuthorizationService authService)

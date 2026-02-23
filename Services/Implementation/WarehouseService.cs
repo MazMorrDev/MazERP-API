@@ -13,7 +13,7 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper, ICom
     private readonly WarehouseMapper _mapper = mapper;
     private readonly ICompanyService _companyService = companyService;
     private readonly ILogger<WarehouseService> _logger = logger;
-    
+
     public async Task<WarehouseDto> CreateWarehouseAsync(CreateWarehouseDto warehouseDto)
     {
         try
@@ -69,7 +69,6 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper, ICom
             return false;
             throw;
         }
-
     }
 
     public async Task<WarehouseDto> UpdateWarehouseAsync(int warehouseId, CreateWarehouseDto warehouseDto)

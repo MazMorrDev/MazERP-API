@@ -3,9 +3,11 @@ using MazErpBack.DTOs.Company;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using MazErpBack.Utils.Mappers;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
+
 
 public class CompanyService(AppDbContext context, ILogger<CompanyService> logger, CompanyMapper mapper, IUserService userService) : ICompanyService
 {
@@ -104,7 +106,6 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
             var company = await GetCompanyByIdAsync(item.CompanyId);
             companiesDto.Add(_mapper.MapToDto(company));
         }
-        ;
         return companiesDto;
     }
 }

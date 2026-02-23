@@ -8,7 +8,7 @@ namespace MazErpBack.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class WfController(ICompanyService service) : ControllerBase
+public class CompanyController(ICompanyService service) : ControllerBase
 {
     private readonly ICompanyService _service = service;
 

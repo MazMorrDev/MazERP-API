@@ -7,12 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class InventoryService(AppDbContext context, InventoryMapper mapper, IProductService productService, IWarehouseService warehouseService) : IInventoryService
+public class InventoryService(
+    AppDbContext context, InventoryMapper mapper, IProductService productService, 
+    IWarehouseService warehouseService, ILogger<InventoryService> logger) : IInventoryService
 {
     private readonly AppDbContext _context = context;
     private readonly InventoryMapper _mapper = mapper;
     private readonly IProductService _productService = productService;
     private readonly IWarehouseService _warehouseService = warehouseService;
+    private readonly ILogger<InventoryService> _logger = logger;
 
     public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
     {
