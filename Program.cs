@@ -3,7 +3,13 @@ using MazErpBack.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 Env.Load();
-var connectionString = Env.GetString("POSTGRES_CONNECTION_STRING") ?? throw new InvalidOperationException("POSTGRES_CONNECTION_STRING environment variable is not set.");
+var environment = builder.Environment.EnvironmentName; // Development, Production
+var connectionString = environment switch
+{
+    "Development" => Env.GetString("POSTGRES_CONNECTION_STRING_DEV"),
+    "Production" => Env.GetString("POSTGRES_CONNECTION_STRING_PROD"),
+    _ => Env.GetString("POSTGRES_CONNECTION_STRING")
+} ?? throw new InvalidOperationException("No valid connection string found.");
 var jwtSecret = Env.GetString("JWT_SECRET") ?? throw new InvalidOperationException("JWT_SECRET environment variable is not set.");
 var port = Env.GetString("PORT", "5148") ?? throw new InvalidOperationException("PORT environment variable is not set.");
 
