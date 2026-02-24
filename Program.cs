@@ -5,7 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 Env.Load();
 var environment = Environment.GetEnvironmentVariable("MY_APP_ENVIRONMENT") ?? "Production"; // Development o Production 
 
-// Ahora tú controlas todo explícitamente
 var connectionString = environment switch
 {
     "Development" => Environment.GetEnvironmentVariable("POSTGRES_LOCAL_CONNECTION_STRING"),
