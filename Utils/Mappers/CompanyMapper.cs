@@ -24,9 +24,14 @@ public class CompanyMapper
         return new UserCompanyDto
         {
             UserId = userCompany.UserId,
+            Name = userCompany.Company.Name,
             CompanyId = userCompany.CompanyId,
             Role = userCompany.Role,
-            AssignedAt = userCompany.AssignedAt
+            AssignedAt = userCompany.AssignedAt,
+            CompanyCreatedAt = userCompany.Company.CreatedAt,
+            Currency = userCompany.Company.Currency,
+            Description = userCompany.Company.Description,
+            CompanyPhotoUrl = userCompany.Company.CompanyPhotoUrl,
         };
     }
 

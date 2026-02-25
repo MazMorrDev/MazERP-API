@@ -7,12 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
-public class InventoryService(AppDbContext context, InventoryMapper mapper, IProductService productService, IWarehouseService warehouseService) : IInventoryService
+public class InventoryService(
+    AppDbContext context, InventoryMapper mapper, IProductService productService, 
+    IWarehouseService warehouseService, ILogger<InventoryService> logger) : IInventoryService
 {
     private readonly AppDbContext _context = context;
     private readonly InventoryMapper _mapper = mapper;
     private readonly IProductService _productService = productService;
     private readonly IWarehouseService _warehouseService = warehouseService;
+    private readonly ILogger<InventoryService> _logger = logger;
 
     public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
     {
@@ -111,7 +114,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
     {
         try
         {
-            var inventories = await _context.Inventories.Where(i => i.WarehouseId.Equals(warehouseId)).ToListAsync();
+            var inventories = await _context.Inventories.Where(i => i.WarehouseId.Equals(warehouseId) && i.IsActive).ToListAsync();
             List<Product> products = [];
             foreach (var item in inventories)
             {
@@ -129,7 +132,7 @@ public class InventoryService(AppDbContext context, InventoryMapper mapper, IPro
 
     public async Task<List<InventoryDto>> GetInventoriesByCompanyAsync(int companyId)
     {
-        var warehouses = await _context.Warehouses.Where(c => c.CompanyId.Equals(companyId)).ToListAsync();
+        var warehouses = await _context.Warehouses.Where(c => c.CompanyId.Equals(companyId) && c.IsActive).ToListAsync();
         List<InventoryDto> inventoriesDto = [];
         foreach (var warehouse in warehouses)
         {

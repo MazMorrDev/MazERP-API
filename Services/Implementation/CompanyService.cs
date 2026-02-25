@@ -3,9 +3,11 @@ using MazErpBack.DTOs.Company;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using MazErpBack.Utils.Mappers;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
+
 
 public class CompanyService(AppDbContext context, ILogger<CompanyService> logger, CompanyMapper mapper, IUserService userService) : ICompanyService
 {
@@ -51,7 +53,10 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
 
     public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto)
     {
+
+        // FIX: tratar de resolver el problema de que un mismo usuario pueda tener a su nombre varias compañias con exactamente el mismo nombre
         var company = _mapper.MapDtoToModel(companyDto);
+
         var user = await _userService.GetUserByIdAsync(companyDto.UserId);
 
         var userCompany = _mapper.MapUserCompany(user, company);
@@ -73,7 +78,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         try
         {
             var company = await GetCompanyByIdAsync(companyId);
-            var UserCompanies = await _context.UserCompanies.Where(uc => uc.CompanyId == companyId).ToListAsync();
+            var UserCompanies = await _context.UserCompanies.Where(uc => uc.CompanyId == companyId && uc.IsActive).ToListAsync();
             foreach (var item in UserCompanies)
             {
                 item.IsActive = false;
@@ -95,16 +100,14 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<CompanyDto>> GetCompaniesByUser(int userId)
+    public async Task<List<UserCompanyDto>> GetCompaniesByUser(int userId)
     {
-        var userCompanies = await _context.UserCompanies.Where(uc => uc.UserId == userId).ToListAsync();
-        List<CompanyDto> companiesDto = [];
+        var userCompanies = await _context.UserCompanies.Include(uc => uc.Company).Where(uc => uc.UserId == userId && uc.IsActive).ToListAsync();
+        List<UserCompanyDto> companiesDto = [];
         foreach (var item in userCompanies)
         {
-            var company = await GetCompanyByIdAsync(item.CompanyId);
-            companiesDto.Add(_mapper.MapToDto(company));
+            companiesDto.Add(_mapper.MapUserCompanyDto(item));
         }
-        ;
         return companiesDto;
     }
 }

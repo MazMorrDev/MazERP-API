@@ -58,14 +58,14 @@ public class SupplierService(AppDbContext context, SupplierMapper mapper, ILogge
 
     public async Task<List<SupplierDto>> GetSuppliersByWarehouseAsync(int warehouseId)
     {
-        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId).ToListAsync();
+        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId && i.IsActive).ToListAsync();
         List<SupplierDto> suppliersDto = [];
         foreach (var i in inventories)
         {
             var inventorySuppliers = await _context.InventorySuppliers.Where(invSup => invSup.InventoryId == i.Id).ToListAsync();
             foreach (var invSup in inventorySuppliers)
             {
-                var suppliers = await _context.Suppliers.Where(s => s.Id == invSup.SupplierId).ToListAsync();
+                var suppliers = await _context.Suppliers.Where(s => s.Id == invSup.SupplierId && s.IsActive).ToListAsync();
                 suppliersDto.AddRange(_mapper.MapListToDto(suppliers));
             }
         }

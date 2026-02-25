@@ -10,7 +10,7 @@ public interface ICompanyService
     public Task DeleteCompanyAsync(int companyId);
 
     // Para el usuario común
-    public Task<List<CompanyDto>> GetCompaniesByUser(int userId);
+    public Task<List<UserCompanyDto>> GetCompaniesByUser(int userId);
     public Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto);
     public Task<bool> SoftDeleteCompanyAsync(int CompanyId);
     public Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dto);

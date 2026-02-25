@@ -1,0 +1,16 @@
+opencollection: 1.0.0
+info:
+  name: "MazERP API"
+  type: workspace
+
+collections:
+  - name: "Users"
+    path: "collections/Users"
+  - name: "Company"
+    path: "collections/Company"
+
+specs:
+
+docs: ''
+
+activeEnvironmentUid: 17u6hf700000000000000

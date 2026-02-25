@@ -105,7 +105,7 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper, IInv
 
     public async Task<List<SellPointDto>> GetSellPointsByWarehouseAsync(int warehouseId)
     {
-        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId).ToListAsync();
+        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId && i.IsActive).ToListAsync();
         List<SellPointDto> sellPointsDto = [];
         foreach (var inventory in inventories)
         {
