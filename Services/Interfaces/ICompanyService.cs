@@ -13,5 +13,5 @@ public interface ICompanyService
     public Task<List<UserCompanyDto>> GetCompaniesByUser(int userId);
     public Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto);
     public Task<bool> SoftDeleteCompanyAsync(int CompanyId);
-    public Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dto);
+    public Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dto, int companyId);
 }

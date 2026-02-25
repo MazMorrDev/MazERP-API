@@ -3,7 +3,6 @@ using MazErpBack.DTOs.Company;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using MazErpBack.Utils.Mappers;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
@@ -16,23 +15,23 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
     private readonly CompanyMapper _mapper = mapper;
     private readonly IUserService _userService = userService;
 
-    public async Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dto)
+    public async Task<UserCompanyDto> AddUserToCompanyAsync(AddUserToCompanyDto dto, int companyId)
     {
         try
         {
             // check if Company is already associated to user
-            var existingUser = await _context.UserCompanies.FirstOrDefaultAsync(c => c.UserId == dto.UserId && c.CompanyId == dto.CompanyId);
+            var existingUser = await _context.UserCompanies.FirstOrDefaultAsync(c => c.UserId == dto.UserId && c.CompanyId == companyId);
             if (existingUser != null)
             {
-                throw new BadHttpRequestException($"Company {dto.CompanyId} is already assigned to user {dto.UserId}.");
+                throw new BadHttpRequestException($"Company {companyId} is already assigned to user {dto.UserId}.");
             }
 
             var user = await _userService.GetUserByIdAsync(dto.UserId);
-            var company = await GetCompanyByIdAsync(dto.CompanyId);
+            var company = await GetCompanyByIdAsync(companyId);
             var userCompany = new UserCompany
             {
                 UserId = dto.UserId,
-                CompanyId = dto.CompanyId,
+                CompanyId = companyId,
                 Role = dto.Role,
                 AssignedAt = DateTimeOffset.UtcNow,
                 User = user,
@@ -46,7 +45,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error assigning Company with id:{dto.CompanyId} to client with id:{dto.UserId}");
+            _logger.LogError(ex, $"Error assigning Company with id:{companyId} to client with id:{dto.UserId}");
             throw;
         }
     }

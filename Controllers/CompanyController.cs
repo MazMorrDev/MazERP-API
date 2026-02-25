@@ -17,8 +17,7 @@ public class CompanyController(ICompanyService service, ILogger<CompanyControlle
     [HttpGet("by-user/{userId}")]
     public async Task<IActionResult> GetCompaniesByUser(int userId)
     {
-        var companies = await _service.GetCompaniesByUser(userId);
-        return Ok(companies);
+        return Ok(await _service.GetCompaniesByUser(userId));
     }
 
     [HttpPost("assign")]
@@ -26,7 +25,7 @@ public class CompanyController(ICompanyService service, ILogger<CompanyControlle
     {
         try
         {
-            return Ok(await _service.AddUserToCompanyAsync(dto));
+            return Ok(await _service.AddUserToCompanyAsync(dto, companyId));
         }
         catch (KeyNotFoundException)
         {
