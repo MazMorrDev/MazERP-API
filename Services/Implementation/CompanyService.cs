@@ -53,7 +53,10 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
 
     public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto)
     {
+
+        // FIX: tratar de resolver el problema de que un mismo usuario pueda tener a su nombre varias compañias con exactamente el mismo nombre
         var company = _mapper.MapDtoToModel(companyDto);
+
         var user = await _userService.GetUserByIdAsync(companyDto.UserId);
 
         var userCompany = _mapper.MapUserCompany(user, company);
