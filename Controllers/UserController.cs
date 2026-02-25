@@ -16,7 +16,7 @@ public class UserController(IUserService userService) : ControllerBase
         try
         {
             var createUser = await _userService.RegisterUserAsync(createUserDto);
-            return Ok(new { data = createUser });
+            return Ok(createUser);
         }
         catch (Exception)
         {
@@ -34,7 +34,7 @@ public class UserController(IUserService userService) : ControllerBase
             {
                 return Unauthorized(new { error = "Invalid email or password." });
             }
-            return Ok(new { token = token.Token, expiration = token.Expiration });
+            return Ok(token);
         }
         catch (Exception)
         {
