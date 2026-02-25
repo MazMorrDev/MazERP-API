@@ -18,7 +18,7 @@ public class CompanyController(ICompanyService service, ILogger<CompanyControlle
     public async Task<IActionResult> GetCompaniesByUser(int userId)
     {
         var companies = await _service.GetCompaniesByUser(userId);
-        return Ok(new { data = companies });
+        return Ok(companies);
     }
 
     [HttpPost("assign")]

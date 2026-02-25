@@ -3,6 +3,4 @@ variables:
   - secret: true
     name: tokenValue
   - secret: true
-    name: userId
-  - secret: true
     name: userName
