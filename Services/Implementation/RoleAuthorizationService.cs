@@ -38,7 +38,7 @@ public class RoleAuthorizationService(AppDbContext context, ILogger<RoleAuthoriz
                 // Owner tiene acceso a todo
                 UserCompanyRole.Owner => true,
 
-                // Admin tiene acceso a todo menos al /api/Company/Delete
+                // Admin tiene acceso a todo menos al /api/dompany/delete
                 UserCompanyRole.Admin =>
                 zone.StartsWith(COMPANY_PATH) || zone.StartsWith(INVENTORY_PATH),
                 // Aquí algunos ejemplos que dejó la IA que después cambiaré por los roles reales, por ahora solo admin y owner para probar

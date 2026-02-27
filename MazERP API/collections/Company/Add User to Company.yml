@@ -6,7 +6,24 @@ info:
 http:
   method: POST
   url: http://localhost:5148/api/company/assign
+  headers:
+    - name: companyId
+      value: "1"
+  body:
+    type: json
+    data: |-
+      {
+        "userId":3,
+        "role":1
+      }
   auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+        req.setHeader("Authorization", "Bearer "+token);
 
 settings:
   encodeUrl: true
