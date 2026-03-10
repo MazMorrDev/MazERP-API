@@ -1,3 +1,4 @@
+using MazErpBack.DTOs.Movements;
 using MazErpBack.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,45 @@ public class BuyController(IBuyService service, ILogger<BuyController> logger) :
         try
         {
             return Ok(await _service.GetBuysByInventoryAsync(inventoryId));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateBuy([FromHeader(Name = "companyId")] int companyId, CreateBuyDto createBuyDto)
+    {
+        try
+        {
+            return Ok(await _service.CreateBuyAsync(createBuyDto));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpDelete("{buyId}")]
+    public async Task<IActionResult> DeleteBuy([FromHeader(Name = "companyId")] int companyId, int buyId)
+    {
+        try
+        {
+            return Ok(await _service.SoftDeleteBuyAsync(buyId));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPut("{buyId}")]
+    public async Task<IActionResult> UpdateBuy([FromHeader(Name = "companyId")] int companyId, CreateBuyDto buyDto, int buyId)
+    {
+        try
+        {
+            return Ok(await _service.UpdateBuyAsync(buyId, buyDto));
         }
         catch (Exception ex)
         {
