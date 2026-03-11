@@ -102,14 +102,23 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
 
     public async Task<PaginatedResult<UserCompanyDto>> GetCompaniesByUser(int userId, int pageNumber, int pageSize)
     {
-        var userCompanies = await _context.UserCompanies.Include(uc => uc.Company).Where(uc => uc.UserId == userId && uc.IsActive).ToListAsync();
-        List<UserCompanyDto> companiesDto = [];
-        foreach (var item in userCompanies)
-        {
-            companiesDto.Add(_mapper.MapUserCompanyDto(item));
-        }
-        var totalCount = companiesDto.Count;
-        var items = companiesDto.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-        return new PaginatedResult<UserCompanyDto>(items, totalCount, pageNumber, pageSize);
+        // 1. Primero, la consulta sin ejecutar
+        var query = _context.UserCompanies
+            .Include(uc => uc.Company)
+            .Where(uc => uc.UserId == userId && uc.IsActive);
+
+        // 2. Obtener el total de registros (esto es rápido)
+        var totalCount = await query.CountAsync();
+
+        // 3. Aplicar paginación ANTES de traer los datos
+        var items = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        // 4. Mapear SOLO los items de la página actual
+        var companiesDto = items.Select(_mapper.MapUserCompanyDto).ToList();
+
+        return new PaginatedResult<UserCompanyDto>(companiesDto, totalCount, pageNumber, pageSize);
     }
 }
