@@ -2,6 +2,7 @@
 using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ public class BuyService(AppDbContext context, BuyMapper mapper, IUserService use
     private readonly IUserService _userService = userService;
     private readonly ISupplierService _supplierService = supplierService;
     private readonly IInventoryService _inventoryService = inventoryService;
+
     public async Task<BuyDto> CreateBuyAsync(CreateBuyDto createBuyDto)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
@@ -64,7 +66,7 @@ public class BuyService(AppDbContext context, BuyMapper mapper, IUserService use
         return movement;
     }
 
-    public async Task<List<BuyDto>> GetBuysByInventoryAsync(int invId)
+    public async Task<PaginatedResult<BuyDto>> GetBuysByInventoryAsync(int invId, int pageNumber, int pageSize)
     {
         var buys = await _context.Buys.Where(m => m.InventoryId.Equals(invId) && m.Movement.IsActive).ToListAsync();
         List<Movement> movements = [];
@@ -73,7 +75,11 @@ public class BuyService(AppDbContext context, BuyMapper mapper, IUserService use
             var m = await GetMovementByIdAsync(b.MovementId);
             movements.Add(m);
         }
-        return _mapper.MapListToDto(movements, buys);
+        var buyDtos = _mapper.MapListToDto(movements, buys);
+        var totalCount = buyDtos.Count;
+        var items = buyDtos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+        return new PaginatedResult<BuyDto>(items, totalCount, pageNumber, pageSize);
     }
 
     public async Task<bool> SoftDeleteBuyAsync(int movementId)
