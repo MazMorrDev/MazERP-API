@@ -68,18 +68,22 @@ public class BuyService(AppDbContext context, BuyMapper mapper, IUserService use
 
     public async Task<PaginatedResult<BuyDto>> GetBuysByInventoryAsync(int invId, int pageNumber, int pageSize)
     {
-        var buys = await _context.Buys.Where(m => m.InventoryId.Equals(invId) && m.Movement.IsActive).ToListAsync();
-        List<Movement> movements = [];
-        foreach (var b in buys)
-        {
-            var m = await GetMovementByIdAsync(b.MovementId);
-            movements.Add(m);
-        }
-        var buyDtos = _mapper.MapListToDto(movements, buys);
-        var totalCount = buyDtos.Count;
-        var items = buyDtos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        // 1. Consulta optimizada con Include (una sola consulta a BD)
+        var query = _context.Buys.Include(b => b.Movement)  // <-- ESTO ES LA CLAVE
+            .Where(m => m.InventoryId == invId && m.Movement.IsActive);
 
-        return new PaginatedResult<BuyDto>(items, totalCount, pageNumber, pageSize);
+        // 2. Total de registros (rápido, solo COUNT)
+        var totalCount = await query.CountAsync();
+
+        // 3. Paginación en BD y obtención de datos
+        var buys = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize).ToListAsync();
+
+        // 4. Mapeo directo (sin bucles manuales)
+        var buyDtos = _mapper.MapListToDto(buys.Select(b => b.Movement).ToList(), buys);
+
+        return new PaginatedResult<BuyDto>(buyDtos, totalCount, pageNumber, pageSize);
     }
 
     public async Task<bool> SoftDeleteBuyAsync(int movementId)
