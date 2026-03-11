@@ -7,14 +7,8 @@ public class SellMapper(ILogger<SellMapper> logger)
 {
     private readonly ILogger<SellMapper> _logger = logger;
 
-    public SellDto? MapToDto(Movement movement, Sell sell)
+    public SellDto MapToDto(Movement movement, Sell sell)
     {
-        if (movement.Id != sell.MovementId)
-        {
-            _logger.LogError("se está intentando mapear un Sell con un id que no es el mismo del Movement");
-            return null;
-        }
-
         return new SellDto
         {
             MovementId = movement.Id,
@@ -59,7 +53,7 @@ public class SellMapper(ILogger<SellMapper> logger)
         };
     }
 
-    public List<SellDto>? MapListToDto(List<Movement> movements, List<Sell> sells)
+    public List<SellDto> MapListToDto(List<Movement> movements, List<Sell> sells)
     {
         List<SellDto> sellsDto = [];
         foreach (var sell in sells)
@@ -67,7 +61,6 @@ public class SellMapper(ILogger<SellMapper> logger)
             foreach (var movement in movements)
             {
                 var sellDto = MapToDto(movement, sell);
-                if (sellDto == null) return null;
                 sellsDto.Add(sellDto);
             }
         }

@@ -2,6 +2,7 @@
 using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -61,18 +62,14 @@ public class SellService(AppDbContext context, SellMapper mapper, ISellPointServ
         return movement;
     }
 
-    public async Task<List<SellDto>> GetSellsBySellPointAsync(int sellPointId)
+    public async Task<PaginatedResult<SellDto>> GetSellsBySellPointAsync(int sellPointId, int pageNumber, int pageSize)
     {
-        var sells = await _context.Sells.Where(m => m.SellPointId.Equals(sellPointId) && m.Movement.IsActive).ToListAsync();
-        List<SellDto> SellsDto = [];
-        foreach (var sell in sells)
-        {
-            var movement = await GetMovementByIdAsync(sell.MovementId);
-            var SellDto = _mapper.MapToDto(movement, sell);
-            ArgumentNullException.ThrowIfNull(SellDto);
-            SellsDto.Add(SellDto);
-        }
-        return SellsDto;
+        var query = _context.Sells.Include(m => m.Movement).Where(m => m.SellPointId == sellPointId && m.Movement.IsActive);
+        var totalCount = await query.CountAsync();
+        var sells = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        var sellsDto = _mapper.MapListToDto(sells.Select(s => s.Movement).ToList(), sells);
+
+        return new PaginatedResult<SellDto>(sellsDto, totalCount, pageNumber, pageSize);
     }
 
     public async Task<bool> SoftDeleteSellAsync(int movementId)
