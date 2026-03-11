@@ -2,6 +2,7 @@
 using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -61,7 +62,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
     }
 
-    public async Task<List<DevolutionDto>> GetDevolutionsByInventoryAsync(int inventoryId)
+    public async Task<PaginatedResult<DevolutionDto>> GetDevolutionsByInventoryAsync(int inventoryId, int pageNumber, int pageSize)
     {
         var sellPointsInventories = await _context.SellPointInventories.Where(spi => spi.InventoryId == inventoryId).ToListAsync();
         List<DevolutionDto> devolutionsDto = [];
@@ -70,24 +71,24 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
             var sellPoints = await _context.SellPoints.Where(sp => sp.Id.Equals(spi.SellPointId) && sp.IsActive).ToListAsync();
             foreach (var sp in sellPoints)
             {
-                devolutionsDto.AddRange(await GetDevolutionsBySellPointAsync(sp.Id));
+                devolutionsDto.AddRange(GetDevolutionsBySellPointAsync(sp.Id, pageNumber, pageSize).Result.Items.ToList());
             }
         }
-        return devolutionsDto;
+        var totalCount = devolutionsDto.Count;
+
+
+        return new PaginatedResult<DevolutionDto>(items, totalCount, pageNumber, pageSize);
     }
 
-    public async Task<List<DevolutionDto>> GetDevolutionsBySellPointAsync(int sellPointId)
+    public async Task<PaginatedResult<DevolutionDto>> GetDevolutionsBySellPointAsync(int sellPointId, int pageNumber, int pageSize)
     {
-        var sells = await _context.Sells.Where(m => m.SellPointId == sellPointId && m.Movement.IsActive).ToListAsync();
-        List<DevolutionDto> devolutionsDto = [];
-        foreach (var s in sells)
-        {
-            var devolutions = _mapper.MapListToDto(await _context.Devolutions.Where(d => d.SellId == s.MovementId && d.IsActive).ToListAsync());
-            devolutionsDto.AddRange(devolutions);
-        }
-        return devolutionsDto;
+        var query = _context.Devolutions.Include(de => de.Sell).Where(de => de.Sell.SellPointId == sellPointId && de.Sell.Movement.IsActive);
+        var totalCount = await query.CountAsync();
+        var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        var devolutionsDto = items.Select(_mapper.MapToDto).ToList();
+        return new PaginatedResult<DevolutionDto>(devolutionsDto, totalCount, pageNumber, pageSize);
     }
-
+  
     public async Task<bool> SoftDeleteDevolutionAsync(int devolutionId)
     {
         try

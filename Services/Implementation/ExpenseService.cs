@@ -3,6 +3,7 @@ using MazErpBack.Context;
 using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,10 +39,13 @@ public class ExpenseService(ExpenseMapper mapper, ILogger<ExpenseService> logger
         return await _context.Expenses.FindAsync(expenseId) ?? throw new KeyNotFoundException($"Expense with id: {expenseId} not found");
     }
 
-    public async Task<List<ExpenseDto>> GetExpensesByCompanyAsync(int companyId)
+    public async Task<PaginatedResult<ExpenseDto>> GetExpensesByCompanyAsync(int companyId, int pageNumber, int pageSize)
     {
-        List<ExpenseDto> expenses = _mapper.MapListToDto(await _context.Expenses.Where(e => e.CompanyId == companyId && e.IsActive).ToListAsync());
-        return expenses;
+        var query = _context.Expenses.Where(e => e.CompanyId == companyId && e.IsActive);
+        var totalCount = await query.CountAsync();
+        var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        var expensesDto = _mapper.MapListToDto(items);
+        return new PaginatedResult<ExpenseDto>(expensesDto, totalCount, pageNumber, pageSize);
     }
 
     public async Task<bool> SoftDeleteExpenseAsync(int expenseId)
