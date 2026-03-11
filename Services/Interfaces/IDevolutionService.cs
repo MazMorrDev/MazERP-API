@@ -1,5 +1,6 @@
 ﻿using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
+using MazErpBack.Utils;
 
 namespace MazErpBack.Services.Interfaces;
 
@@ -10,8 +11,8 @@ public interface IDevolutionService
     public Task DeleteDevolutionAsync(int devolutionId);
 
     // For common users
-    public Task<List<DevolutionDto>> GetDevolutionsByInventoryAsync(int inventoryId); // para el cliente sería como buscar por producto
-    public Task<List<DevolutionDto>> GetDevolutionsBySellPointAsync(int sellPointId);
+    public Task<PaginatedResult<DevolutionDto>> GetDevolutionsByInventoryAsync(int inventoryId, int pageNumber, int pageSize); // para el cliente sería como buscar por producto
+    public Task<PaginatedResult<DevolutionDto>> GetDevolutionsBySellPointAsync(int sellPointId, int pageNumber, int pageSize);
     public Task<DevolutionDto> CreateDevolutionAsync(CreateDevolutionDto devolutionDto);
     public Task<DevolutionDto> UpdateDevolutionAsync(int devolutionId, CreateDevolutionDto devolutionDto);
     public Task<bool> SoftDeleteDevolutionAsync(int devolutionId);

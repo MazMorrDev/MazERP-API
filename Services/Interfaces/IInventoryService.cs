@@ -1,5 +1,6 @@
 ﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
+using MazErpBack.Utils;
 
 namespace MazErpBack.Services.Interfaces;
 
@@ -10,8 +11,8 @@ public interface IInventoryService
     public Task DeleteInventoryAsync(int inventoryId);
 
     // For common users
-    public Task<List<InventoryDto>> GetInventoriesByWarehouseAsync(int inventoryId);
-    public Task<List<InventoryDto>> GetInventoriesByCompanyAsync(int companyId);
+    public Task<PaginatedResult<InventoryDto>> GetInventoriesByWarehouseAsync(int inventoryId, int pageNumber, int pageSize);
+    public Task<PaginatedResult<InventoryDto>> GetInventoriesByCompanyAsync(int companyId, int pageNumber, int pageSize);
     public Task<InventoryDto> CreateInventoryAndProductAsync(CreateInventoryAndProductDto inventoryDto);
     public Task<InventoryDto> CreateInventoryByExistentProductAsync(CreateInventoryByExistentProductDto inventoryDto);
     public Task<InventoryDto> UpdateInventoryAndProductAsync(int inventoryId, UpdateInventoryProductDto inventoryDto);

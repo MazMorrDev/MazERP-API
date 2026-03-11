@@ -1,5 +1,6 @@
 ﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
+using MazErpBack.Utils;
 
 namespace MazErpBack.Services.Interfaces;
 
@@ -10,7 +11,7 @@ public interface IWarehouseService
     public Task DeleteWarehouseAsync(int id);
 
     // For common users
-    public Task<List<WarehouseDto>> GetWarehousesByCompanyAsync(int companyId);
+    public Task<PaginatedResult<WarehouseDto>> GetWarehousesByCompanyAsync(int companyId, int pageNumber, int pageSize);
     public Task<WarehouseDto> CreateWarehouseAsync(CreateWarehouseDto warehouseDto);
     public Task<WarehouseDto> UpdateWarehouseAsync(int WarehouseId, CreateWarehouseDto warehouseDto);
     public Task<bool> SoftDeleteWarehouseAsync(int warehouseId);

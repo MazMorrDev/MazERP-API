@@ -1,5 +1,6 @@
 ﻿using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
+using MazErpBack.Utils;
 
 namespace MazErpBack.Services.Interfaces;
 
@@ -10,10 +11,10 @@ public interface ISellPointService
     public Task DeleteSellPointAsync(int sellPointId);
 
     // For common users
-    public Task<List<SellPointDto>> GetSellPointsByCompanyAsync(int companyId);
+    public Task<PaginatedResult<SellPointDto>> GetSellPointsByCompanyAsync(int companyId, int pageNumber, int pageSize);
     public Task<SellPointInventoryDto> AssignInventoryToSellPointAsync(AssignInventoryToSellPointDto dto);
     public Task<SellPointInventoryDto> UpdateSellPointInventoryAsync(AssignInventoryToSellPointDto dto);
-    public Task<List<SellPointDto>> GetSellPointsByWarehouseAsync(int warehouseId);
+    public Task<PaginatedResult<SellPointDto>> GetSellPointsByWarehouseAsync(int warehouseId, int pageNumber, int pageSize);
     public Task<SellPointDto> CreateSellPointAsync(CreateSellPointDto sellPointDto);
     public Task<SellPointDto> UpdateSellPointAsync(int sellPointId, CreateSellPointDto sellPointDto);
     public Task<bool> SoftDeleteSellPointAsync(int sellPointId);
