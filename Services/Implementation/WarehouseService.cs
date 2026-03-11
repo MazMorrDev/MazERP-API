@@ -2,6 +2,7 @@
 using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -81,12 +82,15 @@ public class WarehouseService(AppDbContext context, WarehouseMapper mapper, ICom
         return _mapper.MapToDto(warehouse);
     }
 
-    public async Task<List<WarehouseDto>> GetWarehousesByCompanyAsync(int companyId)
+    public async Task<PaginatedResult<WarehouseDto>> GetWarehousesByCompanyAsync(int companyId, int pageNumber, int pageSize)
     {
         try
         {
             var warehouses = await _context.Warehouses.Where(w => w.CompanyId == companyId && w.IsActive).ToListAsync();
-            return _mapper.MapListToDto(warehouses);
+            var warehouseDtos = _mapper.MapListToDto(warehouses);
+            var totalCount = warehouseDtos.Count;
+            var items = warehouseDtos.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            return new PaginatedResult<WarehouseDto>(items, totalCount, pageNumber, pageSize);
         }
         catch (Exception)
         {
