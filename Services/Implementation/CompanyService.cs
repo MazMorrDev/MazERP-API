@@ -2,6 +2,7 @@
 using MazErpBack.DTOs.Company;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -99,7 +100,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<UserCompanyDto>> GetCompaniesByUser(int userId)
+    public async Task<PaginatedResult<UserCompanyDto>> GetCompaniesByUser(int userId, int pageNumber, int pageSize)
     {
         var userCompanies = await _context.UserCompanies.Include(uc => uc.Company).Where(uc => uc.UserId == userId && uc.IsActive).ToListAsync();
         List<UserCompanyDto> companiesDto = [];
@@ -107,6 +108,8 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
         {
             companiesDto.Add(_mapper.MapUserCompanyDto(item));
         }
-        return companiesDto;
+        var totalCount = companiesDto.Count;
+        var items = companiesDto.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        return new PaginatedResult<UserCompanyDto>(items, totalCount, pageNumber, pageSize);
     }
 }
