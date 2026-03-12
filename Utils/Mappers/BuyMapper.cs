@@ -3,10 +3,8 @@ using MazErpBack.Models;
 
 namespace MazErpBack.Utils.Mappers;
 
-public class BuyMapper(ILogger<BuyMapper> logger)
+public class BuyMapper()
 {
-    private readonly ILogger<BuyMapper> _logger = logger;
-
     public BuyDto MapToDto(Movement movement, Buy buy)
     {
 
