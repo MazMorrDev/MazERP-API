@@ -67,7 +67,7 @@ public class SellService(AppDbContext context, SellMapper mapper, ISellPointServ
         var query = _context.Sells.Include(m => m.Movement).Where(m => m.SellPointId == sellPointId && m.Movement.IsActive);
         var totalCount = await query.CountAsync();
         var sells = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-        var sellsDto = _mapper.MapListToDto(sells.Select(s => s.Movement).ToList(), sells);
+        var sellsDto = _mapper.MapListToDto([.. sells.Select(s => s.Movement)], sells);
 
         return new PaginatedResult<SellDto>(sellsDto, totalCount, pageNumber, pageSize);
     }

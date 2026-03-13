@@ -56,4 +56,5 @@ public class Inventory
 
     public virtual ICollection<Movement> Movements { get; set; } = new HashSet<Movement>();
     public virtual ICollection<SellPointInventory> SellPointInventories { get; set; } = new HashSet<SellPointInventory>();
+    public virtual ICollection<InventorySupplier> InventorySuppliers { get; set; } = new HashSet<InventorySupplier>();
 }

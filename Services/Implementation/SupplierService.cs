@@ -2,6 +2,7 @@
 using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,20 +57,19 @@ public class SupplierService(AppDbContext context, SupplierMapper mapper, ILogge
 
     }
 
-    public async Task<List<SupplierDto>> GetSuppliersByWarehouseAsync(int warehouseId)
+    public async Task<PaginatedResult<SupplierDto>> GetSuppliersByWarehouseAsync(int warehouseId, int pageNumber, int pageSize)
     {
-        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId && i.IsActive).ToListAsync();
-        List<SupplierDto> suppliersDto = [];
-        foreach (var i in inventories)
-        {
-            var inventorySuppliers = await _context.InventorySuppliers.Where(invSup => invSup.InventoryId == i.Id).ToListAsync();
-            foreach (var invSup in inventorySuppliers)
-            {
-                var suppliers = await _context.Suppliers.Where(s => s.Id == invSup.SupplierId && s.IsActive).ToListAsync();
-                suppliersDto.AddRange(_mapper.MapListToDto(suppliers));
-            }
-        }
-        return suppliersDto;
+        var query = _context.Inventories
+            .Where(i => i.WarehouseId == warehouseId && i.IsActive)
+            .SelectMany(i => i.InventorySuppliers)
+            .Select(si => si.Supplier).Distinct();
+        var totalCount = await query.CountAsync();
+        var suppliers = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize).ToListAsync();
+        var suppliersDto = suppliers.Select(_mapper.MapToDto).ToList();
+
+        return new PaginatedResult<SupplierDto>(suppliersDto, totalCount, pageNumber, pageSize);
     }
 
     public async Task<bool> SoftDeleteSupplierAsync(int supplierId)
