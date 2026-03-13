@@ -3,7 +3,6 @@ using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
 using MazErpBack.Utils.Mappers;
-using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
@@ -34,28 +33,6 @@ public class ProductService(AppDbContext context, ProductMapper mapper) : IProdu
     {
         var product = await _context.Products.FindAsync(productId) ?? throw new KeyNotFoundException($"Product with id: {productId} not found");
         return product;
-    }
-
-    public async Task<List<Product>> GetProductsByCompanyAsync(int companyId)
-    {
-        var warehouses = _context.Warehouses.Where(w => w.CompanyId == companyId && w.IsActive);
-        List<Product> products = [];
-        foreach (var w in warehouses)
-        {
-            products.AddRange(await GetProductsByWarehouseAsync(w.Id));
-        }
-        return products;
-    }
-
-    public async Task<List<Product>> GetProductsByWarehouseAsync(int warehouseId)
-    {
-        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId && i.IsActive).ToListAsync();
-        List<Product> products = [];
-        foreach (var inventory in inventories)
-        {
-            products.AddRange(await _context.Products.Where(p => p.Id == inventory.Id).ToListAsync());
-        }
-        return products;
     }
 
     public async Task<Product> UpdateProductAsync(int productId, UpdateInventoryProductDto productDto)
