@@ -38,7 +38,7 @@ public class CompanyService(AppDbContext context, ILogger<CompanyService> logger
                 User = user,
                 Company = company
             };
-
+        
             await _context.UserCompanies.AddAsync(userCompany);
             await _context.SaveChangesAsync();
             return _mapper.MapUserCompanyDto(userCompany);

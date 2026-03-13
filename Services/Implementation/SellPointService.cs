@@ -2,6 +2,7 @@
 using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -92,32 +93,46 @@ public class SellPointService(AppDbContext context, SellPointMapper mapper, IInv
         return sellPoint;
     }
 
-    public async Task<List<SellPointDto>> GetSellPointsByCompanyAsync(int companyId)
+    public async Task<PaginatedResult<SellPointDto>> GetSellPointsByCompanyAsync(int companyId, int pageNumber, int pageSize)
     {
-        var warehouses = await _context.Warehouses.Where(w => w.CompanyId == companyId).ToListAsync();
-        List<SellPointDto> sellPointsDto = [];
-        foreach (var warehouse in warehouses)
-        {
-            sellPointsDto.AddRange(await GetSellPointsByWarehouseAsync(warehouse.Id));
-        }
-        return sellPointsDto;
-    }
+        var query = _context.Inventories
+            .Where(i => i.Warehouse.CompanyId == companyId && i.IsActive)
+            .SelectMany(i => i.SellPointInventories)
+            .Select(spi => spi.SellPoint)
+            .Distinct();
 
-    public async Task<List<SellPointDto>> GetSellPointsByWarehouseAsync(int warehouseId)
+        var totalCount = await query.CountAsync();
+
+        var sellPoints = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var sellPointsDto = sellPoints.Select(_mapper.MapToDto).ToList();
+
+        return new PaginatedResult<SellPointDto>(sellPointsDto, totalCount, pageNumber, pageSize);
+    }
+    
+    public async Task<PaginatedResult<SellPointDto>> GetSellPointsByWarehouseAsync(int warehouseId, int pageNumber, int pageSize)
     {
-        var inventories = await _context.Inventories.Where(i => i.WarehouseId == warehouseId && i.IsActive).ToListAsync();
-        List<SellPointDto> sellPointsDto = [];
-        foreach (var inventory in inventories)
-        {
-            // TODO: ver bien como se hace esta consulta teniendo en cuenta que hay 2 keys
-            var sellPointInventories = await _context.SellPointInventories.Where(spi => spi.InventoryId == inventory.Id).ToListAsync();
-            foreach (var sellPointsInventory in sellPointInventories)
-            {
-                var sellPoint = await GetSellPointByIdAsync(sellPointsInventory.SellPointId);
-                if (sellPoint != null) sellPointsDto.Add(_mapper.MapToDto(sellPoint));
-            }
-        }
-        return sellPointsDto;
+        var query = _context.Inventories
+            .Where(i => i.WarehouseId == warehouseId && i.IsActive)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize);
+
+        var totalCount = await _context.Inventories
+            .Where(i => i.WarehouseId == warehouseId && i.IsActive)
+            .CountAsync();
+
+        var sellPointsDto = await query
+            .SelectMany(inventory => inventory.SellPointInventories)
+            .Select(spi => spi.SellPoint)
+            .Where(sellPoint => sellPoint != null)
+            .Distinct() // Optional: remove duplicates if an inventory can have the same sell point
+            .Select(sellPoint => _mapper.MapToDto(sellPoint))
+            .ToListAsync();
+
+        return new PaginatedResult<SellPointDto>(sellPointsDto, totalCount, pageNumber, pageSize);
     }
 
     public async Task<bool> SoftDeleteSellPointAsync(int sellPointId)

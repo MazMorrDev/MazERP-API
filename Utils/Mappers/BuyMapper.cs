@@ -7,7 +7,6 @@ public class BuyMapper()
 {
     public BuyDto MapToDto(Movement movement, Buy buy)
     {
-
         return new BuyDto
         {
             MovementId = movement.Id,
