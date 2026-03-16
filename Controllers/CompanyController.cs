@@ -15,9 +15,16 @@ public class CompanyController(ICompanyService service, ILogger<CompanyControlle
     private readonly ILogger<CompanyController> _logger = logger;
 
     [HttpGet("by-user/{userId}")]
-    public async Task<IActionResult> GetCompaniesByUser(int userId)
+    public async Task<IActionResult> GetCompaniesByUser(int userId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        return Ok(await _service.GetCompaniesByUser(userId));
+        try
+        {
+            return Ok(await _service.GetCompaniesByUser(userId, pageNumber, pageSize));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpPost("assign")]
