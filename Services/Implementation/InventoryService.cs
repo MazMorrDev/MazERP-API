@@ -118,8 +118,8 @@ public class InventoryService(
             var query = _context.Inventories.Include(i => i.Product).Where(i => i.WarehouseId.Equals(warehouseId) && i.IsActive);
             var totalCount = await query.CountAsync();
             var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            
             List<InventoryDto> inventoriesDto = [];
-
             foreach (var item in items)
             {
                 inventoriesDto.Add(_mapper.MapToDto(item, item.Product));
@@ -135,12 +135,16 @@ public class InventoryService(
 
     public async Task<PaginatedResult<InventoryDto>> GetInventoriesByCompanyAsync(int companyId, int pageNumber, int pageSize)
     {
-        var warehouses = await _context.Warehouses.Where(c => c.CompanyId.Equals(companyId) && c.IsActive).ToListAsync();
+        var query = _context.Warehouses.Where(c => c.CompanyId == companyId && c.IsActive).SelectMany(c => c.Inventories);
+        var totalCount = await query.CountAsync();
+        var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        
         List<InventoryDto> inventoriesDto = [];
-        foreach (var warehouse in warehouses)
+        foreach (var item in items)
         {
-            inventoriesDto.AddRange(await GetInventoriesByWarehouseAsync(warehouse.Id));
+            inventoriesDto.Add(_mapper.MapToDto(item, item.Product));
         }
-        return inventoriesDto;
+
+        return new PaginatedResult<InventoryDto>(inventoriesDto, totalCount, pageNumber, pageSize);
     }
 }
