@@ -14,20 +14,29 @@ public class BuyController(IBuyService service, ILogger<BuyController> logger) :
     public ILogger<BuyController> _logger = logger;
 
     [HttpGet("by-inventory/{inventoryId}")]
-    public async Task<IActionResult> GetBuysByInventory(int inventoryId)
+    public async Task<IActionResult> GetBuysByInventory(
+        int inventoryId, [FromHeader(Name = "companyId")] int companyId,
+        [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10
+    )
     {
         try
         {
-            return Ok(await _service.GetBuysByInventoryAsync(inventoryId));
+            // Validaciones
+            if (pageNumber < 1 || pageSize < 1 || pageSize > 100)
+                return BadRequest("Parámetros de paginación inválidos");
+
+            var result = await _service.GetBuysByInventoryAsync(inventoryId, pageNumber, pageSize);
+            return Ok(result);
         }
         catch (Exception ex)
         {
+            // Logear el error aquí
             return StatusCode(500, ex.Message);
         }
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateBuy([FromHeader(Name = "companyId")] int companyId, CreateBuyDto createBuyDto)
+    public async Task<IActionResult> CreateBuy(CreateBuyDto createBuyDto, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -40,7 +49,7 @@ public class BuyController(IBuyService service, ILogger<BuyController> logger) :
     }
 
     [HttpDelete("{buyId}")]
-    public async Task<IActionResult> DeleteBuy([FromHeader(Name = "companyId")] int companyId, int buyId)
+    public async Task<IActionResult> DeleteBuy(int buyId, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -53,7 +62,7 @@ public class BuyController(IBuyService service, ILogger<BuyController> logger) :
     }
 
     [HttpPut("{buyId}")]
-    public async Task<IActionResult> UpdateBuy([FromHeader(Name = "companyId")] int companyId, CreateBuyDto buyDto, int buyId)
+    public async Task<IActionResult> UpdateBuy(CreateBuyDto buyDto, int buyId, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
