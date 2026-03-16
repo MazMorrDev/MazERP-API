@@ -74,16 +74,11 @@ public class WarehouseController(IWarehouseService warehouseService) : Controlle
     }
 
     [HttpGet("by-company/{companyId:int}")]
-    public async Task<IActionResult> GetWarehousesByCompany(int companyId)
+    public async Task<IActionResult> GetWarehousesByCompany(int companyId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         try
         {
-            var warehouses = await _warehouseService.GetWarehousesByCompanyAsync(companyId);
-
-            if (warehouses == null || warehouses.Count == 0)
-                return NotFound($"No se encontraron almacenes para la empresa {companyId}");
-
-            return Ok(warehouses);
+            return Ok(await _warehouseService.GetWarehousesByCompanyAsync(companyId, pageNumber, pageSize));
         }
         catch (KeyNotFoundException ex)
         {
