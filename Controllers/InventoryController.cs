@@ -13,11 +13,14 @@ public class InventoryController(IInventoryService service) : ControllerBase
     private readonly IInventoryService _service = service;
 
     [HttpGet("by-warehouse{warehouseId}")]
-    public async Task<IActionResult> GetInventoriesByWarehouse(int warehouseId, [FromHeader(Name = "companyId")] int companyId)
+    public async Task<IActionResult> GetInventoriesByWarehouse(
+        int warehouseId, [FromHeader(Name = "companyId")] int companyId,
+        [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10
+    )
     {
         try
         {
-            return Ok(await _service.GetInventoriesByWarehouseAsync(warehouseId));
+            return Ok(await _service.GetInventoriesByWarehouseAsync(warehouseId, pageNumber, pageSize));
         }
         catch (Exception)
         {
