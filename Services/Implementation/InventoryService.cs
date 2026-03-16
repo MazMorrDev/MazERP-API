@@ -2,13 +2,14 @@
 using MazErpBack.DTOs.Inventory;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
+using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpBack.Services.Implementation;
 
 public class InventoryService(
-    AppDbContext context, InventoryMapper mapper, IProductService productService, 
+    AppDbContext context, InventoryMapper mapper, IProductService productService,
     IWarehouseService warehouseService, ILogger<InventoryService> logger) : IInventoryService
 {
     private readonly AppDbContext _context = context;
@@ -110,19 +111,21 @@ public class InventoryService(
         }
     }
 
-    public async Task<List<InventoryDto>> GetInventoriesByWarehouseAsync(int warehouseId)
+    public async Task<PaginatedResult<InventoryDto>> GetInventoriesByWarehouseAsync(int warehouseId, int pageNumber, int pageSize)
     {
         try
         {
-            var inventories = await _context.Inventories.Where(i => i.WarehouseId.Equals(warehouseId) && i.IsActive).ToListAsync();
-            List<Product> products = [];
-            foreach (var item in inventories)
+            var query = _context.Inventories.Include(i => i.Product).Where(i => i.WarehouseId.Equals(warehouseId) && i.IsActive);
+            var totalCount = await query.CountAsync();
+            var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            List<InventoryDto> inventoriesDto = [];
+
+            foreach (var item in items)
             {
-                var product = await _productService.GetProductByIdAsync(item.ProductId);
-                products.Add(product);
+                inventoriesDto.Add(_mapper.MapToDto(item, item.Product));
             }
 
-            return _mapper.MapListToDto(inventories, products);
+            return new PaginatedResult<InventoryDto>(inventoriesDto, totalCount, pageNumber, pageSize);
         }
         catch (Exception)
         {
@@ -130,7 +133,7 @@ public class InventoryService(
         }
     }
 
-    public async Task<List<InventoryDto>> GetInventoriesByCompanyAsync(int companyId)
+    public async Task<PaginatedResult<InventoryDto>> GetInventoriesByCompanyAsync(int companyId, int pageNumber, int pageSize)
     {
         var warehouses = await _context.Warehouses.Where(c => c.CompanyId.Equals(companyId) && c.IsActive).ToListAsync();
         List<InventoryDto> inventoriesDto = [];
