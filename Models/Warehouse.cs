@@ -30,5 +30,5 @@ public class Warehouse
     [ForeignKey("CompanyId")]
     public required virtual Company Company { get; set; }
 
-        public virtual ICollection<Inventory> Inventories { get; set; } = new HashSet<Inventory>();
+    public virtual ICollection<Inventory> Inventories { get; set; } = new HashSet<Inventory>();
 }

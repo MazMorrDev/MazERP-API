@@ -115,15 +115,11 @@ public class InventoryService(
     {
         try
         {
-            var query = _context.Inventories.Include(i => i.Product).Where(i => i.WarehouseId.Equals(warehouseId) && i.IsActive);
-            var totalCount = await query.CountAsync();
-            var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-            
-            List<InventoryDto> inventoriesDto = [];
-            foreach (var item in items)
-            {
-                inventoriesDto.Add(_mapper.MapToDto(item, item.Product));
-            }
+            var warehouse = await _warehouseService.GetWarehouseByIdAsync(warehouseId);
+            var inventories = warehouse.Inventories.ToList();
+            var products = inventories.Select(i => i.Product).ToList();
+            var inventoriesDto = _mapper.MapListToDto(warehouse.Inventories.ToList(), products);
+            var totalCount = inventories.Count;
 
             return new PaginatedResult<InventoryDto>(inventoriesDto, totalCount, pageNumber, pageSize);
         }
@@ -138,7 +134,7 @@ public class InventoryService(
         var query = _context.Warehouses.Where(c => c.CompanyId == companyId && c.IsActive).SelectMany(c => c.Inventories);
         var totalCount = await query.CountAsync();
         var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-        
+
         List<InventoryDto> inventoriesDto = [];
         foreach (var item in items)
         {
