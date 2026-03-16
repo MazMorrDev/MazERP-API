@@ -36,7 +36,7 @@ public class BuyController(IBuyService service, ILogger<BuyController> logger) :
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateBuy(CreateBuyDto createBuyDto, [FromHeader(Name = "companyId")] int companyId)
+    public async Task<IActionResult> CreateBuy([FromBody] CreateBuyDto createBuyDto, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
@@ -62,7 +62,7 @@ public class BuyController(IBuyService service, ILogger<BuyController> logger) :
     }
 
     [HttpPut("{buyId}")]
-    public async Task<IActionResult> UpdateBuy(CreateBuyDto buyDto, int buyId, [FromHeader(Name = "companyId")] int companyId)
+    public async Task<IActionResult> UpdateBuy([FromBody] CreateBuyDto buyDto, int buyId, [FromHeader(Name = "companyId")] int companyId)
     {
         try
         {
