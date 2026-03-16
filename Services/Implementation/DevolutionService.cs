@@ -1,4 +1,5 @@
-﻿using MazErpBack.Context;
+﻿using System.Collections;
+using MazErpBack.Context;
 using MazErpBack.DTOs.Movements;
 using MazErpBack.Models;
 using MazErpBack.Services.Interfaces;
@@ -64,20 +65,20 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
     public async Task<PaginatedResult<DevolutionDto>> GetDevolutionsByInventoryAsync(int inventoryId, int pageNumber, int pageSize)
     {
-        var sellPointsInventories = await _context.SellPointInventories.Where(spi => spi.InventoryId == inventoryId).ToListAsync();
+        var query = _context.SellPointInventories
+            .Include(spi => spi.SellPoint)
+            .Where(spi => spi.InventoryId == inventoryId && spi.SellPoint.IsActive);
+        var totalCount = await query.CountAsync();
+        var items = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize).ToListAsync();
         List<DevolutionDto> devolutionsDto = [];
-        foreach (var spi in sellPointsInventories)
+        foreach (var item in items)
         {
-            var sellPoints = await _context.SellPoints.Where(sp => sp.Id.Equals(spi.SellPointId) && sp.IsActive).ToListAsync();
-            foreach (var sp in sellPoints)
-            {
-                devolutionsDto.AddRange(GetDevolutionsBySellPointAsync(sp.Id, pageNumber, pageSize).Result.Items.ToList());
-            }
+            devolutionsDto.AddRange(GetDevolutionsBySellPointAsync(item.SellPointId, pageNumber, pageSize).Result.Items.ToList());
         }
-        var totalCount = devolutionsDto.Count;
 
-
-        return new PaginatedResult<DevolutionDto>(items, totalCount, pageNumber, pageSize);
+        return new PaginatedResult<DevolutionDto>(devolutionsDto, totalCount, pageNumber, pageSize);
     }
 
     public async Task<PaginatedResult<DevolutionDto>> GetDevolutionsBySellPointAsync(int sellPointId, int pageNumber, int pageSize)
@@ -88,7 +89,7 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
         var devolutionsDto = items.Select(_mapper.MapToDto).ToList();
         return new PaginatedResult<DevolutionDto>(devolutionsDto, totalCount, pageNumber, pageSize);
     }
-  
+
     public async Task<bool> SoftDeleteDevolutionAsync(int devolutionId)
     {
         try
