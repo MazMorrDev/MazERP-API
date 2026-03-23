@@ -1,0 +1,39 @@
+info:
+  name: Update Buy
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: http://localhost:5148/api/buy/{{buyId}}
+  body:
+    type: json
+    data: |-
+      {
+        "userId":{{userId}},
+        "inventoryId":1,
+        "supplierId":1,
+        "quantity":30,
+        "currency":1,
+        "movementDate":"2025-03-23T12:00:00Z",
+        "description":"Updated test buy",
+        "deliveryStatus":2,
+        "unitaryCost":30.00,
+        "receivedQuantity":30
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

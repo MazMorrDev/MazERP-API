@@ -1,0 +1,45 @@
+info:
+  name: Create Inventory
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:5148/api/inventory
+  body:
+    type: json
+    data: |-
+      {
+        "productName":"Test Product",
+        "productDescription":"Test description",
+        "photoUrl":"https://example.com/photo.jpg",
+        "productCategory":1,
+        "warehouseId":1,
+        "stock":100,
+        "baseDiscount":5,
+        "basePrice":50.00,
+        "averageCost":30.00,
+        "alertStock":10,
+        "warningStock":20
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+    - type: after-response
+      code: |-
+        bru.setGlobalEnvVar("inventoryId", res.body.id);
+        bru.setGlobalEnvVar("productId", res.body.productId);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

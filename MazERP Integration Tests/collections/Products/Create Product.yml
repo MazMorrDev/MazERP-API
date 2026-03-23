@@ -1,0 +1,44 @@
+info:
+  name: Create Product
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:5148/api/product
+  body:
+    type: json
+    data: |-
+      {
+        "productName":"Standalone Product",
+        "productDescription":"Test standalone product",
+        "photoUrl":"https://example.com/product.jpg",
+        "productCategory":1,
+        "warehouseId":1,
+        "stock":50,
+        "baseDiscount":5,
+        "basePrice":100.00,
+        "averageCost":60.00,
+        "alertStock":5,
+        "warningStock":10
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+    - type: after-response
+      code: |-
+        bru.setGlobalEnvVar("productId", res.body.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
