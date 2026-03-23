@@ -28,10 +28,19 @@ public class BuyController(IBuyService service, ILogger<BuyController> logger) :
             var result = await _service.GetBuysByInventoryAsync(inventoryId, pageNumber, pageSize);
             return Ok(result);
         }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound($"Recurso no encontrado: {ex.Message}");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid($"Permiso denegado: {ex.Message}");
+        }
         catch (Exception ex)
         {
             // Logear el error aquí
-            return StatusCode(500, ex.Message);
+            _logger.LogError(ex, "Error en GetBuysByInventory");
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }
     }
 
@@ -42,9 +51,22 @@ public class BuyController(IBuyService service, ILogger<BuyController> logger) :
         {
             return Ok(await _service.CreateBuyAsync(createBuyDto));
         }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound($"Recurso no encontrado: {ex.Message}");
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest($"Datos inválidos: {ex.Message}");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid($"Permiso denegado: {ex.Message}");
+        }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            _logger.LogError(ex, "Error en CreateBuy");
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }
     }
 
@@ -53,11 +75,31 @@ public class BuyController(IBuyService service, ILogger<BuyController> logger) :
     {
         try
         {
-            return Ok(await _service.SoftDeleteBuyAsync(buyId));
+            var deleted = await _service.SoftDeleteBuyAsync(buyId);
+
+            if (deleted)
+                return NoContent(); // 204 - Eliminación exitosa
+            else
+                return NotFound($"Compra con ID {buyId} no encontrada");
+        }
+        catch (InvalidOperationException ex)
+        {
+            // Ej: La compra tiene movimientos asociados
+            return Conflict(new
+            {
+                Error = "No se puede eliminar",
+                Details = ex.Message
+            });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid(); // 403 - Sin permisos
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            // Log the exception here
+            _logger.LogError(ex, "Error en DeleteBuy");
+            return StatusCode(500, $"Error interno del servidor {ex.Message}");
         }
     }
 
@@ -68,9 +110,22 @@ public class BuyController(IBuyService service, ILogger<BuyController> logger) :
         {
             return Ok(await _service.UpdateBuyAsync(buyId, buyDto));
         }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound($"Recurso no encontrado: {ex.Message}");
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest($"Datos inválidos: {ex.Message}");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid($"Permiso denegado: {ex.Message}");
+        }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            _logger.LogError(ex, "Error en UpdateBuy");
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }
     }
 }

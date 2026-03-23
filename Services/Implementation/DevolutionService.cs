@@ -63,20 +63,28 @@ public class DevolutionService(AppDbContext context, DevolutionMapper mapper, IL
 
     }
 
-    public async Task<PaginatedResult<DevolutionDto>> GetDevolutionsByInventoryAsync(int inventoryId, int pageNumber, int pageSize)
+    public async Task<PaginatedResult<DevolutionDto>> GetDevolutionsByInventoryAsync(
+        int inventoryId, int pageNumber, int pageSize)
     {
-        var query = _context.SellPointInventories
-            .Include(spi => spi.SellPoint)
-            .Where(spi => spi.InventoryId == inventoryId && spi.SellPoint.IsActive);
+        // Consulta única que obtiene todas las devoluciones del inventario
+        var query = _context.Devolutions
+            .Include(de => de.Sell)
+                .ThenInclude(s => s.SellPoint)
+            .Where(de => de.Sell.SellPointId != 0
+                         && de.Sell.Movement.IsActive
+                         && de.Sell.SellPoint.IsActive
+                         && _context.SellPointInventories.Any(spi =>
+                             spi.SellPointId == de.Sell.SellPointId &&
+                             spi.InventoryId == inventoryId));
+
         var totalCount = await query.CountAsync();
+
         var items = await query
             .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize).ToListAsync();
-        List<DevolutionDto> devolutionsDto = [];
-        foreach (var item in items)
-        {
-            devolutionsDto.AddRange(GetDevolutionsBySellPointAsync(item.SellPointId, pageNumber, pageSize).Result.Items.ToList());
-        }
+            .Take(pageSize)
+            .ToListAsync();
+
+        var devolutionsDto = items.Select(_mapper.MapToDto).ToList();
 
         return new PaginatedResult<DevolutionDto>(devolutionsDto, totalCount, pageNumber, pageSize);
     }

@@ -40,4 +40,7 @@ public class Devolution
     // Navigation Properties
     [ForeignKey("SellId")]
     public required virtual Sell Sell { get; set; }
+
+
+
 }
