@@ -8,6 +8,17 @@ collections:
     path: "collections/Users"
   - name: "Company"
     path: "collections/Company"
+  - name: "Inventory"
+    path: "collections/Inventory"
+  - name: "Products"
+    path: "collections/Products"
+  - name: "Sells"
+    path: "collections/Sells"
+  - name: "Buys"
+    path: "collections/Buys"
+  - name: "Warehouses"
+    path: "collections/Warehouses"
+
 
 specs:
 
