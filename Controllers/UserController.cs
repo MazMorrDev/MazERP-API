@@ -18,8 +18,17 @@ public class UserController(IUserService userService) : ControllerBase
             var createUser = await _userService.RegisterUserAsync(createUserDto);
             return Ok(createUser);
         }
-        catch (Exception)
+        catch (ArgumentException ex)
         {
+            return BadRequest($"Datos inválidos: {ex.Message}");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict($"Conflicto: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Log the exception here (assuming there's a logger available)
             return StatusCode(500, new { error = "An error occurred while processing your request." });
         }
     }
@@ -36,9 +45,18 @@ public class UserController(IUserService userService) : ControllerBase
             }
             return Ok(token);
         }
-        catch (Exception)
+        catch (ArgumentException ex)
         {
-            throw;
+            return BadRequest($"Datos inválidos: {ex.Message}");
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound($"Recurso no encontrado: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Log the exception here
+            return StatusCode(500, new { error = "An error occurred while processing your request." });
         }
     }
 
