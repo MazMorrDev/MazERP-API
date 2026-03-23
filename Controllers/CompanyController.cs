@@ -19,11 +19,25 @@ public class CompanyController(ICompanyService service, ILogger<CompanyControlle
     {
         try
         {
-            return Ok(await _service.GetCompaniesByUser(userId, pageNumber, pageSize));
+            // Validaciones
+            if (pageNumber < 1 || pageSize < 1 || pageSize > 100)
+                return BadRequest("Parámetros de paginación inválidos");
+
+            var result = await _service.GetCompaniesByUser(userId, pageNumber, pageSize);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound($"Recurso no encontrado: {ex.Message}");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid($"Permiso denegado: {ex.Message}");
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            _logger.LogError(ex, "Error en GetCompaniesByUser");
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }
     }
 
@@ -34,14 +48,22 @@ public class CompanyController(ICompanyService service, ILogger<CompanyControlle
         {
             return Ok(await _service.AddUserToCompanyAsync(dto, companyId));
         }
-        catch (KeyNotFoundException)
+        catch (KeyNotFoundException ex)
         {
-            return NotFound("User or Company not found");
+            return NotFound($"Recurso no encontrado: {ex.Message}");
+        }
+        catch (BadHttpRequestException ex)
+        {
+            return BadRequest($"Solicitud inválida: {ex.Message}");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid($"Permiso denegado: {ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            return StatusCode(500, "An error occurred while assigning the Company to the user. Check logs for details or try again later.");
+            _logger.LogError(ex, "Error en AddUserToCompany");
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }
     }
 
@@ -54,16 +76,25 @@ public class CompanyController(ICompanyService service, ILogger<CompanyControlle
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex.Message);
+            return NotFound($"Recurso no encontrado: {ex.Message}");
         }
         catch (NpgsqlException ex)
         {
-            return StatusCode(500, ex.Message);
+            _logger.LogError(ex, "Error de base de datos en CreateCompany");
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest($"Datos inválidos: {ex.Message}");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid($"Permiso denegado: {ex.Message}");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return StatusCode(500, "An error occurred while assigning the Company to the user. Check logs for details or try again later.");
+            _logger.LogError(ex, "Error en CreateCompany");
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }
     }
 
@@ -72,11 +103,30 @@ public class CompanyController(ICompanyService service, ILogger<CompanyControlle
     {
         try
         {
-            return Ok(await _service.SoftDeleteCompanyAsync(companyId));
+            var deleted = await _service.SoftDeleteCompanyAsync(companyId);
+
+            if (deleted)
+                return NoContent(); // 204 - Eliminación exitosa
+            else
+                return NotFound($"Empresa con ID {companyId} no encontrada");
         }
-        catch (Exception)
+        catch (InvalidOperationException ex)
         {
-            throw;
+            // Ej: La empresa tiene usuarios asociados
+            return Conflict(new
+            {
+                Error = "No se puede eliminar",
+                Details = ex.Message
+            });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid(); // 403 - Sin permisos
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error en DeleteCompany");
+            return StatusCode(500, $"Error interno del servidor {ex.Message}");
         }
     }
 }
