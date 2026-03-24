@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazErpBack", "MazErpBack.csproj", "{B8A1FA16-D9DE-2209-EAE0-E96C34EDCF07}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GithubUserActivity", "..\..\..\C#\GithubUserActivity\GithubUserActivity.csproj", "{FEDBEC3A-7C2E-4120-B49F-F0F39A8EBB21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazErpAPI", "MazErpAPI.csproj", "{B8A1FA16-D9DE-2209-EAE0-E96C34EDCF07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
