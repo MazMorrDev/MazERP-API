@@ -29,7 +29,7 @@ public class UserController(IUserService userService) : ControllerBase
         catch (Exception ex)
         {
             // Log the exception here (assuming there's a logger available)
-            return StatusCode(500, new { error = "An error occurred while processing your request." });
+            return StatusCode(500, new { error = $"An error occurred while processing your request: {ex.Message}" });
         }
     }
 
@@ -56,7 +56,7 @@ public class UserController(IUserService userService) : ControllerBase
         catch (Exception ex)
         {
             // Log the exception here
-            return StatusCode(500, new { error = "An error occurred while processing your request." });
+            return StatusCode(500, new { error = $"An error occurred while processing your request: {ex.Message}." });
         }
     }
 
