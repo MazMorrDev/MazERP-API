@@ -10,8 +10,6 @@ collections:
     path: "collections/Company"
   - name: "Inventory"
     path: "collections/Inventory"
-  - name: "Products"
-    path: "collections/Products"
   - name: "Sells"
     path: "collections/Sells"
   - name: "Buys"
@@ -19,9 +17,8 @@ collections:
   - name: "Warehouses"
     path: "collections/Warehouses"
 
-
 specs:
 
 docs: ''
 
-activeEnvironmentUid: 17u6hf700000000000000
+activeEnvironmentUid: lhii6v000000000000000
