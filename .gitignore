@@ -1,6 +1,8 @@
 # Debug folders
-bin/*
-obj/*
+bin/
+obj/
+UnitTests/bin/
+UnitTests/obj/
 
 # Personal Configuration Folders
 *.user
