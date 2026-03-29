@@ -1,0 +1,39 @@
+info:
+  name: Create Supplier
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:5148/api/supplier
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Test Supplier",
+        "contactPerson": "John Doe",
+        "email": "test@supplier.com",
+        "phone": "123456789",
+        "location": "Test Location",
+        "rating": 5
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+    - type: after-response
+      code: |-
+        bru.setGlobalEnvVar("supplierId", res.body.supplierId);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

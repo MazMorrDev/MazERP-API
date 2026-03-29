@@ -1,0 +1,36 @@
+info:
+  name: Create SellPoint
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:5148/api/sellpoint
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Test Sell Point",
+        "description": "Test Description",
+        "location": "Test Location"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+    - type: after-response
+      code: |-
+        bru.setGlobalEnvVar("sellPointId", res.body.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,35 @@
+info:
+  name: Update Supplier
+  type: http
+  seq: 1
+
+http:
+  method: PUT
+  url: http://localhost:5148/api/supplier/{{supplierId}}
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Updated Supplier",
+        "contactPerson": "Jane Smith",
+        "email": "updated@supplier.com",
+        "phone": "987654321",
+        "location": "Updated Location",
+        "rating": 4
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
