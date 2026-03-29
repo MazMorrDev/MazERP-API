@@ -2,6 +2,19 @@ info:
   name: Delete SellPoint
   type: http
   seq: 1
+  description: Deletes a sell point by its ID
+  documentation: |
+    This endpoint allows authenticated users to delete a sell point from the system.
+    
+    Request:
+    - Method: DELETE
+    - URL: /api/sellpoint/{sellPointId}
+    - Auth: Requires Bearer token in Authorization header
+    - Headers: companyId (ID of the company)
+    
+    Response:
+    - Success: Returns confirmation of deletion
+    - Error: Returns appropriate error message for sell point not found or unauthorized access
 
 http:
   method: DELETE

@@ -2,6 +2,20 @@ info:
   name: Create Supplier
   type: http
   seq: 1
+  description: Creates a new supplier in the system
+  documentation: |
+    This endpoint allows authenticated users to create a new supplier.
+    
+    Request:
+    - Method: POST
+    - URL: /api/supplier
+    - Body: JSON with supplier details (name, contactPerson, email, phone, location, rating)
+    - Auth: Requires Bearer token in Authorization header
+    - Headers: companyId (ID of the company)
+    
+    Response:
+    - Success: Returns the created supplier data including its ID
+    - Error: Returns appropriate error message for validation failures or unauthorized access
 
 http:
   method: POST

@@ -2,6 +2,20 @@ info:
   name: Update Sell
   type: http
   seq: 3
+  description: Updates an existing sale transaction by its ID
+  documentation: |
+    This endpoint allows authenticated users to update an existing sale transaction's details.
+    
+    Request:
+    - Method: PUT
+    - URL: /api/sell/{sellId}
+    - Body: JSON with updated sale details
+    - Auth: Requires Bearer token in Authorization header
+    - Headers: companyId (ID of the company)
+    
+    Response:
+    - Success: Returns the updated sale transaction data
+    - Error: Returns appropriate error message for validation failures, sale not found, or unauthorized access
 
 http:
   method: PUT

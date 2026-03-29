@@ -2,6 +2,18 @@ info:
   name: Login
   type: http
   seq: 1
+  description: Authenticates a user and returns an access token
+  documentation: |
+    This endpoint allows users to log in to the system by providing their email and password.
+    
+    Request:
+    - Method: POST
+    - URL: /api/user/login
+    - Body: JSON with email and password fields
+    
+    Response:
+    - Success: Returns user data and authentication token
+    - Error: Returns appropriate error message for invalid credentials
 
 http:
   method: POST

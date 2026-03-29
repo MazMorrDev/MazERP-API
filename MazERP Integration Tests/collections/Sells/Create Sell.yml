@@ -2,6 +2,20 @@ info:
   name: Create Sell
   type: http
   seq: 1
+  description: Creates a new sale transaction in the system
+  documentation: |
+    This endpoint allows authenticated users to record a new sale transaction.
+    
+    Request:
+    - Method: POST
+    - URL: /api/sell
+    - Body: JSON with sale details (userId, sellPointId, quantity, etc.)
+    - Auth: Requires Bearer token in Authorization header
+    - Headers: companyId (ID of the company)
+    
+    Response:
+    - Success: Returns the created sale transaction data including its ID
+    - Error: Returns appropriate error message for validation failures or unauthorized access
 
 http:
   method: POST

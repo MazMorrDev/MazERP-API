@@ -2,6 +2,18 @@ info:
   name: Get Warehouse
   type: http
   seq: 2
+  description: Retrieves a specific warehouse by its ID
+  documentation: |
+    This endpoint returns the details of a warehouse based on its unique identifier.
+    
+    Request:
+    - Method: GET
+    - URL: /api/warehouse/{warehouseId}
+    - Auth: Requires Bearer token in Authorization header
+    
+    Response:
+    - Success: Returns the warehouse object with all its details
+    - Error: Returns appropriate error message for invalid warehouse ID or unauthorized access
 
 http:
   method: GET

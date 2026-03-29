@@ -2,6 +2,20 @@ info:
   name: Update Product
   type: http
   seq: 3
+  description: Updates an existing product by its ID
+  documentation: |
+    This endpoint allows authenticated users to update an existing product's details.
+    
+    Request:
+    - Method: PUT
+    - URL: /api/product/{productId}
+    - Body: JSON with updated product details
+    - Auth: Requires Bearer token in Authorization header
+    - Headers: companyId (ID of the company)
+    
+    Response:
+    - Success: Returns the updated product data
+    - Error: Returns appropriate error message for validation failures, product not found, or unauthorized access
 
 http:
   method: PUT

@@ -2,6 +2,20 @@ info:
   name: Update Supplier
   type: http
   seq: 1
+  description: Updates an existing supplier by its ID
+  documentation: |
+    This endpoint allows authenticated users to update an existing supplier's details.
+    
+    Request:
+    - Method: PUT
+    - URL: /api/supplier/{supplierId}
+    - Body: JSON with updated supplier details
+    - Auth: Requires Bearer token in Authorization header
+    - Headers: companyId (ID of the company)
+    
+    Response:
+    - Success: Returns the updated supplier data
+    - Error: Returns appropriate error message for validation failures, supplier not found, or unauthorized access
 
 http:
   method: PUT
