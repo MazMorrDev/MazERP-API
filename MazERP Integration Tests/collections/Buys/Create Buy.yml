@@ -3,19 +3,20 @@ info:
   type: http
   seq: 1
   description: Creates a new purchase transaction (buy) in the system
-  documentation: |
-    This endpoint allows authenticated users to record a new purchase transaction.
-    
-    Request:
-    - Method: POST
-    - URL: /api/buy
-    - Body: JSON with buy details (userId, inventoryId, supplierId, quantity, etc.)
-    - Auth: Requires Bearer token in Authorization header
-    - Headers: companyId (ID of the company)
-    
-    Response:
-    - Success: Returns the created buy transaction data including its ID
-    - Error: Returns appropriate error message for validation failures or unauthorized access
+
+docs: |-
+  This endpoint allows authenticated users to record a new purchase transaction.
+
+  Request:
+  - Method: POST
+  - URL: /api/buy
+  - Body: JSON with buy details (userId, inventoryId, supplierId, quantity, etc.)
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns the created buy transaction data including its ID
+  - Error: Returns appropriate error message for validation failures or unauthorized access
 
 http:
   method: POST

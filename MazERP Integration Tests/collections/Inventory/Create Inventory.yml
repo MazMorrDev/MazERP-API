@@ -3,23 +3,6 @@ info:
   type: http
   seq: 1
   description: Creates a new inventory item for a product in a warehouse
-  documentation: |
-    # Objetive
-
-    This endpoint is used when you want to create an inventory for a non-existent product at the database.
-
-    This endpoint allows authenticated users to create a new inventory record.
-
-    Request:
-    - Method: POST
-    - URL: /api/inventory
-    - Body: JSON with product details (name, description, photoUrl, category, warehouseId, stock, etc.)
-    - Auth: Requires Bearer token in Authorization header
-    - Headers: companyId (ID of the company)
-
-    Response:
-    - Success: Returns the created inventory data including its ID and the associated product ID
-    - Error: Returns appropriate error message for validation failures or unauthorized access
 
 http:
   method: POST
@@ -64,4 +47,17 @@ settings:
 docs: |-
   # Objetive
 
-  This endpoint is used when you want to create an inventory for an non existent product at the database.
+  This endpoint is used when you want to create an inventory for a non-existent product at the database.
+
+  This endpoint allows authenticated users to create a new inventory record.
+
+  Request:
+  - Method: POST
+  - URL: /api/inventory
+  - Body: JSON with product details (name, description, photoUrl, category, warehouseId, stock, etc.)
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns the created inventory data including its ID and the associated product ID
+  - Error: Returns appropriate error message for validation failures or unauthorized access

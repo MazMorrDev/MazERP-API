@@ -3,18 +3,19 @@ info:
   type: http
   seq: 1
   description: Deletes a supplier by its ID
-  documentation: |
-    This endpoint allows authenticated users to delete a supplier from the system.
-    
-    Request:
-    - Method: DELETE
-    - URL: /api/supplier/{supplierId}
-    - Auth: Requires Bearer token in Authorization header
-    - Headers: companyId (ID of the company)
-    
-    Response:
-    - Success: Returns confirmation of deletion
-    - Error: Returns appropriate error message for supplier not found or unauthorized access
+
+docs: |-
+  This endpoint allows authenticated users to delete a supplier from the system.
+
+  Request:
+  - Method: DELETE
+  - URL: /api/supplier/{supplierId}
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns confirmation of deletion
+  - Error: Returns appropriate error message for supplier not found or unauthorized access
 
 http:
   method: DELETE

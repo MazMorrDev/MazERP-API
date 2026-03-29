@@ -3,17 +3,18 @@ info:
   type: http
   seq: 4
   description: Deletes a warehouse by its ID
-  documentation: |
-    This endpoint allows authenticated users to delete a warehouse from the system.
-    
-    Request:
-    - Method: DELETE
-    - URL: /api/warehouse/{warehouseId}
-    - Auth: Requires Bearer token in Authorization header
-    
-    Response:
-    - Success: Returns confirmation of deletion
-    - Error: Returns appropriate error message for warehouse not found or unauthorized access
+
+docs: |-
+  This endpoint allows authenticated users to delete a warehouse from the system.
+
+  Request:
+  - Method: DELETE
+  - URL: /api/warehouse/{warehouseId}
+  - Auth: Requires Bearer token in Authorization header
+
+  Response:
+  - Success: Returns confirmation of deletion
+  - Error: Returns appropriate error message for warehouse not found or unauthorized access
 
 http:
   method: DELETE

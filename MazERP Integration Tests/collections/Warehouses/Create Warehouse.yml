@@ -3,18 +3,19 @@ info:
   type: http
   seq: 1
   description: Creates a new warehouse in the system
-  documentation: |
-    This endpoint allows authenticated users to create a new warehouse.
-    
-    Request:
-    - Method: POST
-    - URL: /api/warehouse
-    - Body: JSON with companyId, name, and description fields
-    - Auth: Requires Bearer token in Authorization header
-    
-    Response:
-    - Success: Returns the created warehouse data including its ID
-    - Error: Returns appropriate error message for validation failures or unauthorized access
+
+docs: |-
+  This endpoint allows authenticated users to create a new warehouse.
+
+  Request:
+  - Method: POST
+  - URL: /api/warehouse
+  - Body: JSON with companyId, name, and description fields
+  - Auth: Requires Bearer token in Authorization header
+
+  Response:
+  - Success: Returns the created warehouse data including its ID
+  - Error: Returns appropriate error message for validation failures or unauthorized access
 
 http:
   method: POST

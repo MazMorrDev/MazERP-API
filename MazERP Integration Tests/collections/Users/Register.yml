@@ -3,17 +3,18 @@ info:
   type: http
   seq: 2
   description: Registers a new user in the system
-  documentation: |
-    This endpoint allows new users to register by providing their email, name, and password.
-    
-    Request:
-    - Method: POST
-    - URL: /api/user/register
-    - Body: JSON with email, name, and password fields
-    
-    Response:
-    - Success: Returns the created user data
-    - Error: Returns appropriate error message for validation failures or duplicate email
+
+docs: |-
+  This endpoint allows new users to register by providing their email, name, and password.
+
+  Request:
+  - Method: POST
+  - URL: /api/user/register
+  - Body: JSON with email, name, and password fields
+
+  Response:
+  - Success: Returns the created user data
+  - Error: Returns appropriate error message for validation failures or duplicate email
 
 http:
   method: POST

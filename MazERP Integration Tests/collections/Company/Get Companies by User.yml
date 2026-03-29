@@ -3,7 +3,8 @@ info:
   type: http
   seq: 2
   description: Retrieves all companies associated with a specific user
-  documentation: |
+  
+docs: |-
     This endpoint returns a list of companies that a user is associated with.
     
     Request:

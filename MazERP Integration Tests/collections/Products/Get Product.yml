@@ -3,17 +3,18 @@ info:
   type: http
   seq: 2
   description: Retrieves a specific product by its ID
-  documentation: |
-    This endpoint returns the details of a product based on its unique identifier.
-    
-    Request:
-    - Method: GET
-    - URL: /api/product/{productId}
-    - Auth: Requires Bearer token in Authorization header
-    
-    Response:
-    - Success: Returns the product object with all its details
-    - Error: Returns appropriate error message for invalid product ID or unauthorized access
+
+docs: |-
+  This endpoint returns the details of a product based on its unique identifier.
+
+  Request:
+  - Method: GET
+  - URL: /api/product/{productId}
+  - Auth: Requires Bearer token in Authorization header
+
+  Response:
+  - Success: Returns the product object with all its details
+  - Error: Returns appropriate error message for invalid product ID or unauthorized access
 
 http:
   method: GET

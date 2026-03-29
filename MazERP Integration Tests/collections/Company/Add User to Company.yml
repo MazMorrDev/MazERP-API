@@ -3,18 +3,19 @@ info:
   type: http
   seq: 3
   description: Assigns a user to a company with a specific role
-  documentation: |
-    This endpoint assigns an existing user to a company with a specified role.
-    
-    Request:
-    - Method: POST
-    - URL: /api/company/assign
-    - Headers: companyId (ID of the company)
-    - Body: JSON with userId and role fields
-    
-    Response:
-    - Success: Returns confirmation of the assignment
-    - Error: Returns appropriate error message for invalid user or company
+
+docs: |-
+  This endpoint assigns an existing user to a company with a specified role.
+
+  Request:
+  - Method: POST
+  - URL: /api/company/assign
+  - Headers: companyId (ID of the company)
+  - Body: JSON with userId and role fields
+
+  Response:
+  - Success: Returns confirmation of the assignment
+  - Error: Returns appropriate error message for invalid user or company
 
 http:
   method: POST

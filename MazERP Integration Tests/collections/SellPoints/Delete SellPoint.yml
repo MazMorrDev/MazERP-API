@@ -3,7 +3,8 @@ info:
   type: http
   seq: 1
   description: Deletes a sell point by its ID
-  documentation: |
+  
+docs: |-
     This endpoint allows authenticated users to delete a sell point from the system.
     
     Request:

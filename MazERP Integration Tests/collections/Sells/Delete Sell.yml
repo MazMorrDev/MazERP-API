@@ -3,18 +3,19 @@ info:
   type: http
   seq: 4
   description: Deletes a sale transaction by its ID
-  documentation: |
-    This endpoint allows authenticated users to delete a sale transaction from the system.
-    
-    Request:
-    - Method: DELETE
-    - URL: /api/sell/{sellId}
-    - Auth: Requires Bearer token in Authorization header
-    - Headers: companyId (ID of the company)
-    
-    Response:
-    - Success: Returns confirmation of deletion
-    - Error: Returns appropriate error message for sale not found or unauthorized access
+
+docs: |-
+  This endpoint allows authenticated users to delete a sale transaction from the system.
+
+  Request:
+  - Method: DELETE
+  - URL: /api/sell/{sellId}
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns confirmation of deletion
+  - Error: Returns appropriate error message for sale not found or unauthorized access
 
 http:
   method: DELETE

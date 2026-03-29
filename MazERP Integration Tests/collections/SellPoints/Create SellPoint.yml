@@ -3,7 +3,8 @@ info:
   type: http
   seq: 1
   description: Creates a new sell point in the system
-  documentation: |
+  
+docs: |-
     This endpoint allows authenticated users to create a new sell point.
     
     Request:

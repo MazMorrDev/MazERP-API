@@ -3,19 +3,6 @@ info:
   type: http
   seq: 3
   description: Updates an existing purchase transaction (buy) by its ID
-  documentation: |
-    This endpoint allows authenticated users to update an existing purchase transaction's details.
-    
-    Request:
-    - Method: PUT
-    - URL: /api/buy/{buyId}
-    - Body: JSON with updated buy details
-    - Auth: Requires Bearer token in Authorization header
-    - Headers: companyId (ID of the company)
-    
-    Response:
-    - Success: Returns the updated buy transaction data
-    - Error: Returns appropriate error message for validation failures, buy not found, or unauthorized access
 
 http:
   method: PUT
@@ -51,3 +38,17 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+
+docs: |-
+  This endpoint allows authenticated users to update an existing purchase transaction's details.
+
+  Request:
+  - Method: PUT
+  - URL: /api/buy/{buyId}
+  - Body: JSON with updated buy details
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns the updated buy transaction data
+  - Error: Returns appropriate error message for validation failures, buy not found, or unauthorized access

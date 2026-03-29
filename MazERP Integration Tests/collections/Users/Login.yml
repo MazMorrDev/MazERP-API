@@ -3,7 +3,8 @@ info:
   type: http
   seq: 1
   description: Authenticates a user and returns an access token
-  documentation: |
+  
+docs: |-
     This endpoint allows users to log in to the system by providing their email and password.
     
     Request:

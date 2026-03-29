@@ -3,7 +3,8 @@ info:
   type: http
   seq: 2
   description: Retrieves a specific warehouse by its ID
-  documentation: |
+  
+docs: |-
     This endpoint returns the details of a warehouse based on its unique identifier.
     
     Request:

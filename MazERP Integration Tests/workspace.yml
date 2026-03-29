@@ -16,6 +16,10 @@ collections:
     path: "collections/Buys"
   - name: "Warehouses"
     path: "collections/Warehouses"
+  - name: "SellPoints"
+    path: "collections/SellPoints"
+  - name: "Suppliers"
+    path: "collections/Suppliers"
 
 specs:
 

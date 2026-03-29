@@ -37,6 +37,6 @@ settings:
   maxRedirects: 5
 
 docs: |
-  # Objective
+  # Objetive
 
   This endpoint is used when you have an existent product and you want to add another inventory at another warehouse.
