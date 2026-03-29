@@ -32,7 +32,6 @@ runtime:
 
         req.setHeader("Authorization", "Bearer "+token);
         req.setHeader("companyId", "1");
-
     - type: after-response
       code: |-
         bru.setGlobalEnvVar("inventoryId", res.body.id);
@@ -43,3 +42,8 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+
+docs: |-
+  # Objetive
+
+  This endpoint is used when you want to create an inventory for an non existent product at the database.

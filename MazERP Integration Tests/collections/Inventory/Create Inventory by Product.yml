@@ -35,3 +35,8 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+
+docs: |
+  # Objective
+
+  This endpoint is used when you have an existent product and you want to add another inventory at another warehouse.
