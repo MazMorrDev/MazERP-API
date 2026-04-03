@@ -75,49 +75,49 @@ Este proyecto es una API RESTful desarrollada con .NET Core a modo práctica par
 ```text
 MazERP-API-Enterprise Resource Planning API/
 ├── API/
-│   ├── Controllers/          # Endpoints RESTful
-│   ├── Services/             # Lógica de negocio
-│   │   ├── Implementation/   # Implementaciones de servicios
-│   │   └── Interfaces/       # Contratos de servicios
-│   ├── Models/               # Entidades de base de datos
-│   ├── DTOs/                 # Objetos de transferencia de datos
-│   ├── Utils/                # Utilidades y helpers
-│   │   ├── Mappers/          # Mapeo entre entidades y DTOs
-│   │   └── PaginatedResult.cs# Resultado paginado genérico
-│   ├── Config/               # Configuración de la aplicación
-│   ├── Middleware/           # Middleware personalizado
-│   ├── Enums/                # Enumeraciones
-│   ├── Context/              # Contexto de Entity Framework
-│   └── Migrations/           # Migraciones de base de datos
+│   ├── Controllers/           # Endpoints RESTful
+│   ├── Services/              # Lógica de negocio
+│   │   ├── Implementation/    # Implementaciones de servicios
+│   │   └── Interfaces/        # Contratos de servicios
+│   ├── Models/                # Entidades de base de datos
+│   ├── DTOs/                  # Objetos de transferencia de datos
+│   ├── Utils/                 # Utilidades y helpers
+│   │   ├── Mappers/           # Mapeo entre entidades y DTOs
+│   │   └── PaginatedResult.cs # Resultado paginado genérico
+│   ├── Config/                # Configuración de la aplicación
+│   ├── Middleware/            # Middleware personalizado
+│   ├── Enums/                 # Enumeraciones
+│   ├── Context/               # Contexto de Entity Framework
+│   └── Migrations/            # Migraciones de base de datos
 │
-├── MazERP Integration Tests/ # Tests de integración con Bruno
-│   ├── collections/          # Colecciones de pruebas API
-│   │   ├── Company/          # Pruebas para gestión de empresas
-│   │   ├── Users/            # Pruebas para autenticación y usuarios
-│   │   ├── Suppliers/        # Pruebas para gestión de proveedores
-│   │   ├── Products/         # Pruebas para gestión de productos
-│   │   ├── Inventory/        # Pruebas para gestión de inventario
-│   │   ├── SellPoints/       # Pruebas para puntos de venta
-│   │   ├── Sells/            # Pruebas para ventas
-│   │   ├── Buys/             # Pruebas para compras
-│   │   └── Warehouses/       # Pruebas para almacenes
-│   ├── environments/         # Entornos de prueba (desarrollo/producción)
-│   │   └── GlobalTestEnv.yml # Variables de entorno globales
-│   └── workspace.yml         # Configuración del workspace de Bruno
+├── MazERP Integration Tests/  # Tests de integración con Bruno
+│   ├── collections/           # Colecciones de pruebas API
+│   │   ├── Company/           # Pruebas para gestión de empresas
+│   │   ├── Users/             # Pruebas para autenticación y usuarios
+│   │   ├── Suppliers/         # Pruebas para gestión de proveedores
+│   │   ├── Products/          # Pruebas para gestión de productos
+│   │   ├── Inventory/         # Pruebas para gestión de inventario
+│   │   ├── SellPoints/        # Pruebas para puntos de venta
+│   │   ├── Sells/             # Pruebas para ventas
+│   │   ├── Buys/              # Pruebas para compras
+│   │   └── Warehouses/        # Pruebas para almacenes
+│   ├── environments/          # Entornos de prueba (desarrollo/producción)
+│   │   └── GlobalTestEnv.yml  # Variables de entorno globales
+│   └── workspace.yml          # Configuración del workspace de Bruno
 │
-├── UnitTests/                # Proyecto de pruebas unitarias (xUnit)
-│   ├── UnitTest1.cs          # Archivo de pruebas unitarias (en desarrollo)
-│   └── UnitTests.csproj      # Proyecto de pruebas
+├── UnitTests/                 # Proyecto de pruebas unitarias (xUnit)
+│   ├── UnitTest1.cs           # Archivo de pruebas unitarias (en desarrollo)
+│   └── UnitTests.csproj       # Proyecto de pruebas
 │
-├── MazErpAPI.sln             # Solución de Visual Studio
-└── README.md                 # Este archivo
+├── MazErpAPI.sln              # Solución de Visual Studio
+└── README.md                  # Este archivo
 ```
 
 ## 🧪 Calidad del Código y Testing
 
 - **Pruebas Unitarias**: Proyecto separado para testing de lógica de negocio
 - **Cobertura de código**: Enfoque en probar casos críticos y edge cases
-- **Tests de integración**: Colecciones de Postman para validar endpoints
+- **Tests de integración**: Colecciones de Bruno para validar endpoints
 - **Manejo de errores**: Respuestas consistentes y códigos de estado HTTP apropiados
 - **Logging**: Implementación básica para seguimiento de eventos
 
