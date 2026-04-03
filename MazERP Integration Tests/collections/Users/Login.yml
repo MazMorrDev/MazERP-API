@@ -1,0 +1,43 @@
+info:
+  name: Login
+  type: http
+  seq: 1
+  description: Authenticates a user and returns an access token
+  
+docs: |-
+    This endpoint allows users to log in to the system by providing their email and password.
+    
+    Request:
+    - Method: POST
+    - URL: /api/user/login
+    - Body: JSON with email and password fields
+    
+    Response:
+    - Success: Returns user data and authentication token
+    - Error: Returns appropriate error message for invalid credentials
+
+http:
+  method: POST
+  url: http://localhost:5148/api/user/login
+  body:
+    type: json
+    data: |-
+      {
+        "email":"pepito@gmail.com",
+        "password":"1234"  
+      }
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        // Guardar token
+        bru.setGlobalEnvVar("tokenValue", res.body.token);
+        bru.setGlobalEnvVar("userId", res.body.userDto.id);
+        bru.setGlobalEnvVar("userName", res.body.userDto.name);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

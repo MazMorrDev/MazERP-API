@@ -1,0 +1,38 @@
+info:
+  name: Get SellPoint
+  type: http
+  seq: 1
+  description: Retrieves a specific sell point by its ID
+  
+docs: |-
+    This endpoint returns the details of a sell point based on its unique identifier.
+    
+    Request:
+    - Method: GET
+    - URL: /api/sellpoint/{sellPointId}
+    - Auth: Requires Bearer token in Authorization header
+    - Headers: companyId (ID of the company)
+    
+    Response:
+    - Success: Returns the sell point object with all its details
+    - Error: Returns appropriate error message for invalid sell point ID or unauthorized access
+
+http:
+  method: GET
+  url: http://localhost:5148/api/sellpoint/{{sellPointId}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

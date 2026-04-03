@@ -1,0 +1,46 @@
+info:
+  name: Create Company
+  type: http
+  seq: 1
+  description: Creates a new company in the system
+
+docs: |-
+  This endpoint allows authenticated users to create a new company.
+
+  Request:
+  - Method: POST
+  - URL: /api/company/create
+  - Body: JSON with userId, name, description, and currency fields
+  - Auth: Requires Bearer token in Authorization header
+
+  Response:
+  - Success: Returns the created company data
+  - Error: Returns appropriate error message for validation failures or unauthorized access
+
+http:
+  method: POST
+  url: http://localhost:5148/api/company/create
+  body:
+    type: json
+    data: |-
+      {
+        "userId":{{userId}},
+        "name":"Example2 Corp",
+        "description":"another example corp",
+        "currency":3
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

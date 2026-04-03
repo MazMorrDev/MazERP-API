@@ -1,0 +1,38 @@
+info:
+  name: Get Inventories by Warehouse
+  type: http
+  seq: 3
+  description: Retrieves all inventory items for a specific warehouse
+
+docs: |-
+  This endpoint returns a list of all inventory items associated with a specific warehouse.
+
+  Request:
+  - Method: GET
+  - URL: /api/inventory/by-warehouse/{warehouseId}
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns array of inventory objects
+  - Error: Returns appropriate error message for invalid warehouse ID or unauthorized access
+
+http:
+  method: GET
+  url: http://localhost:5148/api/inventory/by-warehouse/1
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

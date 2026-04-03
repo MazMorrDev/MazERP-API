@@ -1,0 +1,38 @@
+info:
+  name: Get Buys by Inventory
+  type: http
+  seq: 2
+  description: Retrieves all purchase transactions for a specific inventory item
+
+docS: |-
+  This endpoint returns a list of all buy transactions associated with a specific inventory item.
+
+  Request:
+  - Method: GET
+  - URL: /api/buy/by-inventory/{inventoryId}
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns array of buy transaction objects
+  - Error: Returns appropriate error message for invalid inventory ID or unauthorized access
+
+http:
+  method: GET
+  url: http://localhost:5148/api/buy/by-inventory/1
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

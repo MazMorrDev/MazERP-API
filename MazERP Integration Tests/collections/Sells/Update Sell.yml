@@ -1,0 +1,53 @@
+info:
+  name: Update Sell
+  type: http
+  seq: 3
+  description: Updates an existing sale transaction by its ID
+
+docs: |-
+  This endpoint allows authenticated users to update an existing sale transaction's details.
+
+  Request:
+  - Method: PUT
+  - URL: /api/sell/{sellId}
+  - Body: JSON with updated sale details
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns the updated sale transaction data
+  - Error: Returns appropriate error message for validation failures, sale not found, or unauthorized access
+
+http:
+  method: PUT
+  url: http://localhost:5148/api/sell/{{sellId}}
+  body:
+    type: json
+    data: |-
+      {
+        "userId":{{userId}},
+        "sellPointId":1,
+        "quantity":10,
+        "currency":1,
+        "movementDate":"2025-03-23T12:00:00Z",
+        "discountPercentage":20,
+        "paymentStatus":2,
+        "saleType":1,
+        "sellerNotes":"Updated test sale"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

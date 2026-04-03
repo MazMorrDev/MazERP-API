@@ -1,0 +1,59 @@
+info:
+  name: Create Product
+  type: http
+  seq: 1
+  description: Creates a new product in the system
+
+docs: |-
+  This endpoint allows authenticated users to create a new product.
+
+  Request:
+  - Method: POST
+  - URL: /api/product
+  - Body: JSON with product details (name, description, photoUrl, category, warehouseId, stock, etc.)
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns the created product data including its ID
+  - Error: Returns appropriate error message for validation failures or unauthorized access
+
+http:
+  method: POST
+  url: http://localhost:5148/api/product
+  body:
+    type: json
+    data: |-
+      {
+        "productName":"Standalone Product",
+        "productDescription":"Test standalone product",
+        "photoUrl":"https://example.com/product.jpg",
+        "productCategory":1,
+        "warehouseId":1,
+        "stock":50,
+        "baseDiscount":5,
+        "basePrice":100.00,
+        "averageCost":60.00,
+        "alertStock":5,
+        "warningStock":10
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+    - type: after-response
+      code: |-
+        bru.setGlobalEnvVar("productId", res.body.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

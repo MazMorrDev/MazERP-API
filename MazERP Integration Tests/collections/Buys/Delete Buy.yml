@@ -1,0 +1,38 @@
+info:
+  name: Delete Buy
+  type: http
+  seq: 4
+  description: Deletes a purchase transaction (buy) by its ID
+
+docs: |-
+  This endpoint allows authenticated users to delete a purchase transaction from the system.
+
+  Request:
+  - Method: DELETE
+  - URL: /api/buy/{buyId}
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns confirmation of deletion
+  - Error: Returns appropriate error message for buy not found or unauthorized access
+
+http:
+  method: DELETE
+  url: http://localhost:5148/api/buy/{{buyId}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

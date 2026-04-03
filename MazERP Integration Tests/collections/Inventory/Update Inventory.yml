@@ -1,0 +1,41 @@
+info:
+  name: Update Inventory
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: http://localhost:5148/api/inventory/{{inventoryId}}
+  body:
+    type: json
+    data: |-
+      {
+        "productId":{{productId}},
+        "warehouseId":1,
+        "productName":"Updated Test Product",
+        "productDescription":"Updated description",
+        "photoUrl":"https://example.com/updated-photo.jpg",
+        "productCategory":2,
+        "stock":150,
+        "baseDiscount":15,
+        "basePrice":60.00,
+        "averageCost":35.00,
+        "alertStock":20,
+        "warningStock":30
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

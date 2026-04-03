@@ -1,0 +1,63 @@
+info:
+  name: Create Inventory
+  type: http
+  seq: 1
+  description: Creates a new inventory item for a product in a warehouse
+
+http:
+  method: POST
+  url: http://localhost:5148/api/inventory
+  body:
+    type: json
+    data: |-
+      {
+        "productName":"Test Product",
+        "productDescription":"Test description",
+        "photoUrl":"https://example.com/photo.jpg",
+        "productCategory":1,
+        "warehouseId":1,
+        "stock":100,
+        "baseDiscount":5,
+        "basePrice":50.00,
+        "averageCost":30.00,
+        "alertStock":10,
+        "warningStock":20
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+    - type: after-response
+      code: |-
+        bru.setGlobalEnvVar("inventoryId", res.body.id);
+        bru.setGlobalEnvVar("productId", res.body.productId);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  # Objetive
+
+  This endpoint is used when you want to create an inventory for a non-existent product at the database.
+
+  This endpoint allows authenticated users to create a new inventory record.
+
+  Request:
+  - Method: POST
+  - URL: /api/inventory
+  - Body: JSON with product details (name, description, photoUrl, category, warehouseId, stock, etc.)
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns the created inventory data including its ID and the associated product ID
+  - Error: Returns appropriate error message for validation failures or unauthorized access

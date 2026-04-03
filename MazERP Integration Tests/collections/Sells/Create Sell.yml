@@ -1,0 +1,57 @@
+info:
+  name: Create Sell
+  type: http
+  seq: 1
+  description: Creates a new sale transaction in the system
+
+docs: |-
+  This endpoint allows authenticated users to record a new sale transaction.
+
+  Request:
+  - Method: POST
+  - URL: /api/sell
+  - Body: JSON with sale details (userId, sellPointId, quantity, etc.)
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns the created sale transaction data including its ID
+  - Error: Returns appropriate error message for validation failures or unauthorized access
+
+http:
+  method: POST
+  url: http://localhost:5148/api/sell
+  body:
+    type: json
+    data: |-
+      {
+        "userId":{{userId}},
+        "sellPointId":1,
+        "quantity":5,
+        "currency":1,
+        "movementDate":"2025-03-23T10:00:00Z",
+        "discountPercentage":10,
+        "paymentStatus":1,
+        "saleType":1,
+        "sellerNotes":"Test sale"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+    - type: after-response
+      code: |-
+        bru.setGlobalEnvVar("sellId", res.body.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

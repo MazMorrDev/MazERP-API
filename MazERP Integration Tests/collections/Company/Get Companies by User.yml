@@ -1,0 +1,35 @@
+info:
+  name: Get Companies by User
+  type: http
+  seq: 2
+  description: Retrieves all companies associated with a specific user
+  
+docs: |-
+    This endpoint returns a list of companies that a user is associated with.
+    
+    Request:
+    - Method: GET
+    - URL: /api/company/by-user/{userId}
+    - Auth: Requires Bearer token in Authorization header
+    
+    Response:
+    - Success: Returns array of company objects
+    - Error: Returns appropriate error message for invalid user ID or unauthorized access
+
+http:
+  method: GET
+  url: http://localhost:5148/api/company/by-user/{{userId}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+        req.setHeader("Authorization", "Bearer "+ token);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
