@@ -75,42 +75,42 @@ This project is a RESTful API developed with .NET Core as a practical exercise t
 ```text
 MazERP-API-Enterprise Resource Planning API/
 ├── API/
-│   ├── Controllers/          # RESTful endpoints
-│   ├── Services/             # Business logic
-│   │   ├── Implementation/   # Service implementations
-│   │   └── Interfaces/       # Service contracts
-│   ├── Models/               # Database entities
-│   ├── DTOs/                 # Data transfer objects
-│   ├── Utils/                # Utilities and helpers
-│   │   ├── Mappers/          # Entity-DTO mapping
-│   │   └── PaginatedResult.cs# Generic paginated result
-│   ├── Config/               # Application configuration
-│   ├── Middleware/           # Custom middleware
-│   ├── Enums/                # Enumerations
-│   ├── Context/              # Entity Framework context
-│   └── Migrations/           # Database migrations
+│   ├── Controllers/           # RESTful endpoints
+│   ├── Services/              # Business logic
+│   │   ├── Implementation/    # Service implementations
+│   │   └── Interfaces/        # Service contracts
+│   ├── Models/                # Database entities
+│   ├── DTOs/                  # Data transfer objects
+│   ├── Utils/                 # Utilities and helpers
+│   │   ├── Mappers/           # Entity-DTO mapping
+│   │   └── PaginatedResult.cs # Generic paginated result
+│   ├── Config/                # Application configuration
+│   ├── Middleware/            # Custom middleware
+│   ├── Enums/                 # Enumerations
+│   ├── Context/               # Entity Framework context
+│   └── Migrations/            # Database migrations
 │
-├── MazERP Integration Tests/ # Integration tests with Bruno
-│   ├── collections/          # API test collections
-│   │   ├── Company/          # Company management tests
-│   │   ├── Users/            # Authentication and user tests
-│   │   ├── Suppliers/        # Supplier management tests
-│   │   ├── Products/         # Product management tests
-│   │   ├── Inventory/        # Inventory management tests
-│   │   ├── SellPoints/       # Point of sale tests
-│   │   ├── Sells/            # Sales tests
-│   │   ├── Buys/             # Purchase tests
-│   │   └── Warehouses/       # Warehouse tests
-│   ├── environments/         # Test environments (dev/production)
-│   │   └── GlobalTestEnv.yml # Global environment variables
-│   └── workspace.yml         # Bruno workspace configuration
+├── MazERP Integration Tests/  # Integration tests with Bruno
+│   ├── collections/           # API test collections
+│   │   ├── Company/           # Company management tests
+│   │   ├── Users/             # Authentication and user tests
+│   │   ├── Suppliers/         # Supplier management tests
+│   │   ├── Products/          # Product management tests
+│   │   ├── Inventory/         # Inventory management tests
+│   │   ├── SellPoints/        # Point of sale tests
+│   │   ├── Sells/             # Sales tests
+│   │   ├── Buys/              # Purchase tests
+│   │   └── Warehouses/        # Warehouse tests
+│   ├── environments/          # Test environments (dev/production)
+│   │   └── GlobalTestEnv.yml  # Global environment variables
+│   └── workspace.yml          # Bruno workspace configuration
 │
-├── UnitTests/                # Unit testing project (xUnit)
-│   ├── UnitTest1.cs          # Unit test file (in development)
-│   └── UnitTests.csproj      # Test project
+├── UnitTests/                 # Unit testing project (xUnit)
+│   ├── UnitTest1.cs           # Unit test file (in development)
+│   └── UnitTests.csproj       # Test project
 │
-├── MazErpAPI.sln             # Visual Studio solution
-└── README.md                 # This file
+├── MazErpAPI.sln              # Visual Studio solution
+└── README.md                  # This file
 ```
 
 ## 🧪 Code Quality and Testing
