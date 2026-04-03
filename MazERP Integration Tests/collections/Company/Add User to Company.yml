@@ -2,20 +2,6 @@ info:
   name: Add User to Company
   type: http
   seq: 3
-  description: Assigns a user to a company with a specific role
-
-docs: |-
-  This endpoint assigns an existing user to a company with a specified role.
-
-  Request:
-  - Method: POST
-  - URL: /api/company/assign
-  - Headers: companyId (ID of the company)
-  - Body: JSON with userId and role fields
-
-  Response:
-  - Success: Returns confirmation of the assignment
-  - Error: Returns appropriate error message for invalid user or company
 
 http:
   method: POST
@@ -27,7 +13,7 @@ http:
     type: json
     data: |-
       {
-        "userId":3,
+        "userId":1,
         "role":1
       }
   auth: inherit
@@ -44,3 +30,16 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+
+docs: |-
+  This endpoint assigns an existing user to a company with a specified role.
+
+  Request:
+  - Method: POST
+  - URL: /api/company/assign
+  - Headers: companyId (ID of the company)
+  - Body: JSON with userId and role fields
+
+  Response:
+  - Success: Returns confirmation of the assignment
+  - Error: Returns appropriate error message for invalid user or company
