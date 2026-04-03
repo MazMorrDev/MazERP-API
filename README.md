@@ -117,7 +117,7 @@ MazERP-API-Enterprise Resource Planning API/
 
 - **Unit Tests**: Separate project for business logic testing
 - **Code coverage**: Focus on testing critical cases and edge cases
-- **Integration Tests**: Postman/Bruno collections to validate endpoints
+- **Integration Tests**: Bruno collections to validate endpoints
 - **Error handling**: Consistent responses and appropriate HTTP status codes
 - **Logging**: Basic implementation for event tracking
 
