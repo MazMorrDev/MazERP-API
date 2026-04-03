@@ -1,0 +1,36 @@
+info:
+  name: Delete Product
+  type: http
+  seq: 4
+  description: Deletes a product by its ID
+
+docs: |-
+  This endpoint allows authenticated users to delete a product from the system.
+
+  Request:
+  - Method: DELETE
+  - URL: /api/product/{productId}
+  - Auth: Requires Bearer token in Authorization header
+
+  Response:
+  - Success: Returns confirmation of deletion
+  - Error: Returns appropriate error message for product not found or unauthorized access
+
+http:
+  method: DELETE
+  url: http://localhost:5148/api/product/{{productId}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

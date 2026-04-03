@@ -1,0 +1,51 @@
+info:
+  name: Create SellPoint
+  type: http
+  seq: 1
+  description: Creates a new sell point in the system
+  
+docs: |-
+    This endpoint allows authenticated users to create a new sell point.
+    
+    Request:
+    - Method: POST
+    - URL: /api/sellpoint
+    - Body: JSON with sell point details (name, description, location)
+    - Auth: Requires Bearer token in Authorization header
+    - Headers: companyId (ID of the company)
+    
+    Response:
+    - Success: Returns the created sell point data including its ID
+    - Error: Returns appropriate error message for validation failures or unauthorized access
+
+http:
+  method: POST
+  url: http://localhost:5148/api/sellpoint
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Test Sell Point",
+        "description": "Test Description",
+        "location": "Test Location"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+    - type: after-response
+      code: |-
+        bru.setGlobalEnvVar("sellPointId", res.body.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

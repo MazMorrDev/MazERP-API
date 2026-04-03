@@ -1,0 +1,36 @@
+info:
+  name: Get Product
+  type: http
+  seq: 2
+  description: Retrieves a specific product by its ID
+
+docs: |-
+  This endpoint returns the details of a product based on its unique identifier.
+
+  Request:
+  - Method: GET
+  - URL: /api/product/{productId}
+  - Auth: Requires Bearer token in Authorization header
+
+  Response:
+  - Success: Returns the product object with all its details
+  - Error: Returns appropriate error message for invalid product ID or unauthorized access
+
+http:
+  method: GET
+  url: http://localhost:5148/api/product/{{productId}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

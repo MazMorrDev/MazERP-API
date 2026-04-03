@@ -1,0 +1,38 @@
+info:
+  name: Get Supplier
+  type: http
+  seq: 1
+  description: Retrieves a specific supplier by its ID
+
+docs: |-
+  This endpoint returns the details of a supplier based on its unique identifier.
+
+  Request:
+  - Method: GET
+  - URL: /api/supplier/{supplierId}
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns the supplier object with all its details
+  - Error: Returns appropriate error message for invalid supplier ID or unauthorized access
+
+http:
+  method: GET
+  url: http://localhost:5148/api/supplier/{{supplierId}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

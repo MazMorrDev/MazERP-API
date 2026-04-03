@@ -1,0 +1,6 @@
+name: GlobalTestEnv
+variables:
+  - secret: true
+    name: tokenValue
+  - secret: true
+    name: userName

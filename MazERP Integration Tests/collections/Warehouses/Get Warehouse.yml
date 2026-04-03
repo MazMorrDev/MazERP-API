@@ -1,0 +1,36 @@
+info:
+  name: Get Warehouse
+  type: http
+  seq: 2
+  description: Retrieves a specific warehouse by its ID
+  
+docs: |-
+    This endpoint returns the details of a warehouse based on its unique identifier.
+    
+    Request:
+    - Method: GET
+    - URL: /api/warehouse/{warehouseId}
+    - Auth: Requires Bearer token in Authorization header
+    
+    Response:
+    - Success: Returns the warehouse object with all its details
+    - Error: Returns appropriate error message for invalid warehouse ID or unauthorized access
+
+http:
+  method: GET
+  url: http://localhost:5148/api/warehouse/{{warehouseId}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,47 @@
+info:
+  name: Update SellPoint
+  type: http
+  seq: 1
+  description: Updates an existing sell point by its ID
+
+docs: |-
+  This endpoint allows authenticated users to update an existing sell point's details.
+
+  Request:
+  - Method: PUT
+  - URL: /api/sellpoint/{sellPointId}
+  - Body: JSON with updated sell point details
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns the updated sell point data
+  - Error: Returns appropriate error message for validation failures, sell point not found, or unauthorized access
+
+http:
+  method: PUT
+  url: http://localhost:5148/api/sellpoint/{{sellPointId}}
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Updated Sell Point",
+        "description": "Updated Description",
+        "location": "Updated Location"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,58 @@
+info:
+  name: Create Buy
+  type: http
+  seq: 1
+  description: Creates a new purchase transaction (buy) in the system
+
+docs: |-
+  This endpoint allows authenticated users to record a new purchase transaction.
+
+  Request:
+  - Method: POST
+  - URL: /api/buy
+  - Body: JSON with buy details (userId, inventoryId, supplierId, quantity, etc.)
+  - Auth: Requires Bearer token in Authorization header
+  - Headers: companyId (ID of the company)
+
+  Response:
+  - Success: Returns the created buy transaction data including its ID
+  - Error: Returns appropriate error message for validation failures or unauthorized access
+
+http:
+  method: POST
+  url: http://localhost:5148/api/buy
+  body:
+    type: json
+    data: |-
+      {
+        "userId":{{userId}},
+        "inventoryId":1,
+        "supplierId":1,
+        "quantity":20,
+        "currency":1,
+        "movementDate":"2025-03-23T10:00:00Z",
+        "description":"Test buy",
+        "deliveryStatus":1,
+        "unitaryCost":25.50,
+        "receivedQuantity":20
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const token = bru.getGlobalEnvVar("tokenValue");
+
+        req.setHeader("Authorization", "Bearer "+token);
+        req.setHeader("companyId", "1");
+
+    - type: after-response
+      code: |-
+        bru.setGlobalEnvVar("buyId", res.body.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
