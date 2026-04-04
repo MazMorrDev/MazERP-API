@@ -1,9 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using MazErpAPI.DTOs.Users;
+using MazErpAPI.Models;
+using MazErpAPI.Services.Interfaces;
 using MazErpBack.DTOs.Users;
-using MazErpBack.Models;
-using MazErpBack.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MazErpBack.Services.Implementation;

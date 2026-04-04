@@ -1,7 +1,7 @@
-﻿using MazErpBack.Models;
+﻿using MazErpAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Context;
+namespace MazErpAPI.Context;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

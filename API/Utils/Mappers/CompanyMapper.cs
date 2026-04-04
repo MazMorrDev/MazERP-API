@@ -1,6 +1,6 @@
-﻿using MazErpBack.DTOs.Company;
-using MazErpBack.Enums;
-using MazErpBack.Models;
+﻿using MazErpAPI.DTOs.Company;
+using MazErpAPI.Enums;
+using MazErpAPI.Models;
 
 namespace MazErpBack.Utils.Mappers;
 

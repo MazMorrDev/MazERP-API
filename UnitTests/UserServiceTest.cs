@@ -1,12 +1,13 @@
-﻿using MazErpBack.Controllers;
-using MazErpBack.Services.Implementation;
-using MazErpBack.Services.Interfaces;
+﻿using MazErpAPI.Controllers;
+using MazErpAPI.Services.Implementation;
+using MazErpAPI.Services.Interfaces;
 
 namespace UnitTests;
 
 public class UserServiceTest
 {
-    private readonly UserController _controller ;
+    private readonly 
+    private readonly UserController _controller;
     private readonly IUserService _service;
     public UserServiceTest()
     {

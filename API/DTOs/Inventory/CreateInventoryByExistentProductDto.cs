@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MazErpBack.Enums;
 
-namespace MazErpBack.DTOs.Inventory;
+namespace MazErpAPI.DTOs.Inventory;
 
 public record class CreateInventoryByExistentProductDto
 {

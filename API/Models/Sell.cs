@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MazErpBack.Enums;
+using MazErpAPI.Enums;
 
-namespace MazErpBack.Models;
+namespace MazErpAPI.Models;
 
 [Table("Sell")]
 public class Sell

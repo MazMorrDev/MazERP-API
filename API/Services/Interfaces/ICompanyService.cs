@@ -1,8 +1,8 @@
-﻿using MazErpBack.DTOs.Company;
-using MazErpBack.Models;
+﻿using MazErpAPI.DTOs.Company;
+using MazErpAPI.Models;
 using MazErpBack.Utils;
 
-namespace MazErpBack.Services.Interfaces;
+namespace MazErpAPI.Services.Interfaces;
 
 public interface ICompanyService
 {

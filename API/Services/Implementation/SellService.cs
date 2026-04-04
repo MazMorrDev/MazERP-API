@@ -1,7 +1,7 @@
-﻿using MazErpBack.Context;
-using MazErpBack.DTOs.Movements;
-using MazErpBack.Models;
-using MazErpBack.Services.Interfaces;
+﻿using MazErpAPI.Context;
+using MazErpAPI.DTOs.Movements;
+using MazErpAPI.Models;
+using MazErpAPI.Services.Interfaces;
 using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;

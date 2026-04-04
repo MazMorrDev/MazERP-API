@@ -1,5 +1,5 @@
-﻿using MazErpBack.DTOs.Movements;
-using MazErpBack.Models;
+﻿using MazErpAPI.DTOs.Movements;
+using MazErpAPI.Models;
 
 namespace MazErpBack.Utils.Mappers;
 

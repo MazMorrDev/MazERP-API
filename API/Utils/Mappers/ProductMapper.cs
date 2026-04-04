@@ -1,5 +1,5 @@
-﻿using MazErpBack.DTOs.Inventory;
-using MazErpBack.Models;
+﻿using MazErpAPI.DTOs.Inventory;
+using MazErpAPI.Models;
 
 namespace MazErpBack.Utils.Mappers;
 

@@ -1,8 +1,8 @@
-using MazErpBack.DTOs.Users;
-using MazErpBack.Services.Interfaces;
+using MazErpAPI.DTOs.Users;
+using MazErpAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MazErpBack.Controllers;
+namespace MazErpAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

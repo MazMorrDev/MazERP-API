@@ -1,8 +1,8 @@
-﻿using MazErpBack.DTOs.Movements;
-using MazErpBack.Models;
+﻿using MazErpAPI.DTOs.Movements;
+using MazErpAPI.Models;
 using MazErpBack.Utils;
 
-namespace MazErpBack.Services.Interfaces;
+namespace MazErpAPI.Services.Interfaces;
 
 public interface ISellService
 {
