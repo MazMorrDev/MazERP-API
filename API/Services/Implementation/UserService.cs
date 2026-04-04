@@ -6,7 +6,7 @@ using MazErpBack.Utils.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services.Implementation;
+namespace MazErpAPI.Services.Implementation;
 
 public class UserService(AppDbContext context, ITokenService tokenService, ILogger<UserService> logger, UserMapper mapper) : IUserService
 {
@@ -42,9 +42,9 @@ public class UserService(AppDbContext context, ITokenService tokenService, ILogg
             _logger.LogInformation("User logged in: {Email}", loginDto.Email);
             return token;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // TODO:
+            _logger.LogError($"It was an error: {ex.Message}");
             throw;
         }
     }

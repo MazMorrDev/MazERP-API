@@ -6,7 +6,7 @@ using MazErpBack.Utils;
 using MazErpBack.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services.Implementation;
+namespace MazErpAPI.Services.Implementation;
 
 
 public class CompanyService(AppDbContext context, ILogger<CompanyService> logger, CompanyMapper mapper, IUserService userService) : ICompanyService
