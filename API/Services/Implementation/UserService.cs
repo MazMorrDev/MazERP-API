@@ -2,7 +2,7 @@ using MazErpAPI.Context;
 using MazErpAPI.DTOs.Users;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Interfaces;
-using MazErpBack.Utils.Mappers;
+using MazErpAPI.Utils.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,18 +1,26 @@
-﻿using MazErpAPI.Controllers;
+﻿using MazErpAPI.Context;
+using MazErpAPI.Controllers;
 using MazErpAPI.Services.Implementation;
 using MazErpAPI.Services.Interfaces;
+using MazErpBack.Services.Implementation;
+using Microsoft.Extensions.Logging;
 
 namespace UnitTests;
 
 public class UserServiceTest
 {
-    private readonly 
+
     private readonly UserController _controller;
-    private readonly IUserService _service;
-    public UserServiceTest()
-    {
-        _service = new UserService();
-        _controller = new UserController(_service);
+    private readonly ILogger<IUserService> _logger;
+    private readonly IUserService _userService;
+    private readonly AppDbContext _context;
+    private readonly ITokenService _tokenService;
+
+    public UserServiceTest(){
+        _tokenService = new TokenService();
+        _userService = new UserService(_context, );
+        _controller = new UserController(_userService);
+
     }
 
 
@@ -20,6 +28,12 @@ public class UserServiceTest
     public void LoginUser_WithInvalidPassword_ReturnsNull()
     {
         // Arrange
-        var options = CreateNewContextOptions();
+        
+        
+        // Execution
+
+
+        // Assert
+        Assert
     }
 }

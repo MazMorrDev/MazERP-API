@@ -2,9 +2,9 @@
 using MazErpAPI.DTOs.Inventory;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Interfaces;
-using MazErpBack.Utils.Mappers;
+using MazErpAPI.Utils.Mappers;
 
-namespace MazErpBack.Services.Implementation;
+namespace MazErpAPI.Services.Implementation;
 
 public class ProductService(AppDbContext context, ProductMapper mapper) : IProductService
 {

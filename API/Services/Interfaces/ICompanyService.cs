@@ -1,6 +1,6 @@
 ﻿using MazErpAPI.DTOs.Company;
 using MazErpAPI.Models;
-using MazErpBack.Utils;
+using MazErpAPI.Utils;
 
 namespace MazErpAPI.Services.Interfaces;
 

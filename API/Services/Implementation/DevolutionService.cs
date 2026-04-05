@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using MazErpAPI.Context;
+﻿using MazErpAPI.Context;
 using MazErpAPI.DTOs.Movements;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Interfaces;
-using MazErpBack.Utils;
-using MazErpBack.Utils.Mappers;
+using MazErpAPI.Utils;
+using MazErpAPI.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services.Implementation;
+namespace MazErpAPI.Services.Implementation;
 
 public class DevolutionService(AppDbContext context, DevolutionMapper mapper, ILogger<DevolutionService> logger, ISellService sellService) : IDevolutionService
 {

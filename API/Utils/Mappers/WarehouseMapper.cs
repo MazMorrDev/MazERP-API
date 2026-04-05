@@ -1,7 +1,7 @@
 ﻿using MazErpAPI.DTOs.Inventory;
 using MazErpAPI.Models;
 
-namespace MazErpBack.Utils.Mappers;
+namespace MazErpAPI.Utils.Mappers;
 
 public class WarehouseMapper
 {

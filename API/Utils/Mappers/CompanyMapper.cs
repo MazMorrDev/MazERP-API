@@ -2,7 +2,7 @@
 using MazErpAPI.Enums;
 using MazErpAPI.Models;
 
-namespace MazErpBack.Utils.Mappers;
+namespace MazErpAPI.Utils.Mappers;
 
 public class CompanyMapper
 {

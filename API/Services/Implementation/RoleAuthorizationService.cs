@@ -3,7 +3,7 @@ using MazErpAPI.Enums;
 using MazErpAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services.Implementation;
+namespace MazErpAPI.Services.Implementation;
 
 public class RoleAuthorizationService(AppDbContext context, ILogger<RoleAuthorizationService> logger) : IRoleAuthorizationService
 {

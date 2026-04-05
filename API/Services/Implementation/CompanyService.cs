@@ -2,9 +2,8 @@
 using MazErpAPI.DTOs.Company;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Interfaces;
-using MazErpBack.Models;
-using MazErpBack.Utils;
-using MazErpBack.Utils.Mappers;
+using MazErpAPI.Utils;
+using MazErpAPI.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace MazErpAPI.Services.Implementation;

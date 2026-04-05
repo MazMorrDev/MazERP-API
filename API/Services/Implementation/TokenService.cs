@@ -4,10 +4,9 @@ using System.Text;
 using MazErpAPI.DTOs.Users;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Interfaces;
-using MazErpBack.DTOs.Users;
 using Microsoft.IdentityModel.Tokens;
 
-namespace MazErpBack.Services.Implementation;
+namespace MazErpAPI.Services.Implementation;
 
 public class TokenService(IConfiguration config) : ITokenService
 {

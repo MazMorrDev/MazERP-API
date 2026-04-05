@@ -2,11 +2,11 @@
 using MazErpAPI.DTOs.Inventory;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Interfaces;
-using MazErpBack.Utils;
-using MazErpBack.Utils.Mappers;
+using MazErpAPI.Utils;
+using MazErpAPI.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services.Implementation;
+namespace MazErpAPI.Services.Implementation;
 
 public class SupplierService(AppDbContext context, SupplierMapper mapper, ILogger<SupplierService> logger) : ISupplierService
 {
