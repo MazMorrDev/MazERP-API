@@ -1,5 +1,4 @@
 ﻿using MazErpAPI.Context;
-using MazErpAPI.Controllers;
 using MazErpAPI.DTOs.Users;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Implementation;
@@ -7,7 +6,6 @@ using MazErpAPI.Services.Interfaces;
 using MazErpAPI.Utils.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 
