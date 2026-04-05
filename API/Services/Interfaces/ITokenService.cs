@@ -1,7 +1,7 @@
-using MazErpBack.DTOs.Users;
-using MazErpBack.Models;
+using MazErpAPI.DTOs.Users;
+using MazErpAPI.Models;
 
-namespace MazErpBack.Services.Interfaces;
+namespace MazErpAPI.Services.Interfaces;
 
 public interface ITokenService
 {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MazErpBack.Models;
+namespace MazErpAPI.Models;
 
 [Table("Supplier")]
 public class Supplier

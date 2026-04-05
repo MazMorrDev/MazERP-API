@@ -1,6 +1,6 @@
-﻿using MazErpBack.Enums;
+﻿using MazErpAPI.Enums;
 
-namespace MazErpBack.Services.Interfaces;
+namespace MazErpAPI.Services.Interfaces;
 
 public interface IRoleAuthorizationService
 {

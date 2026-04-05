@@ -1,4 +1,4 @@
-﻿namespace MazErpBack.Enums;
+﻿namespace MazErpAPI.Enums;
 
 public enum Currency
 {

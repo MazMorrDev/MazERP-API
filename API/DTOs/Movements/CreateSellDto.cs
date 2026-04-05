@@ -1,6 +1,6 @@
-﻿using MazErpBack.Enums;
+﻿using MazErpAPI.Enums;
 
-namespace MazErpBack.DTOs.Movements;
+namespace MazErpAPI.DTOs.Movements;
 
 public record class CreateSellDto : CreateMovementDto
 {

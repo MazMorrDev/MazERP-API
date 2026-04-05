@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MazErpBack.DTOs.Company;
+namespace MazErpAPI.DTOs.Company;
 
 public record class DeleteUserCompanyDto
 {

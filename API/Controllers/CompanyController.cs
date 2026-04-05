@@ -1,10 +1,10 @@
-﻿using MazErpBack.DTOs.Company;
-using MazErpBack.Services.Interfaces;
+﻿using MazErpAPI.DTOs.Company;
+using MazErpAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
-namespace MazErpBack.Controllers;
+namespace MazErpAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

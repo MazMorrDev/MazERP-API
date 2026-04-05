@@ -1,12 +1,12 @@
-﻿using MazErpBack.Context;
-using MazErpBack.DTOs.Inventory;
-using MazErpBack.Models;
-using MazErpBack.Services.Interfaces;
-using MazErpBack.Utils;
-using MazErpBack.Utils.Mappers;
+﻿using MazErpAPI.Context;
+using MazErpAPI.DTOs.Inventory;
+using MazErpAPI.Models;
+using MazErpAPI.Services.Interfaces;
+using MazErpAPI.Utils;
+using MazErpAPI.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services.Implementation;
+namespace MazErpAPI.Services.Implementation;
 
 public class SellPointService(AppDbContext context, SellPointMapper mapper, IInventoryService inventoryService) : ISellPointService
 {

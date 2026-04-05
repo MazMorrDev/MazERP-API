@@ -1,12 +1,12 @@
-﻿using MazErpBack.Context;
-using MazErpBack.DTOs.Movements;
-using MazErpBack.Models;
-using MazErpBack.Services.Interfaces;
-using MazErpBack.Utils;
-using MazErpBack.Utils.Mappers;
+﻿using MazErpAPI.Context;
+using MazErpAPI.DTOs.Movements;
+using MazErpAPI.Models;
+using MazErpAPI.Services.Interfaces;
+using MazErpAPI.Utils;
+using MazErpAPI.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
 
-namespace MazErpBack.Services.Implementation;
+namespace MazErpAPI.Services.Implementation;
 
 public class SellService(AppDbContext context, SellMapper mapper, ISellPointService sellPointService, IUserService userService) : ISellService
 {

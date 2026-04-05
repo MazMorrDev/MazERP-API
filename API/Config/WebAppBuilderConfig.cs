@@ -1,15 +1,15 @@
 ﻿using System.Security.Claims;
 using Serilog;
-using MazErpBack.Context;
-using MazErpBack.Services.Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using MazErpBack.Services.Interfaces;
-using MazErpBack.Utils.Mappers;
 using System.Threading.RateLimiting;
+using MazErpAPI.Services.Implementation;
+using MazErpAPI.Services.Interfaces;
+using MazErpAPI.Context;
+using MazErpAPI.Utils.Mappers;
 
-namespace MazErpBack.Config;
+namespace MazErpAPI.Config;
 
 public class WebAppBuilderConfig
 {
