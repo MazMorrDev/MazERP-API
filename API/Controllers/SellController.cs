@@ -1,9 +1,9 @@
-using MazErpBack.DTOs.Movements;
-using MazErpBack.Services.Interfaces;
+using MazErpAPI.DTOs.Movements;
+using MazErpAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MazErpBack.Controllers;
+namespace MazErpAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

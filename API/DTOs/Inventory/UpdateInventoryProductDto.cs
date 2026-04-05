@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MazErpBack.Enums;
+using MazErpAPI.Enums;
 
-namespace MazErpBack.DTOs.Inventory;
+namespace MazErpAPI.DTOs.Inventory;
 
 public record class UpdateInventoryProductDto
 {

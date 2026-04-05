@@ -1,7 +1,7 @@
-﻿using MazErpBack.DTOs.Users;
-using MazErpBack.Models;
+﻿using MazErpAPI.DTOs.Users;
+using MazErpAPI.Models;
 
-namespace MazErpBack.Utils.Mappers;
+namespace MazErpAPI.Utils.Mappers;
 
 public class UserMapper
 {

@@ -1,4 +1,4 @@
-﻿namespace MazErpBack.DTOs.Inventory;
+﻿namespace MazErpAPI.DTOs.Inventory;
 
 public record class SellPointInventoryDto
 {

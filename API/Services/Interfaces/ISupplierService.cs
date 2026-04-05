@@ -1,8 +1,8 @@
-﻿using MazErpBack.DTOs.Inventory;
-using MazErpBack.Models;
-using MazErpBack.Utils;
+﻿using MazErpAPI.DTOs.Inventory;
+using MazErpAPI.Models;
+using MazErpAPI.Utils;
 
-namespace MazErpBack.Services.Interfaces;
+namespace MazErpAPI.Services.Interfaces;
 
 public interface ISupplierService
 {

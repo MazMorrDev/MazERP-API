@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
-using MazErpBack.Services.Interfaces;
+using MazErpAPI.Services.Interfaces;
 
-namespace MazErpBack.Middleware;
+namespace MazErpAPI.Middleware;
 
 public class RoleAuthorizationMiddleware(RequestDelegate next, ILogger<RoleAuthorizationMiddleware> logger)
 {

@@ -1,6 +1,6 @@
-using MazErpBack.Enums;
+using MazErpAPI.Enums;
 
-namespace MazErpBack.DTOs.Company;
+namespace MazErpAPI.DTOs.Company;
 
 public record class UserCompanyDto
 {

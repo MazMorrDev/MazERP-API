@@ -1,7 +1,7 @@
-﻿using MazErpBack.Middleware;
+﻿using MazErpAPI.Middleware;
 using Scalar.AspNetCore;
 
-namespace MazErpBack.Config;
+namespace MazErpAPI.Config;
 
 public class WebAppConfig
 {
