@@ -5,16 +5,18 @@ using MazErpAPI.Services.Interfaces;
 using MazErpAPI.Utils;
 using MazErpAPI.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace MazErpAPI.Services.Implementation;
 
-public class BuyService(AppDbContext context, BuyMapper mapper, IUserService userService, ISupplierService supplierService, IInventoryService inventoryService) : IBuyService
+public class BuyService(AppDbContext context, BuyMapper mapper, IUserService userService, ISupplierService supplierService, IInventoryService inventoryService, ILogger<BuyService> logger) : IBuyService
 {
     private readonly AppDbContext _context = context;
     private readonly BuyMapper _mapper = mapper;
     private readonly IUserService _userService = userService;
     private readonly ISupplierService _supplierService = supplierService;
     private readonly IInventoryService _inventoryService = inventoryService;
+    private readonly ILogger<BuyService> _logger = logger;
 
     public async Task<BuyDto> CreateBuyAsync(CreateBuyDto createBuyDto)
     {
@@ -36,54 +38,89 @@ public class BuyService(AppDbContext context, BuyMapper mapper, IUserService use
             ArgumentNullException.ThrowIfNull(buyDto);
             return buyDto;
         }
-        catch
+        catch (Exception ex)
         {
             await transaction.RollbackAsync();
+            _logger.LogError(ex, "Error creating buy");
             throw;
         }
-
     }
 
     public async Task DeleteBuyAsync(int buyId)
     {
-        var movement = await GetMovementByIdAsync(buyId);
-        var buy = await GetBuyByIdAsync(buyId);
-        _context.Buys.Remove(buy);
-        _context.Movements.Remove(movement);
-        await _context.SaveChangesAsync();
+        try
+        {
+            var movement = await GetMovementByIdAsync(buyId);
+            var buy = await GetBuyByIdAsync(buyId);
+            _context.Buys.Remove(buy);
+            _context.Movements.Remove(movement);
+            await _context.SaveChangesAsync();
+            
+            _logger.LogInformation("Buy {BuyId} deleted successfully", buyId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting buy {BuyId}", buyId);
+            throw;
+        }
     }
 
     public async Task<Buy> GetBuyByIdAsync(int buyId)
     {
-        await GetMovementByIdAsync(buyId);
-        var buy = await _context.Buys.FindAsync(buyId) ?? throw new KeyNotFoundException($"Buy with id: {buyId} not found");
-        return buy;
+        try
+        {
+            await GetMovementByIdAsync(buyId);
+            var buy = await _context.Buys.FindAsync(buyId) ?? throw new KeyNotFoundException($"Buy with id: {buyId} not found");
+            return buy;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting buy by id {BuyId}", buyId);
+            throw;
+        }
     }
+    
     public async Task<Movement> GetMovementByIdAsync(int movementId)
     {
-        var movement = await _context.Movements.FindAsync(movementId);
-        if (movement == null || !movement.IsActive) throw new KeyNotFoundException($"Movement with id: {movementId} not found");
-        return movement;
+        try
+        {
+            var movement = await _context.Movements.FindAsync(movementId);
+            if (movement == null || !movement.IsActive) throw new KeyNotFoundException($"Movement with id: {movementId} not found");
+            return movement;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting movement by id {MovementId}", movementId);
+            throw;
+        }
     }
 
     public async Task<PaginatedResult<BuyDto>> GetBuysByInventoryAsync(int invId, int pageNumber, int pageSize)
     {
-        // 1. Consulta optimizada con Include (una sola consulta a BD)
-        var query = _context.Buys.Include(b => b.Movement)  // <-- ESTO ES LA CLAVE
-            .Where(m => m.InventoryId == invId && m.Movement.IsActive);
+        try
+        {
+            // 1. Consulta optimizada con Include (una sola consulta a BD)
+            var query = _context.Buys.Include(b => b.Movement)  // <-- ESTO ES LA CLAVE
+                .Where(m => m.InventoryId == invId && m.Movement.IsActive);
 
-        // 2. Total de registros (rápido, solo COUNT)
-        var totalCount = await query.CountAsync();
+            // 2. Total de registros (rápido, solo COUNT)
+            var totalCount = await query.CountAsync();
 
-        // 3. Paginación en BD y obtención de datos
-        var buys = await query
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize).ToListAsync();
+            // 3. Paginación en BD y obtención de datos
+            var buys = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize).ToListAsync();
 
-        // 4. Mapeo directo (sin bucles manuales)
-        var buyDtos = _mapper.MapListToDto(buys.Select(b => b.Movement).ToList(), buys);
+            // 4. Mapeo directo (sin bucles manuales)
+            var buyDtos = _mapper.MapListToDto(buys.Select(b => b.Movement).ToList(), buys);
 
-        return new PaginatedResult<BuyDto>(buyDtos, totalCount, pageNumber, pageSize);
+            return new PaginatedResult<BuyDto>(buyDtos, totalCount, pageNumber, pageSize);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting buys by inventory {InvId}", invId);
+            throw;
+        }
     }
 
     public async Task<bool> SoftDeleteBuyAsync(int movementId)
@@ -93,13 +130,15 @@ public class BuyService(AppDbContext context, BuyMapper mapper, IUserService use
             var movement = await GetMovementByIdAsync(movementId);
             movement.IsActive = false;
             await _context.SaveChangesAsync();
+            
+            _logger.LogInformation("Buy {MovementId} soft deleted successfully", movementId);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogError(ex, "Error soft deleting buy {MovementId}", movementId);
             return false;
         }
-
     }
 
     public async Task<BuyDto> UpdateBuyAsync(int buyId, CreateBuyDto buyDto)
@@ -107,7 +146,6 @@ public class BuyService(AppDbContext context, BuyMapper mapper, IUserService use
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-
             var movement = await GetMovementByIdAsync(buyId);
             var buy = await GetBuyByIdAsync(buyId);
             if (movement == null)
@@ -131,9 +169,10 @@ public class BuyService(AppDbContext context, BuyMapper mapper, IUserService use
             ArgumentNullException.ThrowIfNull(buydto);
             return buydto;
         }
-        catch
+        catch (Exception ex)
         {
             await transaction.RollbackAsync();
+            _logger.LogError(ex, "Error updating buy {BuyId}", buyId);
             throw;
         }
     }

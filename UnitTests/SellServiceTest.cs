@@ -3,8 +3,10 @@ using MazErpAPI.DTOs.Movements;
 using MazErpAPI.Enums;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Interfaces;
+using MazErpAPI.Utils;
 using MazErpAPI.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace UnitTests.Services;
@@ -26,8 +28,10 @@ public class SellServiceTests
         _context = new AppDbContext(options);
         _mockSellPointService = new Mock<ISellPointService>();
         _mockUserService = new Mock<IUserService>();
-        _mapper = new SellMapper();
-        _sellService = new SellService(_context, _mapper, _mockSellPointService.Object, _mockUserService.Object);
+        var mockLogger = new Mock<ILogger<SellService>>();
+        var mockMapperLogger = new Mock<ILogger<SellMapper>>();
+        _mapper = new SellMapper(mockMapperLogger.Object);
+        _sellService = new SellService(_context, _mapper, _mockSellPointService.Object, _mockUserService.Object, mockLogger.Object);
     }
 
     #region CreateSellAsync Tests

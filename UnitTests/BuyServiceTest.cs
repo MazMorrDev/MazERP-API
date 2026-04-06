@@ -4,8 +4,10 @@ using MazErpAPI.Enums;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Implementation;
 using MazErpAPI.Services.Interfaces;
+using MazErpAPI.Utils;
 using MazErpAPI.Utils.Mappers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace UnitTests;
@@ -29,8 +31,10 @@ public class BuyServiceTests
         _mockUserService = new Mock<IUserService>();
         _mockSupplierService = new Mock<ISupplierService>();
         _mockInventoryService = new Mock<IInventoryService>();
-        _mapper = new BuyMapper();
-        _buyService = new BuyService(_context, _mapper, _mockUserService.Object, _mockSupplierService.Object, _mockInventoryService.Object);
+        var mockLogger = new Mock<ILogger<BuyService>>();
+        var mockMapperLogger = new Mock<ILogger<BuyMapper>>();
+        _mapper = new BuyMapper(mockMapperLogger.Object);
+        _buyService = new BuyService(_context, _mapper, _mockUserService.Object, _mockSupplierService.Object, _mockInventoryService.Object, mockLogger.Object);
     }
 
     #region CreateBuyAsync Tests

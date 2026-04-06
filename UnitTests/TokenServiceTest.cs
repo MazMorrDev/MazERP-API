@@ -4,6 +4,7 @@ using System.Text;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Implementation;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
 
@@ -18,7 +19,8 @@ public class TokenServiceTest
     {
         // Arrange
         var configuration = CreateMockConfiguration();
-        var tokenService = new TokenService(configuration);
+        var mockLogger = new Mock<ILogger<TokenService>>();
+        var tokenService = new TokenService(configuration, mockLogger.Object);
         var user = CreateValidUser();
 
         // Act
@@ -45,7 +47,8 @@ public class TokenServiceTest
     public void CreateToken_WithNullUser_ThrowsNullReferenceException()
     {
         var configuration = CreateMockConfiguration();
-        var tokenService = new TokenService(configuration);
+        var mockLogger = new Mock<ILogger<TokenService>>();
+        var tokenService = new TokenService(configuration, mockLogger.Object);
 
         Assert.Throws<NullReferenceException>(() => tokenService.CreateToken(null!));
     }
@@ -55,8 +58,9 @@ public class TokenServiceTest
     {
         var configuration = new Mock<IConfiguration>();
         configuration.Setup(x => x["JWT_SECRET"]).Returns((string)null!);
+        var mockLogger = new Mock<ILogger<TokenService>>();
 
-        var exception = Assert.Throws<ArgumentNullException>(() => new TokenService(configuration.Object));
+        var exception = Assert.Throws<ArgumentNullException>(() => new TokenService(configuration.Object, mockLogger.Object));
         Assert.Contains("JWT_SECRET", exception.Message);
     }
 
@@ -65,8 +69,9 @@ public class TokenServiceTest
     {
         var configuration = new Mock<IConfiguration>();
         configuration.Setup(x => x["JWT_SECRET"]).Returns("ShortSecret");
+        var mockLogger = new Mock<ILogger<TokenService>>();
 
-        var tokenService = new TokenService(configuration.Object);
+        var tokenService = new TokenService(configuration.Object, mockLogger.Object);
         var user = CreateValidUser();
 
         Assert.Throws<ArgumentException>(() => tokenService.CreateToken(user));
@@ -76,7 +81,8 @@ public class TokenServiceTest
     public void CreateToken_WithMinimalUserProperties_WorksCorrectly()
     {
         var configuration = CreateMockConfiguration();
-        var tokenService = new TokenService(configuration);
+        var mockLogger = new Mock<ILogger<TokenService>>();
+        var tokenService = new TokenService(configuration, mockLogger.Object);
         var user = new User
         {
             Id = 1,

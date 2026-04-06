@@ -27,7 +27,7 @@ public class ProductServiceTest
             .Options;
 
         _context = new AppDbContext(options);
-        _productService = new ProductService(_context, _mapper);
+        _productService = new ProductService(_context, _mapper, _mockLogger.Object);
     }
 
     [Fact]

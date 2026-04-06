@@ -3,31 +3,34 @@ using MazErpAPI.DTOs.Inventory;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Interfaces;
 using MazErpAPI.Utils.Mappers;
+using Microsoft.Extensions.Logging;
 
 namespace MazErpAPI.Services.Implementation;
 
-public class ProductService(AppDbContext context, ProductMapper mapper) : IProductService
+public class ProductService(AppDbContext context, ProductMapper mapper, ILogger<ProductService> logger) : IProductService
 {
     private readonly AppDbContext _context = context;
     private readonly ProductMapper _mapper = mapper;
+    private readonly ILogger<ProductService> _logger = logger;
 
-    public async Task<Product> CreateProductAsync(CreateInventoryAndProductDto productDto)
-    {
-        try
+public async Task<Product> CreateProductAsync(CreateInventoryAndProductDto productDto)
         {
-            var product = _mapper.MapDtoToModel(productDto);
+            try
+            {
+                var product = _mapper.MapDtoToModel(productDto);
 
-            await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
+                await _context.Products.AddAsync(product);
+                await _context.SaveChangesAsync();
 
-            return product;
+                _logger.LogInformation("Product {ProductId} created successfully", product.Id);
+                return product;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating product");
+                throw;
+            }
         }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
 
     public async Task<Product> GetProductByIdAsync(int productId)
     {

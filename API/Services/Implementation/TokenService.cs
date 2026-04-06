@@ -4,11 +4,12 @@ using System.Text;
 using MazErpAPI.DTOs.Users;
 using MazErpAPI.Models;
 using MazErpAPI.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MazErpAPI.Services.Implementation;
 
-public class TokenService(IConfiguration config) : ITokenService
+public class TokenService(IConfiguration config, ILogger<TokenService> logger) : ITokenService
 {
     private readonly string _jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET")
         ?? config["JWT_SECRET"]
@@ -16,47 +17,49 @@ public class TokenService(IConfiguration config) : ITokenService
 
     private readonly string _issuer = config["Jwt:Issuer"] ?? "MazErpBack";
     private readonly string _audience = config["Jwt:Audience"] ?? "MazErpFront";
+    private readonly ILogger<TokenService> _logger = logger;
 
-    public TokenDto CreateToken(User user)
-    {
-        try
+public TokenDto CreateToken(User user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new List<Claim>
+            try
             {
-                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new(ClaimTypes.Role, "user")
-            };
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(
-                issuer: _issuer,
-                audience: _audience,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(35),
-                signingCredentials: credentials);
+                var claims = new List<Claim>
+                {
+                    new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new(ClaimTypes.Role, "user")
+                };
 
-            var userDto = new UserDto
+                var token = new JwtSecurityToken(
+                    issuer: _issuer,
+                    audience: _audience,
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddMinutes(35),
+                    signingCredentials: credentials);
+
+                var userDto = new UserDto
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Name = user.Name,
+                    ProfilePhotoUrl = user.ProfilePhotoUrl
+                };
+
+                var tokenResponse = new TokenDto
+                {
+                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    Expiration = token.ValidTo,
+                    UserDto = userDto
+                };
+
+                return tokenResponse;
+            }
+            catch (Exception ex)
             {
-                Id = user.Id,
-                Email = user.Email,
-                Name = user.Name,
-                ProfilePhotoUrl = user.ProfilePhotoUrl
-            };
-
-            var tokenResponse = new TokenDto
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiration = token.ValidTo,
-                UserDto = userDto
-            };
-
-            return tokenResponse;
+                _logger.LogError(ex, "Error creating token for user {Email}", user.Email);
+                throw new ApplicationException($"Error creating token for user {user.Email}", ex);
+            }
         }
-        catch (Exception ex)
-        {
-            throw new ApplicationException($"Error creating token for user {user.Email}", ex);
-        }
-    }
 }

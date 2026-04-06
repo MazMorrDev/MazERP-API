@@ -1,10 +1,13 @@
 ﻿using MazErpAPI.DTOs.Movements;
 using MazErpAPI.Models;
+using Microsoft.Extensions.Logging;
 
 namespace MazErpAPI.Utils.Mappers;
 
-public class BuyMapper()
+public class BuyMapper(ILogger<BuyMapper> logger)
 {
+    private readonly ILogger<BuyMapper> _logger = logger;
+
     public BuyDto MapToDto(Movement movement, Buy buy)
     {
         return new BuyDto
