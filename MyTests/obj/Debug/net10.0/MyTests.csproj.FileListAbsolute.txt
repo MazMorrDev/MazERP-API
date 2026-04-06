@@ -1,0 +1,6 @@
+/home/mazmorrdev/Documentos/Proyectos/Fullstack/MazERP-Enterprise Resource Planning/MazERP-API/MyTests/obj/Debug/net10.0/MyTests.csproj.AssemblyReference.cache
+/home/mazmorrdev/Documentos/Proyectos/Fullstack/MazERP-Enterprise Resource Planning/MazERP-API/MyTests/obj/Debug/net10.0/MyTests.GeneratedMSBuildEditorConfig.editorconfig
+/home/mazmorrdev/Documentos/Proyectos/Fullstack/MazERP-Enterprise Resource Planning/MazERP-API/MyTests/obj/Debug/net10.0/MyTests.AssemblyInfoInputs.cache
+/home/mazmorrdev/Documentos/Proyectos/Fullstack/MazERP-Enterprise Resource Planning/MazERP-API/MyTests/obj/Debug/net10.0/MyTests.AssemblyInfo.cs
+/home/mazmorrdev/Documentos/Proyectos/Fullstack/MazERP-Enterprise Resource Planning/MazERP-API/MyTests/obj/Debug/net10.0/MyTests.csproj.CoreCompileInputs.cache
+/home/mazmorrdev/Documentos/Proyectos/Fullstack/MazERP-Enterprise Resource Planning/MazERP-API/MyTests/obj/Debug/net10.0/MyTests.sourcelink.json
