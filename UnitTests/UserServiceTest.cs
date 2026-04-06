@@ -34,9 +34,8 @@ public class UserServiceTest
         _userService = new UserService(_context, _mockTokenService.Object, _mockLogger.Object, _mapper);
     }
 
-
     [Fact]
-    public async Task LoginUser_WithInvalidPassword_ReturnsArgumentException()
+    public async Task LoginUser_WithCorrectCredentials_ReturnsTokenDto()
     {
         // Arrange
         var user = new User
@@ -44,6 +43,54 @@ public class UserServiceTest
             Id = 1,
             Email = "test@example.com",
             Name = "testuser",
+            IsActive = true,
+            LicenseStartDate = DateTimeOffset.UtcNow,
+            LicenseEndDate = DateTimeOffset.UtcNow.AddMonths(1)
+        };
+
+        // IMPORTANTE: Usar el mismo PasswordHasher que usa el servicio
+        var hasher = new PasswordHasher<User>();
+        user.PasswordHash = hasher.HashPassword(user, "password123");
+
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+
+        // Verificar que el usuario se guardó correctamente
+        var savedUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == "test@example.com");
+        Assert.NotNull(savedUser); // Debug: verificar que existe
+        Assert.True(savedUser.IsActive); // Debug: verificar que está activo
+        Assert.NotNull(savedUser.PasswordHash); // Debug: verificar que tiene hash
+
+        var loginDto = new LoginDto
+        {
+            Email = "test@example.com",
+            Password = "password123"
+        };
+
+        var userDto = _mapper.MapToDto(user);
+        // Setup mock token service para que retorne algo
+        var expectedToken = new TokenDto { Token = "test-token-123", Expiration = DateTime.Now.AddHours(1), UserDto = userDto };
+        _mockTokenService.Setup(x => x.CreateToken(It.IsAny<User>())).Returns(expectedToken);
+
+        // Act
+        var result = await _userService.LoginUserAsync(loginDto);
+
+        // Assert
+        Assert.NotNull(result); // Cambiar a Assert.NotNull primero
+        Assert.IsType<TokenDto>(result);
+    }
+
+
+    [Fact]
+    public async Task LoginUser_WithInvalidPassword_ReturnsNull()
+    {
+        // Arrange
+        var user = new User
+        {
+            Id = 1,
+            Email = "test@example.com",
+            Name = "testuser",
+            IsActive = true,
             LicenseStartDate = DateTimeOffset.UtcNow,
             LicenseEndDate = DateTimeOffset.UtcNow.AddMonths(1)
         };
@@ -59,10 +106,28 @@ public class UserServiceTest
             Password = "password123"
         };
 
+        // Act
+        var result = await _userService.LoginUserAsync(loginDto);
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task LoginUser_WithUnexistentEmail_ReturnsNull()
+    {
+        var loginDto = new LoginDto
+        {
+            Email = "pepito@gmail.com",
+            Password = "password123"
+        };
+
         // Execution
         var result = await _userService.LoginUserAsync(loginDto);
 
         // Assert
         Assert.Null(result);
     }
+
+
 }
